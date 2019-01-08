@@ -1,12 +1,74 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width,initial-scale=1.0">
-    <title>wldw2019</title>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+    <title>物理实验王</title>
+    <meta name="name" itemprop="name" content="好多说不出口的感谢，就写张小纸条告诉TA吧">
+    <meta itemprop="description" content="哪怕是一张简单的感恩小纸条，也能够带来直击心田的温暖~">
+    <meta name="description" itemprop="description" content="哪怕是一张简单的感恩小纸条，也能够带来直击心田的温暖~" />
+    <meta itemprop="image" content="https://h5.nyjun.com/h5/wldw2019/img/share.png">
+    <script type="text/javascript">
+      function parseUA() {
+        var u = navigator.userAgent;
+        var u2 = navigator.userAgent.toLowerCase();
+        return { //移动终端浏览器版本信息
+          trident: u.indexOf('Trident') > -1, //IE内核
+          presto: u.indexOf('Presto') > -1, //opera内核
+          webKit: u.indexOf('AppleWebKit') > -1, //苹果、谷歌内核
+          gecko: u.indexOf('Gecko') > -1 && u.indexOf('KHTML') == -1, //火狐内核
+          mobile: !!u.match(/AppleWebKit.*Mobile.*/), //是否为移动终端
+          ios: !!u.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/), //ios终端
+          android: u.indexOf('Android') > -1 || u.indexOf('Linux') > -1, //android终端或uc浏览器
+          iPhone: u.indexOf('iPhone') > -1, //是否为iPhone或者QQHD浏览器
+          iPad: u.indexOf('iPad') > -1, //是否iPad
+          webApp: u.indexOf('Safari') == -1, //是否web应该程序，没有头部与底部
+          iosv: u.substr(u.indexOf('iPhone OS') + 9, 3),
+          weixin: u2.match(/MicroMessenger/i) == "micromessenger",
+          ali: u.indexOf('AliApp') > -1,
+        };
+      }
+
+      function adapt(designWidth, designHeight){
+        var rem2px = designWidth / 16;
+        var d = window.document.createElement('div');
+        d.style.width = '1rem';
+        d.style.display = "none";
+        var head = window.document.getElementsByTagName('head')[0];
+        head.appendChild(d);
+        var defaultFontSize = parseFloat(window.getComputedStyle(d, null).getPropertyValue('width'));
+        d.remove();
+
+        var wid;
+        var bh = window.innerHeight / designHeight;
+        var bw = window.innerWidth / designWidth;
+        var iw = designWidth / window.innerWidth;
+        var ih = designHeight / window.innerHeight;
+        if(iw - ih > 0.3){
+          document.documentElement.classList.add("ipx");
+        }
+        // console.log(iw - ih)
+        wid = bh < bw ? (designWidth * window.innerHeight / designHeight) : (window.innerWidth);
+        document.documentElement.style.fontSize = wid / designWidth * rem2px / defaultFontSize * 100 + '%';
+        return defaultFontSize
+      };
+
+      var defaultFontSize = adapt(750, 1210);
+      var ua = parseUA();
+      if (ua.android) {
+        document.documentElement.classList.add("android");
+      } else {
+        document.documentElement.classList.add("ios");
+      }
+    </script>
   </head>
   <body>
     <div id="app"></div>
     <!-- built files will be auto injected -->
+    <script src="https://res.wx.qq.com/open/js/jweixin-1.0.0.js"></script>
+    <script>document.write("<script src='https://h5.nyjun.com/lib/wx_bianchengmao1.php?"+window.location.href+"'><\/script>");</script>
+    <script src="https://h5.nyjun.com/h5/wldw2019/js/qqapi.custom.min_2c627ee26054445d39a7d81ae68d7c6f.js"></script>
+    <script src="https://h5.nyjun.com/h5/wldw2019/js/share.js"></script>
   </body>
 </html>
