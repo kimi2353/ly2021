@@ -10,9 +10,11 @@ import IScroll from 'iscroll'
 import axios from 'axios'
 import VueAxios from 'vue-axios'
 import Toast from 'vue2-toast'
+import VueVideoPlayer from 'vue-video-player'
 import 'swiper/dist/css/swiper.css'
 import './assets/scss/base.scss'
 import 'vue2-toast/lib/toast.css'
+import 'video.js/dist/video-js.css'
 
 Vue.config.productionTip = false
 
@@ -25,6 +27,7 @@ Vue.use(VueAxios, axios)
 Vue.use(IScrollView, IScroll)
 Vue.use(VueAwesomeSwiper)
 Vue.use(Vuex)
+Vue.use(VueVideoPlayer)
 
 Vue.prototype.Url = 'https://h5.nyjun.com/wldw2019/index/'
 
