@@ -48,7 +48,6 @@
         if(iw - ih > 0.3){
           document.documentElement.classList.add("ipx");
         }
-        // console.log(iw - ih)
         wid = bh < bw ? (designWidth * window.innerHeight / designHeight) : (window.innerWidth);
         document.documentElement.style.fontSize = wid / designWidth * rem2px / defaultFontSize * 100 + '%';
         return defaultFontSize

@@ -9,11 +9,18 @@ import IScrollView from 'vue-iscroll-view'
 import IScroll from 'iscroll'
 import axios from 'axios'
 import VueAxios from 'vue-axios'
+import Toast from 'vue2-toast'
 import 'swiper/dist/css/swiper.css'
 import './assets/scss/base.scss'
+import 'vue2-toast/lib/toast.css'
 
 Vue.config.productionTip = false
 
+Vue.use(Toast, {
+  type: 'center',
+  duration: 20000,
+  wordWrap: true
+})
 Vue.use(VueAxios, axios)
 Vue.use(IScrollView, IScroll)
 Vue.use(VueAwesomeSwiper)

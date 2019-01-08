@@ -1,6 +1,6 @@
 <template>
   <div id="app">
-    <img src="./assets/logo.png">
+    <img src="./assets/logo.png" @click='center'>
   </div>
 </template>
 
@@ -9,6 +9,11 @@
 export default {
   name: 'App',
   components: {
+  },
+  methods: {
+    center: function () {
+      this.$toast('bottom')
+    }
   }
 }
 </script>
