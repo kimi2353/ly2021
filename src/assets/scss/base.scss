@@ -32,6 +32,7 @@ img::selection{background:0}
   top:0;
   left: 0;
   background-color: #2d1881;
+  position: fixed;
 }
 .nav{
   position: fixed;
@@ -560,27 +561,27 @@ img::selection{background:0}
   background-size: 100% 28.459rem;
   background-color: #2d1881;
   .pg3_tit{
-    line-height: 1.728rem;
-    height: 1.728rem;
+    line-height: 1.528rem;
+    height: 1.528rem;
     text-align: center;
     color: #fff;
     font-size: 0.981rem;
     font-weight: 600;
-    margin-bottom: 0.299rem;
+    margin-bottom: 0.25rem;
   }
   .pg3_main1{
     width: 14.933rem;
-    height: 11.648rem;
+    height: 10.648rem;
     background-color: #fff;
     border-radius: 8px;
     .pg3_ctit{
-      height: 1.259rem;
-      line-height: 1.259rem;
+      height: 1.059rem;
+      line-height: 1.059rem;
       text-align: center;
       color: #333;
       font-size: 0.683rem;
       font-weight: 600;
-      margin:0.341rem 0;
+      margin:0.241rem 0;
     }
     .pg3_border{
       width: 13.803rem;
@@ -598,7 +599,7 @@ img::selection{background:0}
       }
     }
     .pg3_num{
-      margin-top: 0.491rem;
+      margin-top: 0.291rem;
       li{
         color: #333;
         font-size: 0.597rem;
@@ -663,6 +664,57 @@ img::selection{background:0}
       background:url('../img/wl_pg3_btn.png') no-repeat center;
       background-size: 100% 100%;
       margin:0.64rem 0.299rem 0;
+      font-size: 0.64rem;
+      color: #04348c;
+      line-height: 2.261rem;
+      font-weight: 600;
+      img{
+        width: 1.067rem;
+        height: 0.96rem;
+        display: inline-block;
+        vertical-align: sub;
+        margin-right: 0.305rem;
+      }
+      .iszan{
+        width: 1.067rem;
+        height: 0.96rem;
+        display: inline-block;
+        vertical-align: sub;
+        margin-right: 0.305rem;
+        background:no-repeat center;
+        background-size: 100% 100%;
+      }
+      .zan1{
+        background-image: url('../img/wl_pg3_zan1.png')
+      }
+      .zan2{
+        background-image: url('../img/wl_pg3_zan2.png')
+      }
+    }
+  }
+  .wl_share{
+    position: absolute;
+    width: 11.563rem;
+    pointer-events: none;
+    right: 1.301rem;
+    top:1.408rem;
+  }
+}
+.ipx .pg3{
+  .pg3_tit{
+    line-height: 1.728rem;
+    height: 1.728rem;
+    margin-bottom: 0.299rem;
+  }
+  .pg3_main1{
+    height: 11.648rem;
+    .pg3_ctit{
+      height: 1.259rem;
+      line-height: 1.259rem;
+      margin:0.341rem 0;
+    }
+    .pg3_num{
+      margin-top: 0.491rem;
     }
   }
 }

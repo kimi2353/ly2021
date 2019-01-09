@@ -33,7 +33,7 @@ export default {
           that.loadImage()
         } else {
           percent = 100
-          that.$emit('slideto', 3)
+          that.$emit('slideto', 1)
         }
         l[0].style.width = percent + '%'
       }

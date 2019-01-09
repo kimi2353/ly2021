@@ -5,7 +5,7 @@
     <div class='pg3_main1'>
       <div class='pg3_ctit'>{{tit}}</div>
       <div class='pg3_border'>
-        <video-player class="video-player-box vjs-big-play-centered" ref="videoPlayer" :options="playerOptions" :playsinline="false">
+        <video-player class="video-player-box vjs-big-play-centered" ref="videoPlayer" :options="playerOptions" :playsinline="false" @play="onPlayerPlay()">
         </video-player>
       </div>
       <ul class='pg3_num'>
@@ -18,19 +18,23 @@
       <div class='pg3_txt'>{{txt}}</div>
     </div>
     <ul class='pg3_btnlist'>
-      <li v-if='type==="zhu"'>
-        <img src="../assets/img/wl_pg3_zan1.png">{{num}}票
+      <li v-if='type==="zhu"' @click='zanfn'>
+        <div class='iszan' :class='{"zan1":zantype,"zan2":!zantype}'></div>{{num}}票
       </li>
-      <li v-if='type==="zhu"'>
+      <li v-if='type==="zhu"' @click.prevent='wl_share=true'>
         <img src="../assets/img/wl_pg3_share.png">分享拉票
       </li>
-      <li v-if='type==="ke"'>
-        <img src="../assets/img/wl_pg3_zan1.png">我也要参赛
+      <li v-if='type==="ke"' @click='zanfn'>
+        <div class='iszan' :class='{"zan1":zantype,"zan2":!zantype}'></div>为Ta投票
       </li>
-      <li v-if='type==="ke"'>
+      <li v-if='type==="ke"' @click='ret'>
+        <img src="../assets/img/wl_pg3_index.png">
         我也要参赛
       </li>
     </ul>
+    <div class='nav' v-show='wl_share' @click='wl_share=false'>
+      <img src="../assets/img/wl_share.png" class='wl_share'>
+    </div>
   </div>
 </template>
 
@@ -51,7 +55,9 @@ export default {
       num: 0,
       play: 0,
       txt: '',
-      type: 'zhu'
+      type: 'zhu',
+      zantype: true,
+      wl_share: false
     }
   },
   computed: {
@@ -66,6 +72,12 @@ export default {
     init () {
       let that = this
       that.$loading('正在加载，请稍后...')
+      let iszan = that.getCookie('wuli_iszan_' + that.vid)
+      if (iszan) {
+        that.zantype = false
+      } else {
+        that.zantype = true
+      }
       let ismy = that.getCookie('wuli_ismy_' + that.vid)
       let data = new FormData()
       data.append('id', that.vid)
@@ -91,6 +103,43 @@ export default {
     ret () {
       let that = this
       that.$emit('slideto', 1)
+    },
+    onPlayerPlay () {
+      let that = this
+      let isplay = that.getCookie('wuli_isplay_' + that.vid)
+      if (!isplay) {
+        let data = new FormData()
+        data.append('id', that.vid)
+        that.axios.post(that.Url + 'play', data).then((res) => {
+          that.setCookie('wuli_isplay_' + that.vid, 'wuli_isplay_' + that.vid)
+          if (res.data.res === 'success') {
+            that.play = res.data.info.play
+          }
+        })
+      }
+    },
+    zanfn () {
+      let that = this
+      let ismy = that.getCookie('wuli_iszan_' + that.vid)
+      let data = new FormData()
+      data.append('id', that.vid)
+      if (ismy) {
+        that.axios.post(that.Url + 'cancelzan', data).then((res) => {
+          that.clearCookie('wuli_iszan_' + that.vid)
+          that.zantype = true
+          if (res.data.res === 'success') {
+            that.num = res.data.info.num
+          }
+        })
+      } else {
+        that.axios.post(that.Url + 'zan', data).then((res) => {
+          that.setCookie('wuli_iszan_' + that.vid, 'wuli_iszan_' + that.vid)
+          that.zantype = false
+          if (res.data.res === 'success') {
+            that.num = res.data.info.num
+          }
+        })
+      }
     }
   }
 }

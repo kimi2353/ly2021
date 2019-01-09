@@ -95,7 +95,7 @@ const store = new Vuex.Store({
         txt: '<p>1.取一个白色碟子（或者泡面底），将彩虹糖摆好；</p><p>2.往碟子中轻轻倒水，让水刚好没过彩虹糖；</p><p>3.观察现象。</p>'
       }
     ],
-    vid: '8'
+    vid: '0'
   },
   mutations: {
     uVdinfo: (state, data) => {

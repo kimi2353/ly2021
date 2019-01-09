@@ -9,23 +9,23 @@
           <ul class='wl_pg2_msg'>
             <li>
               <span>姓名</span>
-              <input maxlength="5" v-model='username'>
+              <input maxlength="5" v-model='username' type='text'>
             </li>
             <li>
               <span>年纪</span>
-              <input maxlength="10" v-model='grade'>
+              <input maxlength="10" v-model='grade' type='text'>
             </li>
             <li>
               <span>QQ</span>
-              <input placeholder="为方便获奖通知，请务必填写" maxlength="14" v-model='qq'>
+              <input placeholder="为方便获奖通知，请务必填写" maxlength="14" v-model='qq' type='text'>
             </li>
             <li>
               <span>手机</span>
-              <input placeholder="为方便获奖通知，请务必填写" maxlength="11" v-model='tel'>
+              <input placeholder="为方便获奖通知，请务必填写" maxlength="11" v-model='tel' type='text'>
             </li>
           </ul>
           <div class='wl_pg2_info wl_pg2_info2'>实验主题<span>*</span></div>
-          <input placeholder="填写你的作品主题，不超过15个字" maxlength="15" class='wl_info_tit' v-model='title'>
+          <input placeholder="填写你的作品主题，不超过15个字" maxlength="15" class='wl_info_tit' v-model='title' type='text'>
           <div class='wl_pg2_info wl_pg2_info3'>上传视频<span>*</span></div>
           <div class='wl_up_tips'>
             <p>建议横屏拍摄，视频时长在15-30秒之间</p>
@@ -39,7 +39,7 @@
             </video>
           </div>
           <div class='wl_pg2_info wl_pg2_info4'>实验心得<span>*</span></div>
-          <textarea placeholder="写下你的实验心得吧，走心的心得体会可是比赛加分法宝哦，最多200字内" class='wl_pg2_textarea' maxlength="200" v-model='txt'></textarea>
+          <textarea placeholder="写下你的实验心得吧，走心的心得体会可是比赛加分法宝哦，最多200字内" class='wl_pg2_textarea' maxlength="200" v-model='txt' type='text'></textarea>
           <div style='height: 0.853rem;'></div>
         </div>
         <img src="../assets/img/wl_pg2_btn.png" class='wl_pg2_btn' @click='btn'>
