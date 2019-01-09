@@ -7,7 +7,7 @@
         <div class='wl_pg1_txt3'>
           <span class='tit'>实验教程：</span>
           <div class='wl_pg1_video'>
-            <video-player class="video-player-box" ref="videoPlayer" :options="playerOptions" :playsinline="false">
+            <video-player class="video-player-box vjs-big-play-centered" ref="videoPlayer" :options="playerOptions" :playsinline="false">
             </video-player>
           </div>
           <span class='body'>实验步骤：</span>
@@ -24,7 +24,7 @@
       <div style='height: 5.12rem'></div>
     </iscroll-view>
     <ul class='wl_pg1_btnlist'>
-      <li class='wl_pg1_btn wl_pg1_btn1'></li>
+      <li class='wl_pg1_btn wl_pg1_btn1' @click='slideto'></li>
       <li class='wl_pg1_btn wl_pg1_btn2'></li>
     </ul>
   </div>
@@ -44,9 +44,9 @@ export default {
       playerOptions: {
         sources: [{
           type: 'video/mp4',
-          src: 'https://1257805666.vod2.myqcloud.com/d9ef0cb0vodcq1257805666/c50502875285890784100285640/H4YmfkEdSAIA.mp4'
+          src: 'http://1257805666.vod2.myqcloud.com/d9ef0cb0vodcq1257805666/a4a6e2725285890784256283308/MV1by6rsL6wA.mp4'
         }],
-        poster: '/static/img/wl_pg1_bg.jpg'
+        poster: '/static/img/wl_c1.jpg'
       },
       src: '',
       poster: ''
@@ -69,15 +69,21 @@ export default {
       that.step = that.videoinfo[0].txt
       that.$store.commit('uVdinfo', 0)
       that.iscroll1.refresh()
-      // console.log(that.videoinfo)
     },
     exp (i) {
       let that = this
-      // console.log(that.videoinfo[i])
+      if (that.videoinfo[i].active) {
+        return
+      }
       that.$store.commit('uVdinfo', i)
       that.step = that.videoinfo[i].txt
       that.player.poster(that.videoinfo[i].poster)
       that.player.src(that.videoinfo[i].url)
+    },
+    slideto () {
+      let that = this
+      that.player.pause()
+      that.$emit('slideto', 2)
     }
   }
 }
