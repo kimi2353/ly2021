@@ -229,7 +229,7 @@ img::selection{background:0}
       .step{
         color: #fff;
         font-size: 0.54rem;
-        width: 12.629rem;
+        width: 12.829rem;
         text-align: justify;
         line-height: 0.96rem;
       }
@@ -734,6 +734,52 @@ img::selection{background:0}
     }
     .pg3_num{
       margin-top: 0.491rem;
+    }
+  }
+}
+.pg4{
+  width: 100%;height: 100%;
+  overflow: hidden;
+  position: relative;
+  background-color: #2d1881;
+  .pg4_main{
+    background:url('/static/img/wl_pg4.jpg') no-repeat center 0;
+    background-size: 16rem 10.005rem;
+    width: 16rem;
+    padding-top: 10.624rem;
+    .wl_pg4_btn1{
+      width: 5.675rem;
+      position: absolute;
+      top:7.332rem;
+      margin:auto;
+      left: 0;
+      right: 6rem;
+      z-index: 50;
+    }
+    .wl_pg4_btnlist{
+      height: 1.643rem;
+      width: 14.933rem;
+      margin:auto;
+      display: flex;
+      justify-content:space-between;
+      align-items: flex-end;
+      li{
+        height: 1.365rem;
+        line-height: 1.365rem;
+        display: inline-block;
+        vertical-align: bottom;
+        width: 4.907rem;
+        background-color: #3f2bcb;
+        font-size: 0.64rem;
+        color: #fff;
+        border-top-left-radius: 4px;
+        border-top-right-radius: 4px;
+        &.active{
+          height: 1.643rem;
+          line-height: 1.643rem;
+          background-color: #2f76f6;
+        }
+      }
     }
   }
 }

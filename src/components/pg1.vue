@@ -24,8 +24,8 @@
       <div style='height: 5.12rem'></div>
     </iscroll-view>
     <ul class='wl_pg1_btnlist'>
-      <li class='wl_pg1_btn wl_pg1_btn1' @click='slideto'></li>
-      <li class='wl_pg1_btn wl_pg1_btn2'></li>
+      <li class='wl_pg1_btn wl_pg1_btn1' @click='slideto(2)'></li>
+      <li class='wl_pg1_btn wl_pg1_btn2' @click='slideto(4)'></li>
     </ul>
   </div>
 </template>
@@ -80,10 +80,10 @@ export default {
       that.player.poster(that.videoinfo[i].poster)
       that.player.src(that.videoinfo[i].url)
     },
-    slideto () {
+    slideto (res) {
       let that = this
       that.player.pause()
-      that.$emit('slideto', 2)
+      that.$emit('slideto', res)
     }
   }
 }

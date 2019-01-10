@@ -12,7 +12,7 @@
               <input maxlength='5' v-model='username' type='text' @blur='inputBlur'>
             </div>
             <div>
-              <span>年纪</span>
+              <span>年级</span>
               <input maxlength='10' v-model='grade' type='text' @blur='inputBlur'>
             </div>
             <div>

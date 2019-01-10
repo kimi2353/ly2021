@@ -27,6 +27,7 @@ import load from './components/load'
 import pg1 from './components/pg1'
 import pg2 from './components/pg2'
 import pg3 from './components/pg3'
+import pg4 from './components/pg4'
 
 export default {
   name: 'App',
@@ -34,7 +35,8 @@ export default {
     load,
     pg1,
     pg2,
-    pg3
+    pg3,
+    pg4
   },
   computed: {
     swiper () {
@@ -45,7 +47,6 @@ export default {
     slideto (res) {
       let that = this
       if (res) {
-        console.log(res)
         that.moban = 'pg' + res
       }
       that.fadefn()
