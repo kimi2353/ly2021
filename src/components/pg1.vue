@@ -44,7 +44,7 @@ export default {
       playerOptions: {
         sources: [{
           type: 'video/mp4',
-          src: 'http://1257805666.vod2.myqcloud.com/d9ef0cb0vodcq1257805666/a4a6e2725285890784256283308/MV1by6rsL6wA.mp4'
+          src: 'https://1257805666.vod2.myqcloud.com/d9ef0cb0vodcq1257805666/a4a6e2725285890784256283308/MV1by6rsL6wA.mp4'
         }],
         poster: '/static/img/wl_c1.jpg'
       },

@@ -30,11 +30,11 @@ Vue.use(VueAwesomeSwiper)
 Vue.use(Vuex)
 Vue.use(VueVideoPlayer)
 
-// Vue.prototype.Url = 'https://h5.nyjun.com/wldw2019/index/'
-// Vue.prototype.Url2 = 'https://h5.nyjun.com/h5/wldw2019/static/php/'
+Vue.prototype.Url = 'https://h5.nyjun.com/wldw2019/index/'
+Vue.prototype.Url2 = 'https://h5.nyjun.com/h5/wldw2019/static/php/'
 
-Vue.prototype.Url = 'http://localhost/tp5/public/index.php/wldw2019/index/'
-Vue.prototype.Url2 = 'http://localhost/wldw2019/static/php/'
+// Vue.prototype.Url = 'http://localhost/tp5/public/index.php/wldw2019/index/'
+// Vue.prototype.Url2 = 'http://localhost/wldw2019/static/php/'
 
 Vue.prototype.isFudaoApp = function () {
   var REGEXP_FUDAO_APP = /EducationApp/
@@ -195,7 +195,7 @@ Vue.prototype.clearCookie = function (name) {
 
 Vue.prototype.checkzan = function (gindex) {
   var that = this
-  var thiscookie = 'ganen_good_' + gindex
+  var thiscookie = 'wuli_iszan_' + gindex
   var mapcookie = that.getCookie(thiscookie)
   if (mapcookie !== null && mapcookie !== '') {
     return false
@@ -206,12 +206,12 @@ Vue.prototype.checkzan = function (gindex) {
 
 Vue.prototype.checkcookie = function (gindex) {
   var that = this
-  var thiscookie = 'ganen_good_' + gindex
+  var thiscookie = 'wuli_iszan_' + gindex
   var mapcookie = that.getCookie(thiscookie)
   if (mapcookie !== null && mapcookie !== '') {
     return false
   } else {
-    that.setCookie(thiscookie, thiscookie, 20)
+    that.setCookie(thiscookie, thiscookie, 60)
     return true
   }
 }
