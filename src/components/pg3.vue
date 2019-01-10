@@ -48,7 +48,7 @@ export default {
       playerOptions: {
         sources: [{
           type: 'video/mp4',
-          src: 'http://1257805666.vod2.myqcloud.com/d9ef0cb0vodcq1257805666/5cfebd525285890784262281763/p18NyxHgJ2oA.mp4'
+          src: 'https://1257805666.vod2.myqcloud.com/d9ef0cb0vodcq1257805666/5cfebd525285890784262281763/p18NyxHgJ2oA.mp4'
         }]
       },
       video: '',
@@ -92,6 +92,8 @@ export default {
           that.num = info.num
           that.play = info.play
           that.txt = info.txt
+        } else {
+          that.ret()
         }
       })
       if (ismy) {

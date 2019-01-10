@@ -33,7 +33,21 @@ export default {
           that.loadImage()
         } else {
           percent = 100
-          that.$emit('slideto', 1)
+          let id = that.getQueryString('id')
+          if (id) {
+            let data = new FormData()
+            data.append('id', id)
+            that.axios.post(that.Url + 'checkid', data).then((res) => {
+              if (res.data.res === 'success') {
+                that.$store.commit('uvid', id)
+                that.$emit('slideto', 3)
+              } else {
+                that.$emit('slideto', 1)
+              }
+            })
+          } else {
+            that.$emit('slideto', 1)
+          }
         }
         l[0].style.width = percent + '%'
       }

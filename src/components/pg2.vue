@@ -1,31 +1,31 @@
 <template>
   <div class='pg2'>
-    <iscroll-view class='scroll-view' ref='iscroll2' :options='scrollOptions'>
+    <!-- <iscroll-view class='scroll-view' ref='iscroll2' :options='scrollOptions'> -->
       <div class='pg2_main'>
         <div class='return' @click='ret'>返回</div>
         <div class='pg2_tit'>上传你最酷炫的作品吧</div>
         <div class='pg2_center'>
           <div class='wl_pg2_info wl_pg2_info1'>个人信息</div>
-          <ul class='wl_pg2_msg'>
-            <li>
+          <div class='wl_pg2_msg'>
+            <div>
               <span>姓名</span>
-              <input maxlength="5" v-model='username' type='text'>
-            </li>
-            <li>
+              <input maxlength='5' v-model='username' type='text' @blur='inputBlur'>
+            </div>
+            <div>
               <span>年纪</span>
-              <input maxlength="10" v-model='grade' type='text'>
-            </li>
-            <li>
+              <input maxlength='10' v-model='grade' type='text' @blur='inputBlur'>
+            </div>
+            <div>
               <span>QQ</span>
-              <input placeholder="为方便获奖通知，请务必填写" maxlength="14" v-model='qq' type='text'>
-            </li>
-            <li>
+              <input maxlength='14' v-model='qq' type='text' placeholder='为方便获奖通知，请务必填写' @blur='inputBlur'>
+            </div>
+            <div>
               <span>手机</span>
-              <input placeholder="为方便获奖通知，请务必填写" maxlength="11" v-model='tel' type='text'>
-            </li>
-          </ul>
+              <input maxlength='11' v-model='tel' type='text' placeholder='为方便获奖通知，请务必填写' @blur='inputBlur'>
+            </div>
+          </div>
           <div class='wl_pg2_info wl_pg2_info2'>实验主题<span>*</span></div>
-          <input placeholder="填写你的作品主题，不超过15个字" maxlength="15" class='wl_info_tit' v-model='title' type='text'>
+          <input placeholder='填写你的作品主题，不超过15个字' maxlength='15' class='wl_info_tit' v-model='title' type='text'>
           <div class='wl_pg2_info wl_pg2_info3'>上传视频<span>*</span></div>
           <div class='wl_up_tips'>
             <p>建议横屏拍摄，视频时长在15-30秒之间</p>
@@ -33,19 +33,19 @@
             <p>如果能真人出镜，外加配音解读能为你带来更多投票哦！</p>
           </div>
           <div class='wl_up'>
-            <input type="file" class="upload" @change="upload" id="upload" multiple accept="video/*" v-show='uploadDataUrl===""'>
+            <input type="file" class="upload" @change="upload" id="upload" accept="video/*" v-show='uploadDataUrl===""'>
             <video class="" preload="auto" data-setup="{}" controls v-if='uploadDataUrl!==""'>
               <source type="video/mp4" :src="uploadDataUrl">
             </video>
           </div>
           <div class='wl_pg2_info wl_pg2_info4'>实验心得<span>*</span></div>
-          <textarea placeholder="写下你的实验心得吧，走心的心得体会可是比赛加分法宝哦，最多200字内" class='wl_pg2_textarea' maxlength="200" v-model='txt' type='text'></textarea>
+          <textarea placeholder="写下你的实验心得吧，走心的心得体会可是比赛加分法宝哦，最多200字内" class='wl_pg2_textarea' maxlength="200" v-model='txt' type='text' @blur="inputBlur"></textarea>
           <div style='height: 0.853rem;'></div>
         </div>
-        <img src="../assets/img/wl_pg2_btn.png" class='wl_pg2_btn' @click='btn'>
+        <img src="../assets/img/wl_pg2_btn.png" class='wl_pg2_btn' @click='btnfn'>
         <div style='height:1.216rem;'></div>
       </div>
-    </iscroll-view>
+    <!-- </iscroll-view> -->
     <div class='nav' v-show='alert'>
       <div class='wl_pg2_alert'>
         <img src="../assets/img/wl_pg2_btn1.png" @click='alert=false'>
@@ -110,7 +110,7 @@ export default {
       that.title = ''
       that.txt = ''
       that.uploadDataUrl = ''
-      that.iscroll2.refresh()
+      // that.iscroll2.refresh()
     },
     ret () {
       let that = this
@@ -121,7 +121,7 @@ export default {
       let files = document.getElementById('upload').files[0]
       that.uploadDataUrl = that.getObjectURL(files)
     },
-    btn () {
+    btnfn () {
       let that = this
       if (that.username === '') {
         that.alert = true
@@ -160,52 +160,56 @@ export default {
         that.$toast('请上传MP4或者MOV格式文件')
         return
       }
-      // var key = that.tel + '_' + Date.parse(new Date()) + '.MP4'
-      // var putExtra = {
-      //   fname: key,
-      //   params: {}
-      // }
-      // var observer = {
-      //   next (res) {
-      //     that.$loading('上传中（' + Math.floor(res.total.percent) + '%）<br>请耐心等待')
-      //   },
-      //   complete (res) {
-      //     console.log(res)
-      //     let video = 'https://static-k12edu-camprecord.codemao.cn/' + res.key
-      //     let data = new FormData()
-      //     data.append('username', that.username)
-      //     data.append('grade', that.grade)
-      //     data.append('tel', that.tel)
-      //     data.append('qq', that.qq)
-      //     data.append('title', that.title)
-      //     data.append('txt', that.txt.replace(/\n/g, ' '))
-      //     data.append('video', video)
-      //     that.axios.post(that.Url + 'userinfo', data).then((res) => {
-      //       console.log(res)
-      //       that.$loading.close()
-      //     })
-      //   }
-      // }
-      // var observable = window.qiniu.upload(file, key, that.uptoken, putExtra, that.config)
-      // observable.subscribe(observer)
-      let video = 'https://static-k12edu-camprecord.codemao.cn/15366666666_1547014801000.MP4'
-      let data = new FormData()
-      data.append('username', that.username)
-      data.append('grade', that.grade)
-      data.append('tel', that.tel)
-      data.append('qq', that.qq)
-      data.append('title', that.title)
-      data.append('txt', that.txt.replace(/\n/g, ' '))
-      data.append('video', video)
-      that.axios.post(that.Url + 'userinfo', data).then((res) => {
-        if (res.data.res === 'success') {
-          that.$loading.close()
-          that.setCookie('wl_tel', that.tel, 99)
-          that.setCookie('wuli_ismy_' + res.data.id, 'wuli_ismy_' + res.data.id, 99)
-          that.$store.commit('uvid', res.data.id)
-          that.$emit('slideto', 3)
+      var key = that.tel + '_' + Date.parse(new Date()) + '.MP4'
+      var putExtra = {
+        fname: key,
+        params: {}
+      }
+      var observer = {
+        next (res) {
+          that.$loading('上传中（' + Math.floor(res.total.percent) + '%）<br>请耐心等待')
+        },
+        complete (res) {
+          let video = 'https://static-k12edu-camprecord.codemao.cn/' + res.key
+          let data = new FormData()
+          data.append('username', that.username)
+          data.append('grade', that.grade)
+          data.append('tel', that.tel)
+          data.append('qq', that.qq)
+          data.append('title', that.title)
+          data.append('txt', that.txt.replace(/\n/g, ' '))
+          data.append('video', video)
+          that.axios.post(that.Url + 'userinfo', data).then((res) => {
+            if (res.data.res === 'success') {
+              that.$loading.close()
+              that.setCookie('wl_tel', that.tel, 99)
+              that.setCookie('wuli_ismy_' + res.data.id, 'wuli_ismy_' + res.data.id, 99)
+              that.$store.commit('uvid', res.data.id)
+              that.$emit('slideto', 3)
+            }
+          })
         }
-      })
+      }
+      var observable = window.qiniu.upload(file, key, that.uptoken, putExtra, that.config)
+      observable.subscribe(observer)
+      // let video = 'https://static-k12edu-camprecord.codemao.cn/15366666666_1547014801000.MP4'
+      // let data = new FormData()
+      // data.append('username', that.username)
+      // data.append('grade', that.grade)
+      // data.append('tel', that.tel)
+      // data.append('qq', that.qq)
+      // data.append('title', that.title)
+      // data.append('txt', that.txt.replace(/\n/g, ' '))
+      // data.append('video', video)
+      // that.axios.post(that.Url + 'userinfo', data).then((res) => {
+      //   if (res.data.res === 'success') {
+      //     that.$loading.close()
+      //     that.setCookie('wl_tel', that.tel, 99)
+      //     that.setCookie('wuli_ismy_' + res.data.id, 'wuli_ismy_' + res.data.id, 99)
+      //     that.$store.commit('uvid', res.data.id)
+      //     that.$emit('slideto', 3)
+      //   }
+      // })
     }
   }
 }
