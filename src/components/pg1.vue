@@ -1,6 +1,6 @@
 <template>
   <div class='pg1'>
-    <iscroll-view class='scroll-view' ref='iscroll1' :options='scrollOptions'>
+    <iscroll-view class='scroll-view' ref='iscroll1' :options='scrollOptions' @scrollEnd="log">
       <img src="/static/img/wl_pg1_bg.jpg" class='wl_pg1_bg'>
       <div class='wl_pg1_txt1'>
         <div class='wl_pg1_txt2'>请选择大赛规定的12个实验主题进行参赛，点击以下相应主题按钮，观看详细实验教程！</div>
@@ -21,14 +21,16 @@
       </div>
       <img src="/static/img/wl_4.jpg" class='wl_4'>
       <span class='dongtai'>· 第一时间获取比赛最新动态 ·</span>
-      <img src="../assets/img/wl_pg1_dt.png" class='wl_pg1_dt' @click='hr("http://www.baidu.com")'>
+      <img src="../assets/img/wl_pg1_dt.png" class='animated hinge infinite pulse wl_pg1_dt' @click='hr("https://jq.qq.com/?_wv=1027&k=5WPZHpY")'>
       <img src="/static/img/wl_6.jpg" class='wl_4'>
       <div style='height: 5.12rem'></div>
     </iscroll-view>
-    <ul class='wl_pg1_btnlist'>
-      <li class='wl_pg1_btn wl_pg1_btn1' @click='slideto(2)'></li>
-      <li class='wl_pg1_btn wl_pg1_btn2' @click='slideto(4)'></li>
-    </ul>
+    <transition name="fade">
+      <ul class='wl_pg1_btnlist' v-show='btnlist'>
+        <li class='wl_pg1_btn wl_pg1_btn1' @click='slideto(2)'></li>
+        <li class='wl_pg1_btn wl_pg1_btn2' @click='slideto(4)'></li>
+      </ul>
+    </transition>
   </div>
 </template>
 
@@ -40,7 +42,8 @@ export default {
       scrollOptions: {
         mouseWheel: true,
         click: true,
-        tap: true
+        tap: true,
+        probeType: 3
       },
       step: '',
       playerOptions: {
@@ -52,7 +55,9 @@ export default {
       },
       src: '',
       poster: '',
-      fade: true
+      fade: true,
+      btnlist: false,
+      scrolly: -850
     }
   },
   computed: {
@@ -76,9 +81,20 @@ export default {
       that.step = that.videoinfo[0].txt
       that.$store.commit('uVdinfo', 0)
       that.fade = true
+      that.toShare()
       setTimeout(function () {
         that.iscroll1.refresh()
       }, 600)
+    },
+    log (iscroll) {
+      let that = this
+      let y = iscroll.y
+      console.log(y)
+      if (y < that.scrolly) {
+        that.btnlist = true
+      } else {
+        that.btnlist = false
+      }
     },
     exp (i) {
       let that = this

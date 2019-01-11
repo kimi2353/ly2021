@@ -18,7 +18,7 @@
       <div class='pg3_txt'>{{txt}}</div>
     </div>
     <ul class='pg3_btnlist'>
-      <li v-if='type==="zhu"' @click='zanfn'>
+      <li v-if='type==="zhu"'>
         <div class='iszan' :class='{"zan1":zantype,"zan2":!zantype}'></div>{{num}}票
       </li>
       <li v-if='type==="zhu"' @click.prevent='wl_share=true'>
@@ -89,6 +89,7 @@ export default {
         that.$loading.close()
         if (res.data.res === 'success') {
           let info = res.data.info
+          that.toShare(that.vid, info.username)
           that.username = info.username
           that.tit = info.title
           that.video = info.video

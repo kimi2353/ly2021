@@ -55,31 +55,54 @@ Vue.prototype.hr = function (url) {
   }
 }
 
-Vue.prototype.toShare = function (id) {
+Vue.prototype.toShare = function (id, username) {
   let that = this
-  var isFD = that.isFudaoApp()
-  var fudaoapp = {}
-  var AppMShareContent = {}
-  var tit = [
-    '辣么优秀有创意的作品，不来投个票麻！',
-    '给这个低调的感恩小纸条投一票，我们就是homie了',
-    '老铁，我正在参加创作大赛，就差你一票了！',
-    '花式感恩小纸条暴风来袭，快来pick一下！',
-    '花式表白的小纸条了解一下，投个票最好啦！',
-    '感恩小纸条眉头一皱，发现还差你这票！'
+  let isFD = that.isFudaoApp()
+  let fudaoapp = {}
+  let AppMShareContent = {}
+  let imgurl = 'https://h5.nyjun.com/static/img/wl_share.jpg'
+  let weburl = 'https://h5.nyjun.com/h5/wldw2019/'
+  let tit = [
+    {
+      title: '这是' + username + '酷炫的物理实验作品！快来投票吧！',
+      summary: '第一届企鹅辅导物理实验大赛开始报名啦！动动手指，一起玩转物理！'
+    },
+    {
+      title: '谁是物理实验王？等你来投票，请支持' + username + '！',
+      summary: '2019企鹅辅导物理实验大赛火爆来袭！实验王者宝座，虚位以待。'
+    },
+    {
+      title: '嗨，快来为' + username + '酷炫的物理实验作品投票吧！',
+      summary: '2019企鹅辅导物理实验大赛火热进行中！做好准备，赢取属于你的荣耀！'
+    }
+  ]
+  let tit1 = [
+    {
+      title: '玩好物理正当时，物理实验王，C位就是你！',
+      summary: '2019企鹅辅导物理实验大赛重磅来袭！喜欢动手动脑的你准备好了么？'
+    },
+    {
+      title: '想捍卫物理实验的王者地位？就看你的了！',
+      summary: '2019企鹅辅导物理实验大赛强势来袭！让我们一起见证最强王者的诞生！'
+    },
+    {
+      title: '快来，2019最炫酷好玩的物理实验比赛在这里！',
+      summary: '第一届企鹅辅导物理实验大赛热力开赛！是时候展现你真正的技术了！'
+    }
   ]
   if (id) {
-    var n = Math.floor(Math.random() * tit.length)
-    var rt = tit[n]
+    let n = Math.floor(Math.random() * tit.length)
+    let rt = tit[n].title
+    let rs = tit[n].summary
     if (isFD) {
       fudaoapp = {
         title: rt,
-        summary: '企鹅辅导感恩节微短文创作大赛，参与解锁感恩新姿势~',
-        url: 'https://h5.nyjun.com/h5/ge2018/?id=' + id,
-        coverImageUrl: 'https://h5.nyjun.com/h5/ge2018/static/img/share.png'
+        summary: rs,
+        url: weburl + '?id=' + id,
+        coverImageUrl: imgurl
       }
       window.mqq.invoke('edu', 'interceptBackEvent', {'enable': 1})
-      window.mqq.invoke('edu', 'setCenterTitle', {text: '感恩节创作大赛'})
+      window.mqq.invoke('edu', 'setCenterTitle', {text: '物理实验王'})
       window.mqq.invoke('edu', 'setRightTitle', {
         enable: 1,
         imageIcon: 'https://9.url.cn/fudao/assets/images/shareBtnShadow_42019f5.png',
@@ -92,9 +115,9 @@ Vue.prototype.toShare = function (id) {
     } else {
       AppMShareContent = {
         title: rt,
-        desc: '企鹅辅导感恩节微短文创作大赛，参与解锁感恩新姿势~',
-        link: 'https://h5.nyjun.com/h5/ge2018/?id=' + id,
-        imgUrl: 'https://h5.nyjun.com/h5/ge2018/static/img/share.png'
+        desc: rs,
+        link: weburl + '?id=' + id,
+        imgUrl: imgurl
       }
       window.wx.ready(function () {
         window.wx.onMenuShareTimeline(AppMShareContent)
@@ -104,21 +127,24 @@ Vue.prototype.toShare = function (id) {
       })
       window.setShareInfo({
         title: rt,
-        summary: '企鹅辅导感恩节微短文创作大赛，参与解锁感恩新姿势~',
-        pic: 'https://h5.nyjun.com/h5/ge2018/static/img/share.png',
-        url: 'https://h5.nyjun.com/h5/ge2018/?id=' + id
+        summary: rs,
+        pic: imgurl,
+        url: weburl + '?id=' + id
       })
     }
   } else {
+    let n = Math.floor(Math.random() * tit1.length)
+    let rt = tit1[n].title
+    let rs = tit1[n].summary
     if (isFD) {
       fudaoapp = {
-        title: '好多说不出口的感谢，就写张小纸条告诉TA吧',
-        summary: '哪怕是一张简单的感恩小纸条，也能够带来直击心田的温暖~',
-        url: 'https://h5.nyjun.com/h5/ge2018/',
-        coverImageUrl: 'https://h5.nyjun.com/h5/ge2018/static/img/share.png'
+        title: rt,
+        summary: rs,
+        url: weburl,
+        coverImageUrl: imgurl
       }
       window.mqq.invoke('edu', 'interceptBackEvent', {'enable': 1})
-      window.mqq.invoke('edu', 'setCenterTitle', {text: '感恩节创作大赛'})
+      window.mqq.invoke('edu', 'setCenterTitle', {text: '物理实验王'})
       window.mqq.invoke('edu', 'setRightTitle', {
         enable: 1,
         imageIcon: 'https://9.url.cn/fudao/assets/images/shareBtnShadow_42019f5.png',
@@ -130,10 +156,10 @@ Vue.prototype.toShare = function (id) {
       })
     } else {
       AppMShareContent = {
-        title: '好多说不出口的感谢，就写张小纸条告诉TA吧',
-        desc: '哪怕是一张简单的感恩小纸条，也能够带来直击心田的温暖~',
-        link: 'https://h5.nyjun.com/h5/ge2018/',
-        imgUrl: 'https://h5.nyjun.com/h5/ge2018/static/img/share.png'
+        title: rt,
+        desc: rs,
+        link: weburl,
+        imgUrl: imgurl
       }
       window.wx.ready(function () {
         window.wx.onMenuShareTimeline(AppMShareContent)
@@ -142,25 +168,12 @@ Vue.prototype.toShare = function (id) {
         window.wx.onMenuShareWeibo(AppMShareContent)
       })
       window.setShareInfo({
-        title: '好多说不出口的感谢，就写张小纸条告诉TA吧',
-        summary: '哪怕是一张简单的感恩小纸条，也能够带来直击心田的温暖',
-        pic: 'https://h5.nyjun.com/h5/ge2018/static/img/share.png',
-        url: 'https://h5.nyjun.com/h5/ge2018/'
+        title: rt,
+        summary: rs,
+        pic: imgurl,
+        url: weburl
       })
     }
-  }
-  function onBridgeReady () {
-    window.WeixinJSBridge.call('hideToolbar')
-  }
-  if (typeof WeixinJSBridge === 'undefined') {
-    if (document.addEventListener) {
-      document.addEventListener('WeixinJSBridgeReady', onBridgeReady, false)
-    } else if (document.attachEvent) {
-      document.attachEvent('WeixinJSBridgeReady', onBridgeReady)
-      document.attachEvent('onWeixinJSBridgeReady', onBridgeReady)
-    }
-  } else {
-    onBridgeReady()
   }
 }
 

@@ -110,6 +110,7 @@ export default {
         that.uptoken = res.data.uptoken
         that.domain = res.data.domain
       })
+      that.toShare()
       that.username = ''
       that.grade = ''
       that.qq = ''

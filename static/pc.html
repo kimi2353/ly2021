@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+  <title>物理实验王</title>
+  <meta name="name" itemprop="name" content="玩好物理正当时，物理实验王，C位就是你！">
+  <meta itemprop="description" content="2019企鹅辅导物理实验大赛重磅来袭！喜欢动手动脑的你准备好了么？">
+  <meta name="description" itemprop="description" content="2019企鹅辅导物理实验大赛重磅来袭！喜欢动手动脑的你准备好了么？" />
+  <meta itemprop="image" content="https://h5.nyjun.com/static/img/wl_share.jpg">
+  <style type="text/css">
+	body{background-color: #2d1881;position: relative;}
+	.load1{width: 300px;display: block;margin:40px auto;}
+  .load2{width: 200px;display: block;margin:40px auto;}
+	span{font-size: 24px;color: #fff;display: block;text-align: center;margin:50px 0;}
+	</style>
+	<script type="text/javascript">
+		function adapt(designWidth, designHeight){
+      var rem2px = designWidth / 16;
+      var d = window.document.createElement('div');
+      d.style.width = '1rem';
+      d.style.display = "none";
+      var head = window.document.getElementsByTagName('head')[0];
+      head.appendChild(d);
+      var defaultFontSize = parseFloat(window.getComputedStyle(d, null).getPropertyValue('width'));
+      d.remove();
+
+      var wid;
+      var bh = window.innerHeight / designHeight;
+      var bw = window.innerWidth / designWidth;
+      var iw = designWidth / window.innerWidth;
+      var ih = designHeight / window.innerHeight
+      if(iw - ih > 0.3){
+          document.documentElement.className += 'ipx';
+      }
+      // console.log(iw - ih)
+      wid = bh < bw ? (designWidth * window.innerHeight / designHeight) : (window.innerWidth);
+      document.documentElement.style.fontSize = wid / designWidth * rem2px / defaultFontSize * 100 + '%';
+      return defaultFontSize
+    };
+
+    var defaultFontSize = adapt(750, 1210);
+	</script>
+</head>
+<body>
+	<img src='https://h5.nyjun.com/static/img/wl_logo.png' class='load1'>
+	<span>童鞋，该活动不支持在电脑端参与哟~<br>请用手机扫描下方二维码参与吧！</span>
+  <img src='https://h5.nyjun.com/static/img/wl_er.png' class='load2'>
+</body>
+</html>
