@@ -11,7 +11,9 @@
             </video-player>
           </div>
           <span class='body'>实验步骤：</span>
-          <div v-html='step' class='step'></div>
+          <transition name="fadetxt">
+            <div v-html='step' class='step' v-show='fade'></div>
+          </transition>
         </div>
         <ul class='wl_pg1_txt4'>
           <li v-for='(item, index) in videoinfo' :key='index' :class='{active: item.active}' @click='exp(index)'>{{item.name}}</li>
@@ -19,7 +21,7 @@
       </div>
       <img src="/static/img/wl_4.jpg" class='wl_4'>
       <span class='dongtai'>· 第一时间获取比赛最新动态 ·</span>
-      <img src="../assets/img/wl_pg1_dt.png" class='wl_pg1_dt'>
+      <img src="../assets/img/wl_pg1_dt.png" class='wl_pg1_dt' @click='hr("http://www.baidu.com")'>
       <img src="/static/img/wl_6.jpg" class='wl_4'>
       <div style='height: 5.12rem'></div>
     </iscroll-view>
@@ -49,7 +51,8 @@ export default {
         poster: '/static/img/wl_c1.jpg'
       },
       src: '',
-      poster: ''
+      poster: '',
+      fade: true
     }
   },
   computed: {
@@ -63,12 +66,19 @@ export default {
       return this.$refs.videoPlayer.player
     }
   },
+  mounted () {
+    let that = this
+    that.init()
+  },
   methods: {
     init () {
       let that = this
       that.step = that.videoinfo[0].txt
       that.$store.commit('uVdinfo', 0)
-      that.iscroll1.refresh()
+      that.fade = true
+      setTimeout(function () {
+        that.iscroll1.refresh()
+      }, 200)
     },
     exp (i) {
       let that = this
@@ -76,7 +86,11 @@ export default {
         return
       }
       that.$store.commit('uVdinfo', i)
-      that.step = that.videoinfo[i].txt
+      that.fade = false
+      setTimeout(function () {
+        that.step = that.videoinfo[i].txt
+        that.fade = true
+      }, 500)
       that.player.poster(that.videoinfo[i].poster)
       that.player.src(that.videoinfo[i].url)
     },

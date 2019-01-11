@@ -33,6 +33,19 @@ img::selection{background:0}
   left: 0;
   background-color: #2d1881;
   position: fixed;
+  .vjs-poster{
+    background-size: cover;
+  }
+  .vjs-big-play-centered .vjs-big-play-button{
+    width: 1.5em;
+    height: 1.5em;
+    border-radius: 50%;
+    margin:auto;
+    left: 0;
+    right: 0;
+    top:0;
+    bottom: 0;
+  }
 }
 .nav{
   position: fixed;
@@ -73,6 +86,13 @@ img::selection{background:0}
 }
 .fade-enter, .fade-leave-to{
   transition: opacity .1s;
+  opacity: 0;
+}
+.fadetxt-enter-active, .fadetxt-leave-active {
+  transition: opacity .3s;
+}
+.fadetxt-enter, .fadetxt-leave-to{
+  transition: opacity .3s;
   opacity: 0;
 }
 .Music{
@@ -347,18 +367,17 @@ img::selection{background:0}
 }
 .pg2{
   width: 100%;
-  // height: 100%;
+  height: 100%;
   overflow: hidden;
   overflow-y: scroll;
   position: relative;
-  -webkit-overflow-scrolling: touch;
-  // background: url('../img/wl_bg.jpg') no-repeat center 0;
-  // background-size: 100% 28.459rem;
   background-color: #2d1881;
   &::-webkit-scrollbar {
     display:none;
   }
   .pg2_main{
+    -webkit-overflow-scrolling: touch;
+    overflow-y: scroll;
     width: 100%;
     background: url('../img/wl_bg.jpg') no-repeat center 0;
     background-size: 100% 28.459rem;
@@ -547,6 +566,7 @@ img::selection{background:0}
       box-sizing: border-box;
       padding:.5rem;
       margin-top: 0.811rem;
+      word-break: break-all;
     }
     .wl_pg2_btn{
       width: 9.28rem;
@@ -673,6 +693,7 @@ img::selection{background:0}
       box-sizing: border-box;
       padding:.4rem;
       text-align: justify;
+      word-break: break-all;
     }
   }
   .pg3_btnlist{
@@ -780,6 +801,7 @@ img::selection{background:0}
           height: 1.643rem;
           line-height: 1.643rem;
           background-color: #2f76f6;
+          font-weight: 600;
         }
       }
     }
@@ -792,6 +814,21 @@ img::selection{background:0}
       margin:auto;
       display: block;
       padding-top: 0.896rem;
+      font-size: 0;
+      .wl_jp{
+        width: 1.6rem;
+        height: 1.899rem;
+        position: absolute;
+        background:url('../img/wl_jp.png') no-repeat center/cover;
+        z-index: 51;
+        color: #fff;
+        font-size: 0.725rem;
+        text-align: center;box-sizing: border-box;
+        line-height: 0.832rem;
+        padding-top: 0.405rem;
+        left: -0.384rem;
+        top:-0.341rem;
+      }
       li{
         display: block;
         background-color: #fff;
@@ -802,6 +839,7 @@ img::selection{background:0}
         margin-bottom: 0.853rem;
         box-sizing: border-box;
         padding-top: 0.363rem;
+        position: relative;
         .up{
           height: 4.309rem;
           text-align: center;
@@ -894,6 +932,93 @@ img::selection{background:0}
             }
           }
         }
+        &.wl_no_li{
+          background-color: #2f76f6;
+          height: 14.101rem;
+          box-sizing: border-box;
+          padding-top: 3.371rem;
+          .wl_no{
+            width: 5.995rem;
+            display: block;
+            margin:auto;
+          }
+        }
+      }
+    }
+  }
+  .notel{
+    width: 12.907rem;
+    height: 8.043rem;
+    background-color: #fff;
+    border-radius: 8px;
+    box-sizing: border-box;
+    padding-top:0.661rem;
+    position: relative;
+    .notel_tit{
+      font-size: 0.683rem;
+      color: #04348c;
+      text-align: center;
+      height: 1.045rem;
+      line-height: 1.045rem;
+      font-weight: 600;
+    }
+    .notel_info{
+      text-align: center;
+      line-height: 1.28rem;
+      height: 1.28rem;
+      font-size: 0;
+      margin-top: 1.344rem;
+      span{
+        width: 2.347rem;
+        height: 1.28rem;
+        line-height: 1.28rem;
+        font-size: 0.597rem;
+        color: #333;
+        display: inline-block;vertical-align: top;
+      }
+      input{
+        display: inline-block;vertical-align: top;
+        height: 1.28rem;
+        line-height: 1.28rem;
+        font-size: 0.597rem;
+        color: #333;
+        width: 8.725rem;
+        border-radius: 4px;
+        border:1px solid #999999;
+        box-sizing: border-box;
+        padding-left: .5rem;
+      }
+    }
+    .wl_notel_btn{
+      width: 4.672rem;
+      display: block;
+      margin:auto;
+      margin-top: 1.515rem;
+    }
+    .close{
+      width: 1.5rem;height: 1.5rem;
+      position: absolute;
+      right: .8rem;
+      top: .3rem;
+      &:before{
+        content: '';
+        position: absolute;
+        width: 1rem;
+        height: 2px;
+        background-color: #333;
+        transform: rotate(45deg);
+        margin:auto;
+        left: 0;right: 0;top:0;bottom: 0;
+      }
+      &:after{
+        content: '';
+        position: absolute;
+        width: 1rem;
+        height: 2px;
+        background-color: #333;
+        transform: rotate(135deg);
+        margin:auto;
+        left: 0;right: 0;top:0;bottom: 0;
       }
     }
   }

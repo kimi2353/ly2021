@@ -1,10 +1,8 @@
 <template>
   <div id="app">
-    <div class='pg'>
-      <transition name="fade" v-show='fade' mode="out-in">
-        <div :is='moban' ref='moban' @slideto='slideto'></div>
-      </transition>
-    </div>
+    <transition name="fade" v-show='fade' mode="out-in">
+      <div :is='moban' ref='moban' @slideto='slideto'></div>
+    </transition>
     <!-- <swiper :options='swiperOption' ref='mySwiper'>
       <swiper-slide class='pg stop-swiping'>
         <load ref='load' @slideto='slideto'></load>
@@ -46,6 +44,7 @@ export default {
   methods: {
     slideto (res) {
       let that = this
+      that.fade = false
       if (res) {
         that.moban = 'pg' + res
       }
@@ -55,9 +54,8 @@ export default {
     },
     fadefn () {
       let that = this
-      that.fade = false
       setTimeout(function () {
-        that.$refs.moban.init()
+        // that.$refs.moban.init()
         that.fade = true
       }, 1200)
     }

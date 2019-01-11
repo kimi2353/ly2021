@@ -34,7 +34,7 @@
           </div>
           <div class='wl_up'>
             <input type="file" class="upload" @change="upload" id="upload" accept="video/*" v-show='uploadDataUrl===""'>
-            <video class="" preload="auto" data-setup="{}" controls v-if='uploadDataUrl!==""'>
+            <video preload="auto" data-setup="{}" controls v-if='uploadDataUrl!==""' id='upvideo'>
               <source type="video/mp4" :src="uploadDataUrl">
             </video>
           </div>
@@ -46,11 +46,13 @@
         <div style='height:1.216rem;'></div>
       </div>
     <!-- </iscroll-view> -->
-    <div class='nav' v-show='alert'>
-      <div class='wl_pg2_alert'>
-        <img src="../assets/img/wl_pg2_btn1.png" @click='alert=false'>
+    <transition name="fade">
+      <div class='nav' v-show='alert'>
+        <div class='wl_pg2_alert'>
+          <img src="../assets/img/wl_pg2_btn1.png" @click='alert=false'>
+        </div>
       </div>
-    </div>
+    </transition>
   </div>
 </template>
 
@@ -77,13 +79,18 @@ export default {
       tel: '',
       title: '',
       txt: '',
-      alert: false
+      alert: false,
+      imgsrc: ''
     }
   },
   computed: {
     iscroll2 () {
       return this.$refs.iscroll2
     }
+  },
+  mounted () {
+    let that = this
+    that.init()
   },
   methods: {
     getObjectURL (file) {
@@ -110,6 +117,7 @@ export default {
       that.title = ''
       that.txt = ''
       that.uploadDataUrl = ''
+      that.imgsrc = ''
       // that.iscroll2.refresh()
     },
     ret () {
@@ -160,12 +168,18 @@ export default {
         that.$toast('请上传MP4或者MOV格式文件')
         return
       }
-      var key = that.tel + '_' + Date.parse(new Date()) + '.MP4'
-      var putExtra = {
+      let video = document.getElementById('upvideo')
+      let canvas = document.createElement('canvas')
+      canvas.width = '310'
+      canvas.height = '173'
+      canvas.getContext('2d').drawImage(video, 0, 0, canvas.width, canvas.width)
+      that.imgsrc = canvas.toDataURL('image/png')
+      let key = that.tel + '_' + Date.parse(new Date()) + '.MP4'
+      let putExtra = {
         fname: key,
         params: {}
       }
-      var observer = {
+      let observer = {
         next (res) {
           that.$loading('上传中（' + Math.floor(res.total.percent) + '%）<br>请耐心等待')
         },
@@ -179,6 +193,7 @@ export default {
           data.append('title', that.title)
           data.append('txt', that.txt.replace(/\n/g, ' '))
           data.append('video', video)
+          data.append('imgsrc', that.imgsrc)
           that.axios.post(that.Url + 'userinfo', data).then((res) => {
             if (res.data.res === 'success') {
               that.$loading.close()

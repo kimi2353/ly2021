@@ -68,6 +68,10 @@ export default {
       return this.$refs.videoPlayer.player
     }
   },
+  mounted () {
+    let that = this
+    that.init()
+  },
   methods: {
     init () {
       let that = this
@@ -89,6 +93,7 @@ export default {
           that.tit = info.title
           that.video = info.video
           that.player.src(info.video)
+          that.player.poster(info.imgsrc)
           that.num = info.num
           that.play = info.play
           that.txt = info.txt

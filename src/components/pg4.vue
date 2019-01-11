@@ -3,7 +3,7 @@
     <iscroll-view class='scroll-view' ref='iscroll4' :options='scrollOptions' @pullUp='load'>
       <div class='pg4_main'>
         <div class='return' @click='ret'>返回</div>
-        <img src="../assets/img/wl_pg4_btn1.png" class='wl_pg4_btn1'>
+        <img src="../assets/img/wl_pg4_btn1.png" class='wl_pg4_btn1' @click='hr("http://www.baidu.com")'>
         <ul class='wl_pg4_btnlist'>
           <li :class='{active:type===0}' @click='totype(0)'>最热</li>
           <li :class='{active:type===1}' @click='totype(1)'>最新</li>
@@ -11,6 +11,7 @@
         </ul>
         <ul class='wl_pg4_ul'>
           <li v-for='(item, index) in ulData' :key='index'>
+            <div class='wl_jp' v-if='index<5&&type===0'>{{index + 1}}</div>
             <div class='up'>
               <div class='up_left'>
                 <video-player class="video-player-box vjs-big-play-centered" :options="item.playerOptions" :playsinline="false" @play="onPlayerPlay(item.id)"></video-player>
@@ -30,10 +31,27 @@
               </div>
             </div>
           </li>
+          <li v-if='type===2&&ulData.length===0' class='wl_no_li'>
+            <img src="../assets/img/wl_no.png" class='wl_no'>
+          </li>
           <li style='background-color: #2f76f6;height: 1rem;pointer-events: none;'></li>
         </ul>
+        <div style='height: 1rem;pointer-events: none;'></div>
       </div>
     </iscroll-view>
+    <transition name="fade">
+      <div class='nav' v-show='notel'>
+        <div class='notel'>
+          <div class='close' @click='notel=false'></div>
+          <div class='notel_tit'>登录</div>
+          <div class='notel_info'>
+            <span>手机号</span>
+            <input type="text" maxlength="11" v-model='addtel' placeholder="填写你提交视频时的手机号">
+          </div>
+          <img src="../assets/img/wl_notel_btn.png" class='wl_notel_btn' @click='wl_notel_btn'>
+        </div>
+      </div>
+    </transition>
   </div>
 </template>
 
@@ -58,7 +76,9 @@ export default {
       page: 0,
       maxPage: 1,
       tel: '',
-      ulData: []
+      ulData: [],
+      notel: false,
+      addtel: ''
     }
   },
   computed: {
@@ -69,11 +89,15 @@ export default {
       return this.$refs.iscroll4
     }
   },
+  mounted () {
+    let that = this
+    that.init()
+  },
   methods: {
     init () {
       let that = this
+      that.notel = false
       that.tel = that.getCookie('wl_tel')
-      console.log(that.tel)
       that.ul_info('f')
     },
     ul_info (f) {
@@ -90,8 +114,18 @@ export default {
       if (that.type === 2) {
         data.append('tel', that.tel)
       }
+      that.$loading('正在加载，请稍后...')
       that.axios.post(that.Url + 'checknum', data).then((res) => {
         that.c_num = res.data.num
+        if (that.c_num === 0) {
+          that.ulData = []
+          that.page = 1
+          that.$loading.close()
+          setTimeout(function () {
+            that.iscroll.refresh()
+          }, 600)
+          return
+        }
         that.maxPage = Math.ceil(that.c_num / 20)
         that.page++
         if (that.maxPage - that.page >= 0) {
@@ -102,7 +136,7 @@ export default {
             data2.append('tel', that.tel)
           }
           that.axios.post(that.Url + 'checkmsg', data2).then((res) => {
-            console.log(res)
+            that.$loading.close()
             if (res.data.res === 'success') {
               if (f) {
                 that.ulData = []
@@ -114,15 +148,18 @@ export default {
                   sources: [{
                     type: 'video/mp4',
                     src: a.video
-                  }]
+                  }],
+                  poster: a.imgsrc
                 }
                 that.ulData.push(a)
               }
-              console.log(that.ulData)
-              setTimeout(function () {
-                that.iscroll.refresh()
-              }, 400)
+            } else {
+              that.$toast('服务器繁忙<br>请稍后重试')
+              that.$emit('slideto', 1)
             }
+            setTimeout(function () {
+              that.iscroll.refresh()
+            }, 600)
           })
         }
       })
@@ -133,9 +170,11 @@ export default {
     },
     totype (i) {
       let that = this
-      if (i === 2) {
+      if (i === 2 && !that.tel) {
+        that.notel = true
         return
       }
+      that.notel = false
       that.type = i
       that.ul_info('f')
     },
@@ -199,7 +238,20 @@ export default {
     load () {
       let that = this
       that.ul_info()
-      console.log('load')
+    },
+    wl_notel_btn () {
+      let that = this
+      if (that.addtel === '') {
+        that.$toast('请填写你提交视频时输入的手机号')
+        return
+      }
+      if (!that.addtel.match(/^(((1[3-9][0-9]))+\d{8})$/)) {
+        that.$toast('请填正确的联系电话')
+        return
+      }
+      that.setCookie('wl_tel', that.addtel, 99)
+      that.tel = that.addtel
+      that.totype(2)
     }
   }
 }

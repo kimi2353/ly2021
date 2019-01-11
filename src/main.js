@@ -44,6 +44,17 @@ Vue.prototype.isFudaoApp = function () {
   return false
 }
 
+Vue.prototype.hr = function (url) {
+  var isFudaoApp = this.isFudaoApp()
+  if (isFudaoApp) {
+    window.mqq.invoke('edu', 'openAppPage', {
+      url: 'tencentk12://openpage/webview?url=' + encodeURIComponent(url)
+    })
+  } else {
+    window.location.href = url
+  }
+}
+
 Vue.prototype.toShare = function (id) {
   let that = this
   var isFD = that.isFudaoApp()
