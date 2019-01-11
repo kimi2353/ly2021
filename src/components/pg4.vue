@@ -11,7 +11,7 @@
         </ul>
         <ul class='wl_pg4_ul'>
           <li v-for='(item, index) in ulData' :key='index'>
-            <div class='wl_jp' v-if='index<5&&type===0'>{{index + 1}}</div>
+            <div class='wl_jp' v-if='index<5&&jp'>{{index + 1}}</div>
             <div class='up'>
               <div class='up_left'>
                 <video-player class="video-player-box vjs-big-play-centered" :options="item.playerOptions" :playsinline="false" @play="onPlayerPlay(item.id)"></video-player>
@@ -78,7 +78,8 @@ export default {
       tel: '',
       ulData: [],
       notel: false,
-      addtel: ''
+      addtel: '',
+      jp: false
     }
   },
   computed: {
@@ -115,6 +116,9 @@ export default {
         data.append('tel', that.tel)
       }
       that.$loading('正在加载，请稍后...')
+      if (that.type !== 0) {
+        that.jp = false
+      }
       that.axios.post(that.Url + 'checknum', data).then((res) => {
         that.c_num = res.data.num
         if (that.c_num === 0) {
@@ -156,6 +160,9 @@ export default {
             } else {
               that.$toast('服务器繁忙<br>请稍后重试')
               that.$emit('slideto', 1)
+            }
+            if (that.type === 0) {
+              that.jp = true
             }
             setTimeout(function () {
               that.iscroll.refresh()

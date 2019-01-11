@@ -78,7 +78,7 @@ export default {
       that.fade = true
       setTimeout(function () {
         that.iscroll1.refresh()
-      }, 200)
+      }, 600)
     },
     exp (i) {
       let that = this

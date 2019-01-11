@@ -34,7 +34,7 @@
           </div>
           <div class='wl_up'>
             <input type="file" class="upload" @change="upload" id="upload" accept="video/*" v-show='uploadDataUrl===""'>
-            <video preload="auto" data-setup="{}" controls v-if='uploadDataUrl!==""' id='upvideo'>
+            <video preload="auto" data-setup="{}" controls v-if='uploadDataUrl!==""' id='upvideo' :poster='imgsrc'>
               <source type="video/mp4" :src="uploadDataUrl">
             </video>
           </div>
@@ -124,10 +124,23 @@ export default {
       let that = this
       that.$emit('slideto', 1)
     },
+    captureImage () {
+      let that = this
+      let video = document.getElementById('upvideo')
+      let canvas = document.createElement('canvas')
+      canvas.width = '310'
+      canvas.height = '173'
+      canvas.getContext('2d').drawImage(video, 0, 0, canvas.width, canvas.width)
+      that.imgsrc = canvas.toDataURL('image/png')
+    },
     upload () {
       let that = this
       let files = document.getElementById('upload').files[0]
       that.uploadDataUrl = that.getObjectURL(files)
+      setTimeout(function () {
+        let video = document.getElementById('upvideo')
+        video.onloadeddata = that.captureImage
+      }, 100)
     },
     btnfn () {
       let that = this
@@ -168,12 +181,12 @@ export default {
         that.$toast('请上传MP4或者MOV格式文件')
         return
       }
-      let video = document.getElementById('upvideo')
-      let canvas = document.createElement('canvas')
-      canvas.width = '310'
-      canvas.height = '173'
-      canvas.getContext('2d').drawImage(video, 0, 0, canvas.width, canvas.width)
-      that.imgsrc = canvas.toDataURL('image/png')
+      // let video = document.getElementById('upvideo')
+      // let canvas = document.createElement('canvas')
+      // canvas.width = '310'
+      // canvas.height = '173'
+      // canvas.getContext('2d').drawImage(video, 0, 0, canvas.width, canvas.width)
+      // that.imgsrc = canvas.toDataURL('image/png')
       let key = that.tel + '_' + Date.parse(new Date()) + '.MP4'
       let putExtra = {
         fname: key,
