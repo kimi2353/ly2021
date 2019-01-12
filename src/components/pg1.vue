@@ -10,9 +10,11 @@
             <video-player class="video-player-box vjs-big-play-centered" ref="videoPlayer" :options="playerOptions" :playsinline="false">
             </video-player>
           </div>
-          <span class='body'>实验步骤：</span>
           <transition name="fadetxt">
-            <div v-html='step' class='step' v-show='fade'></div>
+            <div v-show='fade'>
+              <span class='body'>实验步骤：</span>
+              <div v-html='step' class='step'></div>
+            </div>
           </transition>
         </div>
         <ul class='wl_pg1_txt4'>
@@ -42,8 +44,7 @@ export default {
       scrollOptions: {
         mouseWheel: true,
         click: true,
-        tap: true,
-        probeType: 3
+        tap: true
       },
       step: '',
       playerOptions: {
@@ -89,7 +90,6 @@ export default {
     log (iscroll) {
       let that = this
       let y = iscroll.y
-      console.log(y)
       if (y < that.scrolly) {
         that.btnlist = true
       } else {

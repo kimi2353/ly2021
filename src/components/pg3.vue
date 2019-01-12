@@ -15,13 +15,15 @@
     </div>
     <div class='pg3_main2'>
       <div class='pg3_ctit'>实验心得</div>
-      <div class='pg3_txt'>{{txt}}</div>
+      <div class='pg3_txt'>
+        <p v-html='txt'></p>
+      </div>
     </div>
     <ul class='pg3_btnlist'>
       <li v-if='type==="zhu"'>
         <div class='iszan' :class='{"zan1":zantype,"zan2":!zantype}'></div>{{num}}票
       </li>
-      <li v-if='type==="zhu"' @click.prevent='wl_share=true'>
+      <li v-if='type==="zhu"' @click.prevent='player.pause();wl_share=true'>
         <img src="../assets/img/wl_pg3_share.png">分享拉票
       </li>
       <li v-if='type==="ke"' @click='zanfn'>

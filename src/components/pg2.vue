@@ -137,11 +137,16 @@ export default {
     upload () {
       let that = this
       let files = document.getElementById('upload').files[0]
+      if (!files) {
+        return
+      }
+      let size = parseInt(files.size / 1000000)
+      if (size >= 200) {
+        that.$toast('视频太大啦<br>请重新录制~')
+        document.getElementById('upload').value = ''
+        return
+      }
       that.uploadDataUrl = that.getObjectURL(files)
-      setTimeout(function () {
-        let video = document.getElementById('upvideo')
-        video.onloadeddata = that.captureImage
-      }, 100)
     },
     btnfn () {
       let that = this
@@ -182,12 +187,12 @@ export default {
         that.$toast('请上传MP4或者MOV格式文件')
         return
       }
-      // let video = document.getElementById('upvideo')
-      // let canvas = document.createElement('canvas')
-      // canvas.width = '310'
-      // canvas.height = '173'
-      // canvas.getContext('2d').drawImage(video, 0, 0, canvas.width, canvas.width)
-      // that.imgsrc = canvas.toDataURL('image/png')
+      let video = document.getElementById('upvideo')
+      let canvas = document.createElement('canvas')
+      canvas.width = '310'
+      canvas.height = '173'
+      canvas.getContext('2d').drawImage(video, 0, 0, canvas.width, canvas.width)
+      that.imgsrc = canvas.toDataURL('image/png')
       let key = that.tel + '_' + Date.parse(new Date()) + '.MP4'
       let putExtra = {
         fname: key,
@@ -205,7 +210,7 @@ export default {
           data.append('tel', that.tel)
           data.append('qq', that.qq)
           data.append('title', that.title)
-          data.append('txt', that.txt.replace(/\n/g, ' '))
+          data.append('txt', that.txt.replace(/\n/g, '<br>'))
           data.append('video', video)
           data.append('imgsrc', that.imgsrc)
           that.axios.post(that.Url + 'userinfo', data).then((res) => {
