@@ -157,6 +157,7 @@ export default {
                   that.setCookie('wl_tel', that.tel, 99)
                   that.setCookie('wuli_ismy_' + res.data.id, 'wuli_ismy_' + res.data.id, 99)
                   that.$store.commit('uvid', res.data.id)
+                  that.$store.commit('ureturn', '')
                   that.$emit('slideto', 3)
                 }
               })

@@ -52,7 +52,6 @@ img::selection{background:0}
   background-color: #2d1881;
   position: fixed;
   .vjs-poster{
-    background-size: cover;
   }
   .vjs-big-play-centered .vjs-big-play-button{
     width: 1.5em;
@@ -232,7 +231,7 @@ img::selection{background:0}
         border-top:0.683rem solid #2f76f6;
         border-left: 0.512rem solid transparent;
         border-right: 0.512rem solid transparent;
-        bottom: -0.68rem;
+        bottom: -0.58rem;
         left: 1.813rem;
       }
     }
@@ -644,7 +643,7 @@ img::selection{background:0}
       width: 13.803rem;
       height: 7.723rem;
       display: block;margin:auto;
-      background-color: #e4e4e4;
+      background-color: #000;
       border-radius: 8px;
     }
     .video-player{
@@ -880,7 +879,10 @@ img::selection{background:0}
             width: 7.872rem;
             display:inline-block;
             vertical-align: top;
-            background-color: #e4e4e4;
+            background: no-repeat center;
+            background-size: contain;
+            background-color: #000;
+            position: relative;
           }
           .up_right{
             height: 4.309rem;

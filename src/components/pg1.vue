@@ -7,7 +7,7 @@
         <div class='wl_pg1_txt3'>
           <span class='tit'>实验教程：</span>
           <div class='wl_pg1_video'>
-            <video-player class="video-player-box vjs-big-play-centered" ref="videoPlayer" :options="playerOptions" :playsinline="false">
+            <video-player class="video-player-box vjs-big-play-centered" ref="videoPlayer" :options="playerOptions" :playsinline="false" @play='play'>
             </video-player>
           </div>
           <transition name="fadetxt">
@@ -109,11 +109,18 @@ export default {
       }, 500)
       that.player.poster(that.videoinfo[i].poster)
       that.player.src(that.videoinfo[i].url)
+      document.querySelector('video').poster = that.videoinfo[i].poster
+      document.querySelector('video').style.display = 'none'
     },
     slideto (res) {
       let that = this
       that.player.pause()
       that.$emit('slideto', res)
+    },
+    play () {
+      let that = this
+      document.querySelector('video').style.display = 'block'
+      console.log(that.player)
     }
   }
 }

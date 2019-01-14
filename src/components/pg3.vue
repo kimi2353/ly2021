@@ -5,7 +5,7 @@
     <div class='pg3_main1'>
       <div class='pg3_ctit'>{{tit}}</div>
       <div class='pg3_border'>
-        <video-player class="video-player-box vjs-big-play-centered" ref="videoPlayer" :options="playerOptions" :playsinline="false" @play="onPlayerPlay()">
+        <video-player class="video-player-box vjs-big-play-centered" ref="videoPlayer" :options="playerOptions" :playsinline="false" @play="onPlayerPlay()" v-show='vshow'>
         </video-player>
       </div>
       <ul class='pg3_num'>
@@ -23,18 +23,18 @@
       <li v-if='type==="zhu"'>
         <div class='iszan' :class='{"zan1":zantype,"zan2":!zantype}'></div>{{num}}票
       </li>
-      <li v-if='type==="zhu"' @click.prevent='player.pause();wl_share=true'>
+      <li v-if='type==="zhu"' @click.prevent='player.pause();vshow=false;wl_share=true'>
         <img src="../assets/img/wl_pg3_share.png">分享拉票
       </li>
       <li v-if='type==="ke"' @click='zanfn'>
         <div class='iszan' :class='{"zan1":zantype,"zan2":!zantype}'></div>为Ta投票
       </li>
-      <li v-if='type==="ke"' @click='ret'>
+      <li v-if='type==="ke"' @click="$emit('slideto',1)">
         <img src="../assets/img/wl_pg3_index.png">
         我也要参赛
       </li>
     </ul>
-    <div class='nav' v-show='wl_share' @click='wl_share=false'>
+    <div class='nav' v-show='wl_share' @click='wl_share=false;vshow=true'>
       <img src="../assets/img/wl_share.png" class='wl_share'>
     </div>
   </div>
@@ -59,7 +59,8 @@ export default {
       txt: '',
       type: 'zhu',
       zantype: true,
-      wl_share: false
+      wl_share: false,
+      vshow: true
     }
   },
   computed: {
@@ -68,6 +69,9 @@ export default {
     },
     player () {
       return this.$refs.videoPlayer.player
+    },
+    tru () {
+      return this.$refs.videoPlayer.tru
     }
   },
   mounted () {
@@ -96,7 +100,7 @@ export default {
           that.tit = info.title
           that.video = info.video
           that.player.src(info.video)
-          that.player.poster(info.imgsrc)
+          that.player.poster(info.video + '?vframe/jpg/offset/0')
           that.num = info.num
           that.play = info.play
           that.txt = info.txt
@@ -112,7 +116,11 @@ export default {
     },
     ret () {
       let that = this
-      that.$emit('slideto', 1)
+      if (that.tru === '') {
+        that.$emit('slideto', 1)
+      } else {
+        that.$emit('slideto', 4)
+      }
     },
     onPlayerPlay () {
       let that = this

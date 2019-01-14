@@ -95,7 +95,8 @@ const store = new Vuex.Store({
         txt: '<p>1.取一个白色碟子（或者泡面底），将彩虹糖摆好；</p><p>2.往碟子中轻轻倒水，让水刚好没过彩虹糖；</p><p>3.观察现象。</p>'
       }
     ],
-    vid: '0'
+    vid: '0',
+    tru: ''
   },
   mutations: {
     uVdinfo: (state, data) => {
@@ -112,6 +113,10 @@ const store = new Vuex.Store({
     uvid: (state, data) => {
       const obj = state
       obj.vid = data
+    },
+    ureturn: (state, data) => {
+      const obj = state
+      obj.tru = data
     }
   }
 })

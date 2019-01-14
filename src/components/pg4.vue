@@ -12,11 +12,11 @@
         <ul class='wl_pg4_ul'>
           <li v-for='(item, index) in ulData' :key='index'>
             <div class='wl_jp' v-if='index<5&&jp'>{{index + 1}}</div>
-            <div class='up'>
-              <div class='up_left'>
-                <video-player class="video-player-box vjs-big-play-centered" :options="item.playerOptions" :playsinline="false" @play="onPlayerPlay(item.id)"></video-player>
+            <div class='up' @click='showinfo(item.id)'>
+              <div class='up_left' :style='"background-image:url(" + item.poster + ")"'>
+                <!-- <video-player class="video-player-box vjs-big-play-centered" :options="item.playerOptions" :playsinline="false" @play="onPlayerPlay(item.id)"></video-player> -->
               </div>
-              <div class='up_right' @click='showinfo(item.id)'>
+              <div class='up_right'>
                 <div class='tit'>{{item.title}}</div>
                 <div class='grade'>{{item.grade}}</div>
                 <div class='grade'>{{item.username}}</div>
@@ -120,6 +120,7 @@ export default {
       if (that.type !== 0) {
         that.jp = false
       }
+      // alert(1)
       that.axios.post(that.Url + 'checknum', data).then((res) => {
         that.c_num = res.data.num
         if (that.c_num === 0) {
@@ -149,13 +150,7 @@ export default {
               for (let i = 0; i < res.data.info.length; i++) {
                 var a = res.data.info[i]
                 a.zan = that.checkzan(a.id)
-                a.playerOptions = {
-                  sources: [{
-                    type: 'video/mp4',
-                    src: a.video
-                  }],
-                  poster: a.imgsrc
-                }
+                a.poster = a.video + '?vframe/jpg/offset/0'
                 that.ulData.push(a)
               }
             } else {
@@ -209,6 +204,7 @@ export default {
     showinfo (id) {
       let that = this
       that.$store.commit('uvid', id)
+      that.$store.commit('ureturn', 'pai')
       that.$emit('slideto', 3)
     },
     goodBtn (id) {
