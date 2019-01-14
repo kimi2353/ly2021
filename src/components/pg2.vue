@@ -109,7 +109,7 @@ export default {
         that.uptoken = res.data.uptoken
         that.domain = res.data.domain
         that.uploader = window.Qiniu.uploader({
-          runtimes: 'html5,html4',
+          runtimes: 'html5,flash,html4',
           browse_button: 'upload',
           get_new_uptoken: false,
           uptoken: that.uptoken,
