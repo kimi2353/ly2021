@@ -57,6 +57,8 @@
 </template>
 
 <script>
+// import * as qiniu from 'qiniu-js'
+
 export default {
   name: 'pg2',
   data () {
@@ -69,10 +71,6 @@ export default {
       uploadDataUrl: '',
       uptoken: '',
       domain: '',
-      config: {
-        useCdnDomain: true,
-        region: window.qiniu.region.z0
-      },
       username: '',
       grade: '',
       qq: '',
@@ -80,7 +78,8 @@ export default {
       title: '',
       txt: '',
       alert: false,
-      imgsrc: ''
+      imgsrc: '',
+      uploader: null
     }
   },
   computed: {
@@ -109,6 +108,66 @@ export default {
       that.axios.get(that.Url2 + 'uptoken.php').then((res) => {
         that.uptoken = res.data.uptoken
         that.domain = res.data.domain
+        that.uploader = window.Qiniu.uploader({
+          runtimes: 'html5,html4',
+          browse_button: 'upload',
+          get_new_uptoken: false,
+          uptoken: that.uptoken,
+          domain: that.domain,
+          chunk_size: '0mb',
+          auto_start: false,
+          init: {
+            FilesAdded: function (up, files) {
+              window.plupload.each(files, function (file) {
+                if (!file) {
+                  return
+                }
+                if (file.name.indexOf('mp4') === -1 && file.name.indexOf('MP4') === -1 && file.name.indexOf('MOV') === -1 && file.name.indexOf('mov') === -1) {
+                  that.$toast('请上传MP4或者MOV格式文件')
+                  return
+                }
+                let size = parseInt(file.size / 1000000)
+                if (size >= 200) {
+                  that.$toast('视频太大啦<br>请重新录制~')
+                  document.getElementById('upload').value = ''
+                  return
+                }
+                that.uploadDataUrl = that.getObjectURL(file.getNative())
+              })
+            },
+            UploadProgress: function (up, file) {
+              // console.log(up.total.percent)
+              that.$loading('上传中（' + Math.floor(up.total.percent) + '%）<br>请耐心等待')
+            },
+            FileUploaded: function (up, file, info) {
+              let res = JSON.parse(info.response)
+              let video = 'https://static-k12edu-camprecord.codemao.cn/' + res.key
+              let data = new FormData()
+              data.append('username', that.username)
+              data.append('grade', that.grade)
+              data.append('tel', that.tel)
+              data.append('qq', that.qq)
+              data.append('title', that.title)
+              data.append('txt', that.txt.replace(/\n/g, '<br>'))
+              data.append('video', video)
+              data.append('imgsrc', that.imgsrc)
+              that.axios.post(that.Url + 'userinfo', data).then((res) => {
+                if (res.data.res === 'success') {
+                  that.$loading.close()
+                  that.setCookie('wl_tel', that.tel, 99)
+                  that.setCookie('wuli_ismy_' + res.data.id, 'wuli_ismy_' + res.data.id, 99)
+                  that.$store.commit('uvid', res.data.id)
+                  that.$emit('slideto', 3)
+                }
+              })
+            },
+            Key: function (up, file) {
+              var vtype = '.mp4'
+              let key = that.tel + '_' + Date.parse(new Date()) + vtype
+              return key
+            }
+          }
+        })
       })
       that.toShare()
       that.username = ''
@@ -178,72 +237,54 @@ export default {
         that.alert = true
         return
       }
-      let file = document.getElementById('upload').files[0]
-      if (!file) {
+      if (that.uploadDataUrl === '') {
         that.$toast('请上传视频')
         return
       }
-      if (file.name.indexOf('mp4') === -1 && file.name.indexOf('MP4') === -1 && file.name.indexOf('MOV') === -1 && file.name.indexOf('mov') === -1) {
-        that.$toast('请上传MP4或者MOV格式文件')
-        return
-      }
-      let video = document.getElementById('upvideo')
-      let canvas = document.createElement('canvas')
-      canvas.width = '310'
-      canvas.height = '173'
-      canvas.getContext('2d').drawImage(video, 0, 0, canvas.width, canvas.width)
-      that.imgsrc = canvas.toDataURL('image/png')
-      let key = that.tel + '_' + Date.parse(new Date()) + '.MP4'
-      let putExtra = {
-        fname: key,
-        params: {}
-      }
-      let observer = {
-        next (res) {
-          that.$loading('上传中（' + Math.floor(res.total.percent) + '%）<br>请耐心等待')
-        },
-        complete (res) {
-          let video = 'https://static-k12edu-camprecord.codemao.cn/' + res.key
-          let data = new FormData()
-          data.append('username', that.username)
-          data.append('grade', that.grade)
-          data.append('tel', that.tel)
-          data.append('qq', that.qq)
-          data.append('title', that.title)
-          data.append('txt', that.txt.replace(/\n/g, '<br>'))
-          data.append('video', video)
-          data.append('imgsrc', that.imgsrc)
-          that.axios.post(that.Url + 'userinfo', data).then((res) => {
-            if (res.data.res === 'success') {
-              that.$loading.close()
-              that.setCookie('wl_tel', that.tel, 99)
-              that.setCookie('wuli_ismy_' + res.data.id, 'wuli_ismy_' + res.data.id, 99)
-              that.$store.commit('uvid', res.data.id)
-              that.$emit('slideto', 3)
-            }
-          })
-        }
-      }
-      var observable = window.qiniu.upload(file, key, that.uptoken, putExtra, that.config)
-      observable.subscribe(observer)
-      // let video = 'https://static-k12edu-camprecord.codemao.cn/15366666666_1547014801000.MP4'
-      // let data = new FormData()
-      // data.append('username', that.username)
-      // data.append('grade', that.grade)
-      // data.append('tel', that.tel)
-      // data.append('qq', that.qq)
-      // data.append('title', that.title)
-      // data.append('txt', that.txt.replace(/\n/g, ' '))
-      // data.append('video', video)
-      // that.axios.post(that.Url + 'userinfo', data).then((res) => {
-      //   if (res.data.res === 'success') {
-      //     that.$loading.close()
-      //     that.setCookie('wl_tel', that.tel, 99)
-      //     that.setCookie('wuli_ismy_' + res.data.id, 'wuli_ismy_' + res.data.id, 99)
-      //     that.$store.commit('uvid', res.data.id)
-      //     that.$emit('slideto', 3)
+      that.$loading('上传中<br>请耐心等待')
+      // var vtype = '.mp4'
+      that.captureImage()
+      that.uploader.start()
+      // let key = that.tel + '_' + Date.parse(new Date()) + vtype
+      // let putExtra = {
+      //   fname: key,
+      //   params: {}
+      // }
+      // let config = {
+      //   useCdnDomain: true,
+      //   region: window.qiniu.region.z0
+      // }
+      // let observer = {
+      //   next (res) {
+      //     that.$loading('上传中（' + Math.floor(res.total.percent) + '%）<br>请耐心等待')
+      //   },
+      //   complete (res) {
+      //     let video = 'https://static-k12edu-camprecord.codemao.cn/' + res.key
+      //     let data = new FormData()
+      //     data.append('username', that.username)
+      //     data.append('grade', that.grade)
+      //     data.append('tel', that.tel)
+      //     data.append('qq', that.qq)
+      //     data.append('title', that.title)
+      //     data.append('txt', that.txt.replace(/\n/g, '<br>'))
+      //     data.append('video', video)
+      //     data.append('imgsrc', that.imgsrc)
+      //     that.axios.post(that.Url + 'userinfo', data).then((res) => {
+      //       if (res.data.res === 'success') {
+      //         that.$loading.close()
+      //         that.setCookie('wl_tel', that.tel, 99)
+      //         that.setCookie('wuli_ismy_' + res.data.id, 'wuli_ismy_' + res.data.id, 99)
+      //         that.$store.commit('uvid', res.data.id)
+      //         that.$emit('slideto', 3)
+      //       }
+      //     })
+      //   },
+      //   error (err) {
+      //     alert('err:' + JSON.stringify(err))
       //   }
-      // })
+      // }
+      // var observable = window.qiniu.upload(file, key, that.uptoken, putExtra, config)
+      // observable.subscribe(observer)
     }
   }
 }

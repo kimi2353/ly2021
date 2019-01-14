@@ -1,0 +1,55 @@
+<html>
+  <head>
+    
+  <script src="https://unpkg.com/qiniu-js@2.4.0/dist/qiniu.min.js" ></script>
+  <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+  
+  <script>
+      
+  var observer = {
+    next(res){
+     $('#progress').val(res.total.percent);
+    },
+    error(err){
+      console.log(err)
+    }, 
+    complete(res){
+      console.log(res)
+    }
+  }
+  
+  var config = {
+    useCdnDomain: true
+  };
+
+  var file = undefined
+  function bindToFile(){
+    $('#thisFile').unbind('change').bind('change',function(){
+	   file = this.files[0]
+    });
+  }
+  
+  function upload(){	
+    var timestamp1 = Date.parse(new Date());
+  	var token ='AZu4n0X_3CFhAmZUESMSgRxuzppa-eIRUwKH9MXd:u0LUR9JC3y8QWqE1GIBmmLxEcfI=:eyJzY29wZSI6InN0YXRpYy1rMTJlZHUtY2FtcHJlY29yZCIsImRlYWRsaW5lIjoxNTQ3NDQwNDI4fQ==';
+  	var putExtra = {
+  		fname: file.name + timestamp1,
+  		params: {}
+  	};
+  	var observable = qiniu.upload(file, file.name + timestamp1, token, putExtra, config)
+  	var subscription = observable.subscribe(observer)
+  }
+
+  window.onload = bindToFile;
+  </script>
+  </head>
+  <body>
+  <input type = 'file' id = 'thisFile'/><br>
+  <input type ='button'  value='upload' onclick="upload()">
+  <br><br>
+  <input type ='text' value ='upload progress' id='progress'>
+  </body>
+  </html>
+  
+  
+  
