@@ -30,11 +30,11 @@ Vue.use(VueAwesomeSwiper)
 Vue.use(Vuex)
 Vue.use(VueVideoPlayer)
 
-// Vue.prototype.Url = 'https://h5.nyjun.com/wldw2019/index/'
-// Vue.prototype.Url2 = 'https://h5.nyjun.com/h5/wldw2019/static/php/'
+Vue.prototype.Url = 'https://h5.nyjun.com/wldw2019/index/'
+Vue.prototype.Url2 = 'https://h5.nyjun.com/h5/wldw2019/static/php/'
 
-Vue.prototype.Url = 'http://localhost/tp5/public/index.php/wldw2019/index/'
-Vue.prototype.Url2 = 'http://localhost/wldw2019/static/php/'
+// Vue.prototype.Url = 'http://localhost/tp5/public/index.php/wldw2019/index/'
+// Vue.prototype.Url2 = 'http://localhost/wldw2019/static/php/'
 
 Vue.prototype.isFudaoApp = function () {
   var REGEXP_FUDAO_APP = /EducationApp/
