@@ -1,6 +1,6 @@
 <template>
   <div class='pg1'>
-    <iscroll-view class='scroll-view' ref='iscroll1' :options='scrollOptions' @scrollEnd="log">
+    <iscroll-view class='scroll-view' ref='iscroll1' :options='scrollOptions'>
       <img src="/static/img/wl_pg1_bg.jpg" class='wl_pg1_bg'>
       <div class='wl_pg1_txt1'>
         <div class='wl_pg1_txt2'>请选择大赛规定的12个实验主题进行参赛，点击以下相应主题按钮，观看详细实验教程！</div>
@@ -27,12 +27,10 @@
       <img src="/static/img/wl_6.jpg" class='wl_4'>
       <div style='height: 5.12rem'></div>
     </iscroll-view>
-    <transition name="fade">
-      <ul class='wl_pg1_btnlist' v-show='btnlist'>
-        <li class='wl_pg1_btn wl_pg1_btn1' @click='slideto(2)'></li>
-        <li class='wl_pg1_btn wl_pg1_btn2' @click='slideto(4)'></li>
-      </ul>
-    </transition>
+    <ul class='wl_pg1_btnlist'>
+      <li class='animated hinge infinite pulse wl_pg1_btn wl_pg1_btn1' @click='slideto(2)'></li>
+      <li class='animated hinge infinite pulse wl_pg1_btn wl_pg1_btn2' @click='slideto(4)'></li>
+    </ul>
   </div>
 </template>
 
@@ -57,7 +55,6 @@ export default {
       src: '',
       poster: '',
       fade: true,
-      btnlist: false,
       scrolly: -850
     }
   },
@@ -87,15 +84,15 @@ export default {
         that.iscroll1.refresh()
       }, 600)
     },
-    log (iscroll) {
-      let that = this
-      let y = iscroll.y
-      if (y < that.scrolly) {
-        that.btnlist = true
-      } else {
-        that.btnlist = false
-      }
-    },
+    // log (iscroll) {
+    //   let that = this
+    //   let y = iscroll.y
+    //   if (y < that.scrolly) {
+    //     that.btnlist = true
+    //   } else {
+    //     that.btnlist = false
+    //   }
+    // },
     exp (i) {
       let that = this
       if (that.videoinfo[i].active) {

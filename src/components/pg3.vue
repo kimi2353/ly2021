@@ -20,14 +20,14 @@
       </div>
     </div>
     <ul class='pg3_btnlist'>
-      <li v-if='type==="zhu"'>
-        <div class='iszan' :class='{"zan1":zantype,"zan2":!zantype}'></div>{{num}}票
+      <li v-if='type==="zhu"' @click='zanfn'>
+        <div class='iszan' :class='{"zan1":zantype,"zan2":!zantype,"zanfr":zanfr}'></div>{{num}}票
       </li>
       <li v-if='type==="zhu"' @click.prevent='player.pause();vshow=false;wl_share=true'>
         <img src="../assets/img/wl_pg3_share.png">分享拉票
       </li>
       <li v-if='type==="ke"' @click='zanfn'>
-        <div class='iszan' :class='{"zan1":zantype,"zan2":!zantype}'></div>为Ta投票
+        <div class='iszan' :class='{"zan1":zantype,"zan2":!zantype,"zanfr":zanfr}'></div>为Ta投票
       </li>
       <li v-if='type==="ke"' @click="$emit('slideto',1)">
         <img src="../assets/img/wl_pg3_index.png">
@@ -60,7 +60,9 @@ export default {
       type: 'zhu',
       zantype: true,
       wl_share: false,
-      vshow: true
+      vshow: true,
+      tel: '',
+      zanfr: false
     }
   },
   computed: {
@@ -71,7 +73,7 @@ export default {
       return this.$refs.videoPlayer.player
     },
     tru () {
-      return this.$refs.videoPlayer.tru
+      return this.$store.state.tru
     }
   },
   mounted () {
@@ -104,6 +106,11 @@ export default {
           that.num = info.num
           that.play = info.play
           that.txt = info.txt
+          that.tel = info.tel
+          if (that.tel !== '' && that.getCookie('wl_tel') === that.tel) {
+            that.setCookie('wuli_ismy_' + that.vid, 'wuli_ismy_' + that.vid, 99)
+            that.type = 'zhu'
+          }
         } else {
           that.ret()
         }
@@ -141,6 +148,7 @@ export default {
       let ismy = that.getCookie('wuli_iszan_' + that.vid)
       let data = new FormData()
       data.append('id', that.vid)
+      that.zanfr = true
       if (ismy) {
         that.axios.post(that.Url + 'cancelzan', data).then((res) => {
           that.clearCookie('wuli_iszan_' + that.vid)

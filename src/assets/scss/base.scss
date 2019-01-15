@@ -41,6 +41,16 @@ img::selection{background:0}
 .pulse{
   animation-name:pulse
 }
+@keyframes zanfr1{
+  0%{transform:scale3d(1,1,1);}
+  50%{transform:scale3d(2,2,2);}
+  100%{transform:scale3d(1,1,1);}
+}
+@keyframes zanfr2{
+  0%{transform:scale3d(1,1,1);}
+  50%{transform:scale3d(2,2,2);}
+  100%{transform:scale3d(1,1,1);}
+}
 #app {
   display: block;
   height: 100%;
@@ -418,6 +428,7 @@ img::selection{background:0}
       box-sizing: border-box;
       padding-top: 0.768rem;
       padding-left: 0.853rem;
+      padding-right: 0.853rem;
     }
     .wl_pg2_info{
       display: block;
@@ -464,18 +475,22 @@ img::selection{background:0}
         background-size: 100% 100%;
         position: absolute;
       }
-      &.wl_pg2_info4:before{
-        content: '';
-        width: 0.939rem;
-        height: 0.768rem;
-        top:0;
-        left: 0;
-        bottom: 0;
-        margin:auto;
-        background:url('../img/wl_pg2_info4.png') no-repeat center;
-        background-size: 100% 100%;
-        position: absolute;
+      &.wl_pg2_info4{
+        margin-top: 1.173rem;
+        &:before{
+          content: '';
+          width: 0.939rem;
+          height: 0.768rem;
+          top:0;
+          left: 0;
+          bottom: 0;
+          margin:auto;
+          background:url('../img/wl_pg2_info4.png') no-repeat center;
+          background-size: 100% 100%;
+          position: absolute;
+        }
       }
+
       span{
         color: #cd0510;
       }
@@ -509,7 +524,7 @@ img::selection{background:0}
         input{
           display: inline-block;vertical-align: top;
           height: 100%;
-          width: 11.413rem;
+          width: 11.1rem;
           border-radius: 4px;
           border: 1px solid #999;
           margin-left: 0.512rem;
@@ -554,7 +569,6 @@ img::selection{background:0}
       border-radius: 4px;
       background:url('../img/wl_up.png') no-repeat center;
       background-size: 3.648rem 2.496rem;
-      margin-bottom: 1.173rem;
       input{
         width: 100%;
         height: 100%;
@@ -570,6 +584,32 @@ img::selection{background:0}
         width: 100%;
         height: 100%;
         background-color: #000;
+      }
+    }
+    .wl_up_btn{
+      display: block;
+      margin:.5rem auto .5rem;
+      position: relative;
+      input{
+        width: 100%;
+        height: 100%;
+        position: absolute;
+        left: 0;
+        right: 0;
+        opacity: 0;
+        z-index: 1;
+      }
+      span{
+        font-size: .55rem;
+        display: block;
+        width: 6rem;
+        height: 1.2rem;line-height: 1.2rem;
+        margin:auto;
+        color: #0c30a0;
+      }
+      div{
+        width: 100%;
+        height: 100%;
       }
     }
     .wl_pg2_textarea{
@@ -750,10 +790,16 @@ img::selection{background:0}
         background-size: 100% 100%;
       }
       .zan1{
-        background-image: url('../img/wl_pg3_zan1.png')
+        background-image: url('../img/wl_pg3_zan1.png');
       }
       .zan2{
-        background-image: url('../img/wl_pg3_zan2.png')
+        background-image: url('../img/wl_pg3_zan2.png');
+      }
+      .zanfr.zan1{
+        animation:zanfr1 1s 1;
+      }
+      .zanfr.zan2{
+        animation:zanfr2 1s 1;
       }
     }
   }
@@ -763,6 +809,20 @@ img::selection{background:0}
     pointer-events: none;
     right: 1.301rem;
     top:1.408rem;
+  }
+  .pg3_txt::-webkit-scrollbar {/*滚动条整体样式*/
+    width: 10px;     /*高宽分别对应横竖滚动条的尺寸*/
+    height: 1px;
+  }
+  .pg3_txt::-webkit-scrollbar-thumb {/*滚动条里面小方块*/
+    border-radius: 10px;
+    -webkit-box-shadow: inset 0 0 5px rgba(0,0,0,0.2);
+    background: #2d1881;
+  }
+  .pg3_txt::-webkit-scrollbar-track {/*滚动条里面轨道*/
+    -webkit-box-shadow: inset 0 0 5px rgba(0,0,0,0.2);
+    border-radius: 10px;
+    background: #EDEDED;
   }
 }
 .ipx .pg3{
@@ -963,6 +1023,12 @@ img::selection{background:0}
             }
             &.zan2{
               background-image: url('../img/wl_pg4_zan2.png');
+            }
+            &.zanfr.zan1{
+              animation:zanfr1 1s 1;
+            }
+            &.zanfr.zan2{
+              animation:zanfr2 1s 1;
             }
           }
         }

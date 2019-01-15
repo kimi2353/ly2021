@@ -24,7 +24,8 @@
             </div>
             <div class='down'>
               <div class='down_left' @click='goodBtn(item.id)'>
-                <i :class='{"zan1":item.zan,"zan2":!item.zan}'></i>投票数 {{item.num}}
+                <i :class='{"zan1":item.zan,"zan2":!item.zan,"zanfr":item.zanfr}'></i>
+                投票数 {{item.num}}
               </div>
               <div class='down_right'>
                 播放数 {{item.play}}
@@ -151,6 +152,7 @@ export default {
                 var a = res.data.info[i]
                 a.zan = that.checkzan(a.id)
                 a.poster = a.video + '?vframe/jpg/offset/0'
+                a.zanfr = false
                 that.ulData.push(a)
               }
             } else {
@@ -218,6 +220,7 @@ export default {
               if (that.ulData[i].id === id) {
                 that.ulData[i].num = res.data.info.num
                 that.ulData[i].zan = false
+                that.ulData[i].zanfr = true
                 break
               }
             }
@@ -232,6 +235,7 @@ export default {
               if (that.ulData[i].id === id) {
                 that.ulData[i].num = res.data.info.num
                 that.ulData[i].zan = true
+                that.ulData[i].zanfr = true
                 break
               }
             }

@@ -9,7 +9,7 @@
           <div class='wl_pg2_msg'>
             <div>
               <span>姓名</span>
-              <input maxlength='5' v-model='username' type='text' @blur='inputBlur'>
+              <input maxlength='7' v-model='username' type='text' @blur='inputBlur'>
             </div>
             <div>
               <span>年级</span>
@@ -17,7 +17,7 @@
             </div>
             <div>
               <span>QQ</span>
-              <input maxlength='14' v-model='qq' type='text' placeholder='为方便获奖通知，请务必填写' @blur='inputBlur'>
+              <input maxlength='10' v-model='qq' type='text' placeholder='为方便获奖通知，请务必填写' @blur='inputBlur'>
             </div>
             <div>
               <span>手机</span>
@@ -32,11 +32,15 @@
             <p>建议白天拍摄，镜头不抖动，背景干净</p>
             <p>如果能真人出镜，外加配音解读能为你带来更多投票哦！</p>
           </div>
-          <div class='wl_up'>
+          <div class='wl_up' id='wl_up'>
             <input type="file" class="upload" @change="upload" id="upload" accept="video/*" v-show='uploadDataUrl===""'>
-            <video preload="auto" data-setup="{}" controls v-if='uploadDataUrl!==""' id='upvideo' :poster='imgsrc'>
+            <video data-setup="{}" controls v-if='uploadDataUrl!==""' id='upvideo'>
               <source type="video/mp4" :src="uploadDataUrl">
             </video>
+          </div>
+          <div class='wl_up_btn' v-show='uploadDataUrl!==""' id='wl_up_btn'>
+            <input type="file" accept="video/*" id='wl_add_btn'>
+            <span>点击重新上传</span>
           </div>
           <div class='wl_pg2_info wl_pg2_info4'>实验心得<span>*</span></div>
           <textarea placeholder="写下你的实验心得吧，走心的心得体会可是比赛加分法宝哦，最多200字内" class='wl_pg2_textarea' maxlength="200" v-model='txt' type='text' @blur="inputBlur"></textarea>
@@ -110,12 +114,22 @@ export default {
         that.domain = res.data.domain
         that.uploader = window.Qiniu.uploader({
           runtimes: 'html5,flash,html4',
-          browse_button: 'upload',
+          browse_button: ['upload', 'wl_add_btn'],
           get_new_uptoken: false,
           uptoken: that.uptoken,
           domain: that.domain,
           chunk_size: '0mb',
           auto_start: false,
+          multi_selection: false,
+          filters: {
+            mime_types: [
+              {
+                title: 'video files',
+                extensions: 'mp4,mov'
+              }
+            ],
+            prevent_duplicates: true
+          },
           init: {
             FilesAdded: function (up, files) {
               window.plupload.each(files, function (file) {
@@ -132,7 +146,12 @@ export default {
                   document.getElementById('upload').value = ''
                   return
                 }
+                that.$toast('已选择视频~')
+                that.uploadDataUrl = ''
                 that.uploadDataUrl = that.getObjectURL(file.getNative())
+                document.getElementById('wl_up').querySelector('div').style.display = 'none'
+                document.getElementById('wl_up_btn').querySelector('div').style.width = '100%'
+                document.getElementById('wl_up_btn').querySelector('div').style.height = '100%'
               })
             },
             UploadProgress: function (up, file) {
@@ -222,6 +241,10 @@ export default {
         that.alert = true
         return
       }
+      if (!that.qq.match(/^[1-9][0-9]{4,14}$/)) {
+        that.$toast('请填正确的QQ号')
+        return
+      }
       if (that.tel === '') {
         that.alert = true
         return
@@ -243,49 +266,8 @@ export default {
         return
       }
       that.$loading('上传中<br>请耐心等待')
-      // var vtype = '.mp4'
-      // that.captureImage()
+      that.uploader.files.splice(0, that.uploader.files.length - 1)
       that.uploader.start()
-      // let key = that.tel + '_' + Date.parse(new Date()) + vtype
-      // let putExtra = {
-      //   fname: key,
-      //   params: {}
-      // }
-      // let config = {
-      //   useCdnDomain: true,
-      //   region: window.qiniu.region.z0
-      // }
-      // let observer = {
-      //   next (res) {
-      //     that.$loading('上传中（' + Math.floor(res.total.percent) + '%）<br>请耐心等待')
-      //   },
-      //   complete (res) {
-      //     let video = 'https://static-k12edu-camprecord.codemao.cn/' + res.key
-      //     let data = new FormData()
-      //     data.append('username', that.username)
-      //     data.append('grade', that.grade)
-      //     data.append('tel', that.tel)
-      //     data.append('qq', that.qq)
-      //     data.append('title', that.title)
-      //     data.append('txt', that.txt.replace(/\n/g, '<br>'))
-      //     data.append('video', video)
-      //     data.append('imgsrc', that.imgsrc)
-      //     that.axios.post(that.Url + 'userinfo', data).then((res) => {
-      //       if (res.data.res === 'success') {
-      //         that.$loading.close()
-      //         that.setCookie('wl_tel', that.tel, 99)
-      //         that.setCookie('wuli_ismy_' + res.data.id, 'wuli_ismy_' + res.data.id, 99)
-      //         that.$store.commit('uvid', res.data.id)
-      //         that.$emit('slideto', 3)
-      //       }
-      //     })
-      //   },
-      //   error (err) {
-      //     alert('err:' + JSON.stringify(err))
-      //   }
-      // }
-      // var observable = window.qiniu.upload(file, key, that.uptoken, putExtra, config)
-      // observable.subscribe(observer)
     }
   }
 }
