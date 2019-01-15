@@ -150,7 +150,7 @@ export default {
               data.append('title', that.title)
               data.append('txt', that.txt.replace(/\n/g, '<br>'))
               data.append('video', video)
-              data.append('imgsrc', that.imgsrc)
+              // data.append('imgsrc', that.imgsrc)
               that.axios.post(that.Url + 'userinfo', data).then((res) => {
                 if (res.data.res === 'success') {
                   that.$loading.close()
@@ -244,7 +244,7 @@ export default {
       }
       that.$loading('上传中<br>请耐心等待')
       // var vtype = '.mp4'
-      that.captureImage()
+      // that.captureImage()
       that.uploader.start()
       // let key = that.tel + '_' + Date.parse(new Date()) + vtype
       // let putExtra = {
