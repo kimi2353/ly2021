@@ -34,8 +34,8 @@
           </div>
           <div class='wl_up' id='wl_up'>
             <input type="file" class="upload" @change="upload" id="upload" accept="video/*" v-show='uploadDataUrl===""'>
-            <video data-setup="{}" controls v-if='uploadDataUrl!==""' id='upvideo'>
-              <source type="video/mp4" :src="uploadDataUrl">
+            <video data-setup="{}" controls v-show='uploadDataUrl!==""' id='upvideo'>
+              <source type="video/mp4">
             </video>
           </div>
           <div class='wl_up_btn' v-show='uploadDataUrl!==""' id='wl_up_btn'>
@@ -149,6 +149,8 @@ export default {
                 that.$toast('已选择视频~')
                 that.uploadDataUrl = ''
                 that.uploadDataUrl = that.getObjectURL(file.getNative())
+                document.getElementById('upvideo').querySelector('source').src = that.uploadDataUrl
+                document.getElementById('upvideo').src = that.uploadDataUrl
                 document.getElementById('wl_up').querySelector('div').style.display = 'none'
                 document.getElementById('wl_up_btn').querySelector('div').style.width = '100%'
                 document.getElementById('wl_up_btn').querySelector('div').style.height = '100%'
