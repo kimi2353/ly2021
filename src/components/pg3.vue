@@ -62,6 +62,7 @@ export default {
       wl_share: false,
       vshow: true,
       tel: '',
+      mytel: '',
       zanfr: false
     }
   },
@@ -84,15 +85,17 @@ export default {
     init () {
       let that = this
       that.$loading('正在加载，请稍后...')
-      let iszan = that.getCookie('wuli_iszan_' + that.vid)
-      if (iszan) {
-        that.zantype = false
-      } else {
-        that.zantype = true
-      }
+      // let iszan = that.getCookie('wuli_iszan_' + that.vid)
+      // if (iszan) {
+      //   that.zantype = false
+      // } else {
+      //   that.zantype = true
+      // }
       let ismy = that.getCookie('wuli_ismy_' + that.vid)
       let data = new FormData()
+      that.mytel = that.getCookie('wl_tel')
       data.append('id', that.vid)
+      data.append('tel', that.mytel)
       that.axios.post(that.Url + 'checkinfo', data).then((res) => {
         that.$loading.close()
         if (res.data.res === 'success') {
@@ -107,6 +110,16 @@ export default {
           that.play = info.play
           that.txt = info.txt
           that.tel = info.tel
+          if (!info.szan) {
+            var thiscookie = 'wuli_iszan_' + info.vid
+            that.setCookie(thiscookie, thiscookie, 99)
+          }
+          let iszan = that.getCookie('wuli_iszan_' + that.vid)
+          if (iszan) {
+            that.zantype = false
+          } else {
+            that.zantype = true
+          }
           if (that.tel !== '' && that.getCookie('wl_tel') === that.tel) {
             that.setCookie('wuli_ismy_' + that.vid, 'wuli_ismy_' + that.vid, 99)
             that.type = 'zhu'
@@ -148,6 +161,7 @@ export default {
       let ismy = that.getCookie('wuli_iszan_' + that.vid)
       let data = new FormData()
       data.append('id', that.vid)
+      data.append('tel', that.mytel)
       that.zanfr = true
       if (ismy) {
         that.axios.post(that.Url + 'cancelzan', data).then((res) => {

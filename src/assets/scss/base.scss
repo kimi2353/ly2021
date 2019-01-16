@@ -428,7 +428,7 @@ img::selection{background:0}
       box-sizing: border-box;
       padding-top: 0.768rem;
       padding-left: 0.853rem;
-      padding-right: 0.853rem;
+      padding-right: 0.653rem;
     }
     .wl_pg2_info{
       display: block;
@@ -499,12 +499,15 @@ img::selection{background:0}
       margin-top: 0.768rem;
       display: block;
       margin-bottom: 1.109rem;
+      white-space: nowrap;
       div{
         display: block;
         height: 1.523rem;
         line-height: 1.523rem;
         text-align: left;
         padding-bottom: 0.64rem;
+        white-space: nowrap;
+        font-size: 0;
         span{
           width: 1.237rem;
           height: 1.523rem;
@@ -524,7 +527,7 @@ img::selection{background:0}
         input{
           display: inline-block;vertical-align: top;
           height: 100%;
-          width: 11.1rem;
+          width: 11.4rem;
           border-radius: 4px;
           border: 1px solid #999;
           margin-left: 0.512rem;
@@ -656,6 +659,7 @@ img::selection{background:0}
   background: url('../img/wl_bg.jpg') no-repeat center 0;
   background-size: 100% 28.459rem;
   background-color: #2d1881;
+  color: #fff;
   .pg3_tit{
     line-height: 1.528rem;
     height: 1.528rem;
@@ -830,6 +834,7 @@ img::selection{background:0}
     line-height: 1.728rem;
     height: 1.728rem;
     margin-bottom: 0.299rem;
+    color: #fff;
   }
   .pg3_main1{
     height: 11.648rem;

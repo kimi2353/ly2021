@@ -14,7 +14,6 @@
             <div class='wl_jp' v-if='index<5&&jp'>{{index + 1}}</div>
             <div class='up' @click='showinfo(item.id)'>
               <div class='up_left' :style='"background-image:url(" + item.poster + ")"'>
-                <!-- <video-player class="video-player-box vjs-big-play-centered" :options="item.playerOptions" :playsinline="false" @play="onPlayerPlay(item.id)"></video-player> -->
               </div>
               <div class='up_right'>
                 <div class='tit'>{{item.title}}</div>
@@ -72,7 +71,6 @@ export default {
         click: true,
         tap: true
       },
-      type: 0,
       c_num: 0,
       page: 0,
       maxPage: 1,
@@ -89,6 +87,9 @@ export default {
     },
     iscroll () {
       return this.$refs.iscroll4
+    },
+    type () {
+      return this.$store.state.type
     }
   },
   mounted () {
@@ -121,7 +122,6 @@ export default {
       if (that.type !== 0) {
         that.jp = false
       }
-      // alert(1)
       that.axios.post(that.Url + 'checknum', data).then((res) => {
         that.c_num = res.data.num
         if (that.c_num === 0) {
@@ -139,9 +139,7 @@ export default {
           let data2 = new FormData()
           data2.append('page', that.page)
           data2.append('type', that.type)
-          if (that.type === 2) {
-            data2.append('tel', that.tel)
-          }
+          data2.append('tel', that.tel)
           that.axios.post(that.Url + 'checkmsg', data2).then((res) => {
             that.$loading.close()
             if (res.data.res === 'success') {
@@ -150,6 +148,10 @@ export default {
               }
               for (let i = 0; i < res.data.info.length; i++) {
                 var a = res.data.info[i]
+                if (!a.szan) {
+                  var thiscookie = 'wuli_iszan_' + a.id
+                  that.setCookie(thiscookie, thiscookie, 99)
+                }
                 a.zan = that.checkzan(a.id)
                 a.poster = a.video + '?vframe/jpg/offset/0'
                 a.zanfr = false
@@ -180,7 +182,7 @@ export default {
         return
       }
       that.notel = false
-      that.type = i
+      that.$store.commit('utype', i)
       that.ul_info('f')
     },
     onPlayerPlay (id) {
@@ -190,7 +192,7 @@ export default {
         let data = new FormData()
         data.append('id', id)
         that.axios.post(that.Url + 'play', data).then((res) => {
-          that.setCookie('wuli_isplay_' + that.vid, 'wuli_isplay_' + that.vid)
+          that.setCookie('wuli_isplay_' + that.vid, 'wuli_isplay_' + that.vid, 99)
           if (res.data.res === 'success') {
             let play = res.data.info.play
             for (let i = 0; i < that.ulData.length; i++) {
@@ -213,6 +215,7 @@ export default {
       var that = this
       let data = new FormData()
       data.append('id', id)
+      data.append('tel', that.tel)
       if (that.checkcookie(id) === true) {
         that.axios.post(that.Url + 'zan', data).then(function (res) {
           if (res.data.res === 'success') {

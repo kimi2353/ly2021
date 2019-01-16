@@ -9,7 +9,7 @@
           <div class='wl_pg2_msg'>
             <div>
               <span>姓名</span>
-              <input maxlength='7' v-model='username' type='text' @blur='inputBlur'>
+              <input maxlength='5' v-model='username' type='text' @blur='inputBlur'>
             </div>
             <div>
               <span>年级</span>

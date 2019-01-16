@@ -235,7 +235,7 @@ Vue.prototype.checkcookie = function (gindex) {
   if (mapcookie !== null && mapcookie !== '') {
     return false
   } else {
-    that.setCookie(thiscookie, thiscookie, 60)
+    that.setCookie(thiscookie, thiscookie, 99)
     return true
   }
 }
