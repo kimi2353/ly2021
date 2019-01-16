@@ -121,15 +121,15 @@ export default {
           chunk_size: '0mb',
           auto_start: false,
           multi_selection: false,
-          filters: {
-            mime_types: [
-              {
-                title: 'video files',
-                extensions: 'mp4,mov'
-              }
-            ],
-            prevent_duplicates: true
-          },
+          // filters: {
+          //   mime_types: [
+          //     {
+          //       title: 'video files',
+          //       extensions: 'mp4,mov'
+          //     }
+          //   ],
+          //   prevent_duplicates: true
+          // },
           init: {
             FilesAdded: function (up, files) {
               window.plupload.each(files, function (file) {
