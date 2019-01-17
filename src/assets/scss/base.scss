@@ -200,6 +200,48 @@ img::selection{background:0}
   overflow: hidden;
   position: relative;
   background-color: #2d1881;
+  .wl_pg1_alert{
+    width: 12.8rem;
+    height: 10.453rem;
+    background:url('/static/img/wl_pg1_alert.png') no-repeat center;
+    background-size: 100% 100%;
+    box-sizing: border-box;
+    padding-top: 8.235rem;
+    margin-bottom: 3rem;
+    position: relative;
+    img{
+      width: 4.672rem;
+      margin:auto;
+      text-align: center;
+      display: block;
+    }
+    .close{
+      width: 1.5rem;height: 1.5rem;
+      position: absolute;
+      right: .8rem;
+      top: 2.8rem;
+      &:before{
+        content: '';
+        position: absolute;
+        width: 1rem;
+        height: 2px;
+        background-color: #333;
+        transform: rotate(45deg);
+        margin:auto;
+        left: 0;right: 0;top:0;bottom: 0;
+      }
+      &:after{
+        content: '';
+        position: absolute;
+        width: 1rem;
+        height: 2px;
+        background-color: #333;
+        transform: rotate(135deg);
+        margin:auto;
+        left: 0;right: 0;top:0;bottom: 0;
+      }
+    }
+  }
   .wl_pg1_bg{
     width: 16rem;
     display: block;
@@ -867,11 +909,12 @@ img::selection{background:0}
     .wl_pg4_btn1{
       width: 5.675rem;
       position: absolute;
-      top:7.332rem;
+      top:1.332rem;
       margin:auto;
       left: 0;
-      right: 6rem;
+      right: -2rem;
       z-index: 50;
+      padding: 6rem 8rem 0 0;
     }
     .wl_pg4_btnlist{
       height: 1.643rem;

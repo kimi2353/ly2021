@@ -96,7 +96,7 @@ const store = new Vuex.Store({
       }
     ],
     vid: '0',
-    tru: '',
+    tru: '1',
     type: 0
   },
   mutations: {

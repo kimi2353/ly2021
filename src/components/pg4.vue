@@ -3,7 +3,7 @@
     <iscroll-view class='scroll-view' ref='iscroll4' :options='scrollOptions' @pullUp='load'>
       <div class='pg4_main'>
         <div class='return' @click='ret'>返回</div>
-        <img src="../assets/img/wl_pg4_btn1.png" class='animated hinge infinite pulse wl_pg4_btn1' @click='hr("https://fudao.qq.com/activities/wlsyk1212/index.html")'>
+        <img src="../assets/img/wl_pg4_btn1.png" class='animated hinge infinite pulse wl_pg4_btn1' @click='hr("https://fudao.qq.com/activities/wlsyk1212/index.html?from=h5_2019wlsyds")'>
         <ul class='wl_pg4_btnlist'>
           <li :class='{active:type===0}' @click='totype(0)'>最热</li>
           <li :class='{active:type===1}' @click='totype(1)'>最新</li>

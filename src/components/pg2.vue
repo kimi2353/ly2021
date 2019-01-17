@@ -51,7 +51,7 @@
     <transition name="fade">
       <div class='nav' v-show='alert'>
         <div class='wl_pg2_alert'>
-          <img src="../assets/img/wl_pg2_btn1.png" @click='alert=false'>
+          <img  class='animated hinge infinite pulse' src="../assets/img/wl_pg2_btn1.png" @click='alert=false'>
         </div>
       </div>
     </transition>
@@ -182,10 +182,10 @@ export default {
             }
           }
         })
-        setTimeout(function () {
-          document.getElementById('wl_up').querySelector('div').querySelector('input').accept = 'video/*'
-          document.getElementById('wl_add_btn').querySelector('div').querySelector('input').accept = 'video/*'
-        }, 1000)
+        // setTimeout(function () {
+        //   document.getElementById('wl_up').querySelector('div').querySelector('input').accept = 'video/*'
+        //   document.getElementById('wl_add_btn').querySelector('div').querySelector('input').accept = 'video/*'
+        // }, 1000)
       })
       that.toShare()
       that.username = ''

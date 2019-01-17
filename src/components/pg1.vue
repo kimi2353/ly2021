@@ -28,9 +28,17 @@
       <div style='height: 5.12rem'></div>
     </iscroll-view>
     <ul class='wl_pg1_btnlist'>
-      <li class='animated hinge infinite pulse wl_pg1_btn wl_pg1_btn1' @click='slideto(2)'></li>
+      <li class='animated hinge infinite pulse wl_pg1_btn wl_pg1_btn1' @click='pan'></li>
       <li class='animated hinge infinite pulse wl_pg1_btn wl_pg1_btn2' @click='slideto(4)'></li>
     </ul>
+    <transition name="fade">
+      <div class='nav' v-show='alert'>
+        <div class='wl_pg1_alert'>
+          <div class='close' @click='alert=false'></div>
+          <img class='animated hinge infinite pulse' src="../assets/img/wl_pg1_abtn1.png" @click='hr("https://jq.qq.com/?_wv=1027&k=5WPZHpY")'>
+        </div>
+      </div>
+    </transition>
   </div>
 </template>
 
@@ -55,7 +63,8 @@ export default {
       src: '',
       poster: '',
       fade: true,
-      scrolly: -850
+      scrolly: -850,
+      alert: false
     }
   },
   computed: {
@@ -84,15 +93,6 @@ export default {
         that.iscroll1.refresh()
       }, 600)
     },
-    // log (iscroll) {
-    //   let that = this
-    //   let y = iscroll.y
-    //   if (y < that.scrolly) {
-    //     that.btnlist = true
-    //   } else {
-    //     that.btnlist = false
-    //   }
-    // },
     exp (i) {
       let that = this
       if (that.videoinfo[i].active) {
@@ -118,6 +118,26 @@ export default {
       let that = this
       document.querySelector('video').style.display = 'block'
       console.log(that.player)
+    },
+    pan () {
+      let that = this
+      let flag = true
+      let cl = document.documentElement.classList
+      for (let i = 0; i < cl.length; i++) {
+        if (cl[i] === 'android') {
+          flag = false
+        }
+      }
+      if (flag) {
+        that.slideto(2)
+      } else {
+        let isFudaoApp = this.isFudaoApp()
+        if (isFudaoApp) {
+          that.alert = true
+        } else {
+          that.slideto(2)
+        }
+      }
     }
   }
 }
