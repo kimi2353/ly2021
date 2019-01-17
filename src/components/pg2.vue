@@ -1,55 +1,53 @@
 <template>
   <div class='pg2'>
-    <!-- <iscroll-view class='scroll-view' ref='iscroll2' :options='scrollOptions'> -->
-      <div class='pg2_main'>
-        <div class='return' @click='ret'>返回</div>
-        <div class='pg2_tit'>上传你最酷炫的作品吧</div>
-        <div class='pg2_center'>
-          <div class='wl_pg2_info wl_pg2_info1'>个人信息</div>
-          <div class='wl_pg2_msg'>
-            <div>
-              <span>姓名</span>
-              <input maxlength='5' v-model='username' type='text' @blur='inputBlur'>
-            </div>
-            <div>
-              <span>年级</span>
-              <input maxlength='5' v-model='grade' type='text' @blur='inputBlur'>
-            </div>
-            <div>
-              <span>QQ</span>
-              <input maxlength='10' v-model='qq' type='text' placeholder='为方便获奖通知，请务必填写' @blur='inputBlur'>
-            </div>
-            <div>
-              <span>手机</span>
-              <input maxlength='11' v-model='tel' type='text' placeholder='为方便获奖通知，请务必填写' @blur='inputBlur'>
-            </div>
+    <div class='pg2_main'>
+      <div class='return' @click='ret'>返回</div>
+      <div class='pg2_tit'>上传你最酷炫的作品吧</div>
+      <div class='pg2_center'>
+        <div class='wl_pg2_info wl_pg2_info1'>个人信息</div>
+        <div class='wl_pg2_msg'>
+          <div>
+            <span>姓名</span>
+            <input maxlength='5' v-model='username' type='text' @blur='inputBlur'>
           </div>
-          <div class='wl_pg2_info wl_pg2_info2'>实验主题<span>*</span></div>
-          <input placeholder='填写你的作品主题，不超过15个字' maxlength='15' class='wl_info_tit' v-model='title' type='text'>
-          <div class='wl_pg2_info wl_pg2_info3'>上传视频<span>*</span></div>
-          <div class='wl_up_tips'>
-            <p>建议横屏拍摄，视频时长在15-30秒之间</p>
-            <p>建议白天拍摄，镜头不抖动，背景干净</p>
-            <p>如果能真人出镜，外加配音解读能为你带来更多投票哦！</p>
+          <div>
+            <span>年级</span>
+            <input maxlength='5' v-model='grade' type='text' @blur='inputBlur'>
           </div>
-          <div class='wl_up' id='wl_up'>
-            <input type="file" class="upload" @change="upload" id="upload" accept="video/*" v-show='uploadDataUrl===""'>
-            <video data-setup="{}" controls v-show='uploadDataUrl!==""' id='upvideo'>
-              <source type="video/mp4">
-            </video>
+          <div>
+            <span>QQ</span>
+            <input maxlength='10' v-model='qq' type='text' placeholder='为方便获奖通知，请务必填写' @blur='inputBlur'>
           </div>
-          <div class='wl_up_btn' v-show='uploadDataUrl!==""' id='wl_up_btn'>
-            <input type="file" accept="video/*" id='wl_add_btn'>
-            <span>点击重新上传</span>
+          <div>
+            <span>手机</span>
+            <input maxlength='11' v-model='tel' type='text' placeholder='为方便获奖通知，请务必填写' @blur='inputBlur'>
           </div>
-          <div class='wl_pg2_info wl_pg2_info4'>实验心得<span>*</span></div>
-          <textarea placeholder="写下你的实验心得吧，走心的心得体会可是比赛加分法宝哦，最多200字内" class='wl_pg2_textarea' maxlength="200" v-model='txt' type='text' @blur="inputBlur"></textarea>
-          <div style='height: 0.853rem;'></div>
         </div>
-        <img src="../assets/img/wl_pg2_btn.png" class='wl_pg2_btn' @click='btnfn'>
-        <div style='height:1.216rem;'></div>
+        <div class='wl_pg2_info wl_pg2_info2'>实验主题<span>*</span></div>
+        <input placeholder='填写你的作品主题，不超过15个字' maxlength='15' class='wl_info_tit' v-model='title' type='text'>
+        <div class='wl_pg2_info wl_pg2_info3'>上传视频<span>*</span></div>
+        <div class='wl_up_tips'>
+          <p>建议横屏拍摄，视频时长在15-30秒之间</p>
+          <p>建议白天拍摄，镜头不抖动，背景干净</p>
+          <p>如果能真人出镜，外加配音解读能为你带来更多投票哦！</p>
+        </div>
+        <div class='wl_up' id='wl_up'>
+          <input type="file" class="upload" @change="upload" id="upload" accept="video/*" v-show='uploadDataUrl===""'>
+          <video data-setup="{}" controls v-show='uploadDataUrl!==""' id='upvideo'>
+            <source type="video/mp4">
+          </video>
+        </div>
+        <div class='wl_up_btn' v-show='uploadDataUrl!==""' id='wl_up_btn'>
+          <input type="file" accept="video/*" id='wl_add_btn'>
+          <span>点击重新上传</span>
+        </div>
+        <div class='wl_pg2_info wl_pg2_info4'>实验心得<span>*</span></div>
+        <textarea placeholder="写下你的实验心得吧，走心的心得体会可是比赛加分法宝哦，最多200字内" class='wl_pg2_textarea' maxlength="200" v-model='txt' type='text' @blur="inputBlur"></textarea>
+        <div style='height: 0.853rem;'></div>
       </div>
-    <!-- </iscroll-view> -->
+      <img src="../assets/img/wl_pg2_btn.png" class='wl_pg2_btn' @click='btnfn'>
+      <div style='height:1.216rem;'></div>
+    </div>
     <transition name="fade">
       <div class='nav' v-show='alert'>
         <div class='wl_pg2_alert'>
@@ -121,29 +119,23 @@ export default {
           chunk_size: '0mb',
           auto_start: false,
           multi_selection: false,
-          // filters: {
-          //   mime_types: [
-          //     {
-          //       title: 'video files',
-          //       extensions: 'mp4,mov'
-          //     }
-          //   ],
-          //   prevent_duplicates: true
-          // },
           init: {
             FilesAdded: function (up, files) {
+              let self = this
               window.plupload.each(files, function (file) {
                 if (!file) {
                   return
                 }
                 if (file.name.indexOf('mp4') === -1 && file.name.indexOf('MP4') === -1 && file.name.indexOf('MOV') === -1 && file.name.indexOf('mov') === -1) {
                   that.$toast('请上传MP4或者MOV格式文件')
+                  self.files.splice(self.files.length - 1, 1)
                   return
                 }
                 let size = parseInt(file.size / 1000000)
                 if (size >= 200) {
                   that.$toast('视频太大啦<br>请重新录制~')
                   document.getElementById('upload').value = ''
+                  self.files.splice(self.files.length - 1, 1)
                   return
                 }
                 that.$toast('已选择视频~')
@@ -206,15 +198,6 @@ export default {
       let that = this
       that.$emit('slideto', 1)
     },
-    captureImage () {
-      let that = this
-      let video = document.getElementById('upvideo')
-      let canvas = document.createElement('canvas')
-      canvas.width = '310'
-      canvas.height = '173'
-      canvas.getContext('2d').drawImage(video, 0, 0, canvas.width, canvas.width)
-      that.imgsrc = canvas.toDataURL('image/png')
-    },
     upload () {
       let that = this
       let files = document.getElementById('upload').files[0]
@@ -267,8 +250,9 @@ export default {
         that.$toast('请上传视频')
         return
       }
-      that.$loading('上传中<br>请耐心等待')
       that.uploader.files.splice(0, that.uploader.files.length - 1)
+      // console.log(that.uploader.files)
+      that.$loading('上传中<br>请耐心等待')
       that.uploader.start()
     }
   }

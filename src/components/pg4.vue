@@ -109,6 +109,7 @@ export default {
       if (f) {
         that.page = 0
         that.maxPage = 1
+        that.ulData = []
       }
       if (that.maxPage - that.page < 1) {
         return
