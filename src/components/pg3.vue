@@ -137,7 +137,7 @@ export default {
     ret () {
       let that = this
       if (that.tru === '') {
-        that.$emit('slideto', 1)
+        that.$emit('slideto', 4)
       } else {
         that.$emit('slideto', 4)
       }
