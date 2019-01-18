@@ -102,7 +102,7 @@ Vue.prototype.toShare = function (id, username) {
         coverImageUrl: imgurl
       }
       window.mqq.invoke('edu', 'interceptBackEvent', {'enable': 1})
-      window.mqq.invoke('edu', 'setCenterTitle', {text: '物理实验王'})
+      window.mqq.invoke('edu', 'setCenterTitle', {text: '企鹅辅导物理实验大赛'})
       window.mqq.invoke('edu', 'setRightTitle', {
         enable: 1,
         imageIcon: 'https://9.url.cn/fudao/assets/images/shareBtnShadow_42019f5.png',
@@ -144,7 +144,7 @@ Vue.prototype.toShare = function (id, username) {
         coverImageUrl: imgurl
       }
       window.mqq.invoke('edu', 'interceptBackEvent', {'enable': 1})
-      window.mqq.invoke('edu', 'setCenterTitle', {text: '物理实验王'})
+      window.mqq.invoke('edu', 'setCenterTitle', {text: '企鹅辅导物理实验大赛'})
       window.mqq.invoke('edu', 'setRightTitle', {
         enable: 1,
         imageIcon: 'https://9.url.cn/fudao/assets/images/shareBtnShadow_42019f5.png',

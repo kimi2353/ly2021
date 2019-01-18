@@ -11,7 +11,7 @@
         </ul>
         <ul class='wl_pg4_ul'>
           <li v-for='(item, index) in ulData' :key='index'>
-            <div class='wl_jp' v-if='index<5&&jp'>{{index + 1}}</div>
+            <div class='wl_jp' v-if='index<20&&jp'>{{index + 1}}</div>
             <div class='up' @click='showinfo(item.id)'>
               <div class='up_left' :style='"background-image:url(" + item.poster + ")"'>
               </div>
@@ -33,8 +33,10 @@
           </li>
           <li v-if='type===2&&ulData.length===0' class='wl_no_li'>
             <img src="../assets/img/wl_no.png" class='wl_no'>
+            <img src="../assets/img/wl_pg4_return.png" class='animated hinge infinite pulse wl_pg4_return' @click='notel=true'>
           </li>
-          <li style='background-color: #2f76f6;height: 1rem;pointer-events: none;'></li>
+          <li style='background-color: #2f76f6;height: 1rem;'>
+          </li>
         </ul>
         <div style='height: 1rem;pointer-events: none;'></div>
       </div>
