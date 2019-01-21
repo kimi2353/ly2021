@@ -11,7 +11,7 @@
         </ul>
         <ul class='wl_pg4_ul'>
           <li v-for='(item, index) in ulData' :key='index'>
-            <div class='wl_jp' v-if='index<20&&jp'>{{index + 1}}</div>
+            <div class='wl_jp' v-if='index<100&&jp'>{{index + 1}}</div>
             <div class='up' @click='showinfo(item.id)'>
               <div class='up_left' :style='"background-image:url(" + item.poster + ")"'>
               </div>

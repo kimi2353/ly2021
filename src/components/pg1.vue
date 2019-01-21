@@ -1,6 +1,7 @@
 <template>
   <div class='pg1'>
     <iscroll-view class='scroll-view' ref='iscroll1' :options='scrollOptions'>
+      <div class='go'></div>
       <img src="/static/img/wl_pg1_bg.jpg" class='wl_pg1_bg'>
       <div class='wl_pg1_txt1'>
         <div class='wl_pg1_txt2'>请选择大赛规定的12个实验主题进行参赛，点击以下相应主题按钮，观看详细实验教程！</div>

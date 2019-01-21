@@ -972,6 +972,7 @@ img::selection{background:0}
         padding-top: 0.405rem;
         left: -0.384rem;
         top:-0.341rem;
+        white-space: nowrap;
       }
       li{
         display: block;
@@ -1175,4 +1176,22 @@ img::selection{background:0}
       }
     }
   }
+}
+.go{
+  position:absolute;
+  top:23rem;
+  left:0;
+  right:0;
+  margin:auto;
+  overflow:hidden;
+  width:1.259rem;
+  height:0.661rem;
+  background:url('../img/wl_go.png') no-repeat center;
+  background-size:cover;
+  animation:go 1s infinite linear;
+  z-index:999;
+}
+@keyframes go{
+  0%{top:23rem;opacity:0}
+  50%{top:23.4rem;opacity:1}
 }
