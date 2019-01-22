@@ -1178,8 +1178,8 @@ img::selection{background:0}
   }
 }
 .go{
-  position:absolute;
-  top:23rem;
+  position:fixed;
+  bottom:4rem;
   left:0;
   right:0;
   margin:auto;
@@ -1192,6 +1192,6 @@ img::selection{background:0}
   z-index:999;
 }
 @keyframes go{
-  0%{top:23rem;opacity:0}
-  50%{top:23.4rem;opacity:1}
+  0%{bottom:4rem;opacity:0}
+  50%{bottom:4.4rem;opacity:1}
 }

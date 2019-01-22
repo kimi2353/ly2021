@@ -1,7 +1,6 @@
 <template>
   <div class='pg1'>
-    <iscroll-view class='scroll-view' ref='iscroll1' :options='scrollOptions'>
-      <div class='go'></div>
+    <iscroll-view class='scroll-view' ref='iscroll1' :options='scrollOptions' @scrollEnd="log">
       <img src="/static/img/wl_pg1_bg.jpg" class='wl_pg1_bg'>
       <div class='wl_pg1_txt1'>
         <div class='wl_pg1_txt2'>请选择大赛规定的12个实验主题进行参赛，点击以下相应主题按钮，观看详细实验教程！</div>
@@ -32,6 +31,9 @@
       <li class='animated hinge infinite pulse wl_pg1_btn wl_pg1_btn1' @click='pan'></li>
       <li class='animated hinge infinite pulse wl_pg1_btn wl_pg1_btn2' @click='slideto(4)'></li>
     </ul>
+    <transition name="fade">
+        <div class='go' v-show='go'></div>
+      </transition>
     <transition name="fade">
       <div class='nav' v-show='alert'>
         <div class='wl_pg1_alert'>
@@ -65,7 +67,8 @@ export default {
       poster: '',
       fade: true,
       scrolly: -850,
-      alert: false
+      alert: false,
+      go: true
     }
   },
   computed: {
@@ -138,6 +141,15 @@ export default {
         } else {
           that.slideto(2)
         }
+      }
+    },
+    log (iscroll) {
+      let that = this
+      console.log(iscroll.y)
+      if (iscroll.y < that.scrolly) {
+        that.go = false
+      } else {
+        that.go = true
       }
     }
   }
