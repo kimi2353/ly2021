@@ -97,7 +97,7 @@ const store = new Vuex.Store({
     ],
     vid: '0',
     tru: '1',
-    type: 0
+    type: 1
   },
   mutations: {
     uVdinfo: (state, data) => {
