@@ -125,27 +125,27 @@ export default {
     },
     pan () {
       let that = this
-      let flag = true
-      let cl = document.documentElement.classList
-      for (let i = 0; i < cl.length; i++) {
-        if (cl[i] === 'android') {
-          flag = false
-        }
-      }
-      if (flag) {
-        that.slideto(2)
-      } else {
-        let isFudaoApp = this.isFudaoApp()
-        if (isFudaoApp) {
-          that.alert = true
-        } else {
-          that.slideto(2)
-        }
-      }
+      that.$toast('活动征集已结束，请耐心等待获奖结果')
+      // let flag = true
+      // let cl = document.documentElement.classList
+      // for (let i = 0; i < cl.length; i++) {
+      //   if (cl[i] === 'android') {
+      //     flag = false
+      //   }
+      // }
+      // if (flag) {
+      //   that.slideto(2)
+      // } else {
+      //   let isFudaoApp = this.isFudaoApp()
+      //   if (isFudaoApp) {
+      //     that.alert = true
+      //   } else {
+      //     that.slideto(2)
+      //   }
+      // }
     },
     log (iscroll) {
       let that = this
-      console.log(iscroll.y)
       if (iscroll.y < that.scrolly) {
         that.go = false
       } else {

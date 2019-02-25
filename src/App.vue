@@ -3,20 +3,6 @@
     <transition name="fade" v-show='fade' mode="out-in">
       <div :is='moban' ref='moban' @slideto='slideto'></div>
     </transition>
-    <!-- <swiper :options='swiperOption' ref='mySwiper'>
-      <swiper-slide class='pg stop-swiping'>
-        <load ref='load' @slideto='slideto'></load>
-      </swiper-slide>
-      <swiper-slide class='pg stop-swiping'>
-        <pg1 ref='pg1' @slideto='slideto'></pg1>
-      </swiper-slide>
-      <swiper-slide class='pg stop-swiping'>
-        <pg2 ref='pg2' @slideto='slideto'></pg2>
-      </swiper-slide>
-      <swiper-slide class='pg stop-swiping'>
-        <pg3 ref='pg3' @slideto='slideto'></pg3>
-      </swiper-slide>
-    </swiper> -->
   </div>
 </template>
 
