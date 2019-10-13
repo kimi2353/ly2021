@@ -4,32 +4,11 @@
       <div class='return' @click='ret'>返回</div>
       <div class='pg2_tit'>上传你最酷炫的作品吧</div>
       <div class='pg2_center'>
-        <div class='wl_pg2_info wl_pg2_info1'>个人信息</div>
-        <div class='wl_pg2_msg'>
-          <div>
-            <span>姓名</span>
-            <input maxlength='5' v-model='username' type='text' @blur='inputBlur'>
-          </div>
-          <div>
-            <span>年级</span>
-            <input maxlength='5' v-model='grade' type='text' @blur='inputBlur'>
-          </div>
-          <div>
-            <span>QQ</span>
-            <input maxlength='10' v-model='qq' type='text' placeholder='为方便获奖通知，请务必填写' @blur='inputBlur'>
-          </div>
-          <div>
-            <span>手机</span>
-            <input maxlength='11' v-model='tel' type='text' placeholder='为方便获奖通知，请务必填写' @blur='inputBlur'>
-          </div>
-        </div>
-        <div class='wl_pg2_info wl_pg2_info2'>实验主题<span>*</span></div>
-        <input placeholder='填写你的作品主题，不超过15个字' maxlength='15' class='wl_info_tit' v-model='title' type='text'>
+        <div class='pg2_center_title' v-if='obj'>{{obj.classname}}</div>
         <div class='wl_pg2_info wl_pg2_info3'>上传视频<span>*</span></div>
         <div class='wl_up_tips'>
-          <p>建议横屏拍摄，视频时长在15-30秒之间</p>
+          <p>建议在微信App中横屏拍摄</p>
           <p>建议白天拍摄，镜头不抖动，背景干净</p>
-          <p>如果能真人出镜，外加配音解读能为你带来更多投票哦！</p>
         </div>
         <div class='wl_up' id='wl_up'>
           <input type="file" class="upload" @change="upload" id="upload" accept="video/*" v-show='uploadDataUrl===""'>
@@ -41,25 +20,17 @@
           <input type="file" accept="video/*" id='wl_add_btn'>
           <span>点击重新上传</span>
         </div>
-        <div class='wl_pg2_info wl_pg2_info4'>实验心得<span>*</span></div>
-        <textarea placeholder="写下你的实验心得吧，走心的心得体会可是比赛加分法宝哦，最多200字内" class='wl_pg2_textarea' maxlength="200" v-model='txt' type='text' @blur="inputBlur"></textarea>
         <div style='height: 0.853rem;'></div>
       </div>
       <img src="../assets/img/wl_pg2_btn.png" class='wl_pg2_btn' @click='btnfn'>
       <div style='height:1.216rem;'></div>
     </div>
-    <transition name="fade">
-      <div class='nav' v-show='alert'>
-        <div class='wl_pg2_alert'>
-          <img  class='animated hinge infinite pulse' src="../assets/img/wl_pg2_btn1.png" @click='alert=false'>
-        </div>
-      </div>
-    </transition>
   </div>
 </template>
 
 <script>
 // import * as qiniu from 'qiniu-js'
+import { uptoken, classinfo, userinfo } from '@/api/login'
 
 export default {
   name: 'pg2',
@@ -79,7 +50,6 @@ export default {
       tel: '',
       title: '',
       txt: '',
-      alert: false,
       imgsrc: '',
       uploader: null
     }
@@ -87,10 +57,17 @@ export default {
   computed: {
     iscroll2 () {
       return this.$refs.iscroll2
+    },
+    obj () {
+      return this.$store.state.obj
     }
   },
   mounted () {
-    let that = this
+    const that = this
+    if (!that.obj) {
+      that.ret()
+      return
+    }
     that.init()
   },
   methods: {
@@ -106,10 +83,10 @@ export default {
       return url
     },
     init () {
-      let that = this
-      that.axios.get(that.Url2 + 'uptoken.php').then((res) => {
-        that.uptoken = res.data.uptoken
-        that.domain = res.data.domain
+      const that = this
+      uptoken().then((res) => {
+        that.uptoken = res.uptoken
+        that.domain = res.domain
         that.uploader = window.Qiniu.uploader({
           runtimes: 'html5,flash,html4',
           browse_button: ['upload', 'wl_add_btn'],
@@ -121,7 +98,7 @@ export default {
           multi_selection: false,
           init: {
             FilesAdded: function (up, files) {
-              let self = this
+              const self = this
               window.plupload.each(files, function (file) {
                 if (!file) {
                   return
@@ -132,7 +109,7 @@ export default {
                   return
                 }
                 let size = parseInt(file.size / 1000000)
-                if (size >= 200) {
+                if (size >= 500) {
                   that.$toast('视频太大啦<br>请重新录制~')
                   document.getElementById('upload').value = ''
                   self.files.splice(self.files.length - 1, 1)
@@ -153,50 +130,59 @@ export default {
               that.$loading('上传中（' + Math.floor(up.total.percent) + '%）<br>请耐心等待')
             },
             FileUploaded: function (up, file, info) {
-              let res = JSON.parse(info.response)
-              let video = 'https://static-k12edu-camprecord.codemao.cn/' + res.key
-              let data = new FormData()
-              data.append('username', that.username)
-              data.append('grade', that.grade)
-              data.append('tel', that.tel)
-              data.append('qq', that.qq)
-              data.append('title', that.title)
-              data.append('txt', that.txt.replace(/\n/g, '<br>'))
-              data.append('video', video)
-              // data.append('imgsrc', that.imgsrc)
-              that.axios.post(that.Url + 'userinfo', data).then((res) => {
-                if (res.data.res === 'success') {
-                  that.$loading.close()
-                  that.setCookie('wl_tel', that.tel, 99)
-                  that.setCookie('wuli_ismy_' + res.data.id, 'wuli_ismy_' + res.data.id, 99)
-                  that.$store.commit('uvid', res.data.id)
-                  // that.$store.commit('ureturn', '')
-                  that.$emit('slideto', 3)
+              const res = JSON.parse(info.response)
+              const video = 'https://static-k12edu-camprecord.codemao.cn/' + res.key
+              const data = {
+                openid: window.Global.openid,
+                unionid: window.Global.unionid,
+                nickname: window.Global.nickname,
+                headimgurl: window.Global.headimgurl,
+                id: that.obj.id,
+                video
+              }
+              userinfo(data).then((res) => {
+                that.$loading.close()
+                if (res.res === 'success') {
+                  that.$store.commit('uvid', res.id)
+                  that.$toast('视频作业上传成功')
+                  that.$emit('slideto', 1)
+                } else if (res.res === 'again') {
+                  that.$store.commit('uvid', res.id)
+                  that.$toast('视频作业修改成功')
+                  that.$emit('slideto', 1)
+                } else if (res.res === 'old') {
+                  that.$toast('视频作业不可修改啦')
+                  that.$emit('slideto', 1)
                 }
               })
             },
             Key: function (up, file) {
-              var vtype = '.mp4'
-              let key = that.tel + '_' + Date.parse(new Date()) + vtype
+              const vtype = '.mp4'
+              const key = window.Global.openid + '_' + that.obj.id + '_' + Date.parse(new Date()) + vtype
               return key
             }
           }
         })
-        // setTimeout(function () {
-        //   document.getElementById('wl_up').querySelector('div').querySelector('input').accept = 'video/*'
-        //   document.getElementById('wl_add_btn').querySelector('div').querySelector('input').accept = 'video/*'
-        // }, 1000)
+        const data = {
+          openid: window.Global.openid,
+          unionid: window.Global.unionid,
+          nickname: window.Global.nickname,
+          headimgurl: window.Global.headimgurl,
+          id: that.obj.id
+        }
+        classinfo(data).then(res => {
+          if (res.res === 'success') {
+            if (res.zuoye !== '') {
+              that.uploadDataUrl = res.zuoye.video
+              document.getElementById('upvideo').querySelector('source').src = that.uploadDataUrl
+              document.getElementById('upvideo').src = that.uploadDataUrl
+              document.getElementById('wl_up').querySelector('div').style.display = 'none'
+              document.getElementById('wl_up_btn').querySelector('div').style.width = '100%'
+              document.getElementById('wl_up_btn').querySelector('div').style.height = '100%'
+            }
+          }
+        })
       })
-      that.toShare()
-      that.username = ''
-      that.grade = ''
-      that.qq = ''
-      that.tel = that.getCookie('wl_tel')
-      that.title = ''
-      that.txt = ''
-      that.uploadDataUrl = ''
-      that.imgsrc = ''
-      // that.iscroll2.refresh()
     },
     ret () {
       let that = this
@@ -217,45 +203,13 @@ export default {
       that.uploadDataUrl = that.getObjectURL(files)
     },
     btnfn () {
-      let that = this
-      if (that.username === '') {
-        that.alert = true
+      const that = this
+      if (that.uploader.files.length === 0) {
+        that.$toast('请选择视频上传')
         return
       }
-      if (that.grade === '') {
-        that.alert = true
-        return
-      }
-      if (that.qq === '') {
-        that.alert = true
-        return
-      }
-      if (!that.qq.match(/^[1-9][0-9]{4,14}$/)) {
-        that.$toast('请填正确的QQ号')
-        return
-      }
-      if (that.tel === '') {
-        that.alert = true
-        return
-      }
-      if (!that.tel.match(/^(((1[3-9][0-9]))+\d{8})$/)) {
-        that.$toast('请填正确的联系电话')
-        return
-      }
-      if (that.title === '') {
-        that.alert = true
-        return
-      }
-      if (that.txt === '') {
-        that.alert = true
-        return
-      }
-      if (that.uploadDataUrl === '') {
-        that.$toast('请上传视频')
-        return
-      }
+      console.log(that.uploader.files)
       that.uploader.files.splice(0, that.uploader.files.length - 1)
-      // console.log(that.uploader.files)
       that.$loading('上传中<br>请耐心等待')
       that.uploader.start()
     }

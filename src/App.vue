@@ -7,7 +7,6 @@
 </template>
 
 <script>
-import load from './components/load'
 import pg1 from './components/pg1'
 import pg2 from './components/pg2'
 import pg3 from './components/pg3'
@@ -16,16 +15,10 @@ import pg4 from './components/pg4'
 export default {
   name: 'App',
   components: {
-    load,
     pg1,
     pg2,
     pg3,
     pg4
-  },
-  computed: {
-    swiper () {
-      return this.$refs.mySwiper.swiper
-    }
   },
   methods: {
     slideto (res) {
@@ -48,19 +41,11 @@ export default {
   },
   data () {
     return {
-      swiperOption: {
-        initialSlide: 0,
-        noSwiping: true,
-        noSwipingClass: 'stop-swiping',
-        preventClicks: false
-      },
-      moban: 'load',
+      moban: 'pg1',
       fade: true
     }
   },
   mounted () {
-    let that = this
-    that.$refs.moban.loadImage()
   }
 }
 </script>

@@ -6,11 +6,13 @@ import VueAwesomeSwiper from 'vue-awesome-swiper'
 import Vuex from 'vuex'
 import store from './vuex/store'
 import IScrollView from 'vue-iscroll-view'
-import IScroll from 'iscroll'
+import IScroll from 'iscroll/build/iscroll-probe.js'
 import axios from 'axios'
 import VueAxios from 'vue-axios'
 import Toast from 'vue2-toast'
 import VueVideoPlayer from 'vue-video-player'
+// import WeVue from 'we-vue'
+// import 'we-vue/lib/style.css'
 import 'swiper/dist/css/swiper.css'
 import './assets/scss/base.scss'
 import 'vue2-toast/lib/toast.css'
@@ -19,6 +21,7 @@ import 'video.js/dist/video-js.css'
 axios.defaults.withCredentials = true
 Vue.config.productionTip = false
 
+// Vue.use(WeVue)
 Vue.use(Toast, {
   type: 'center',
   duration: 2000,
@@ -30,29 +33,20 @@ Vue.use(VueAwesomeSwiper)
 Vue.use(Vuex)
 Vue.use(VueVideoPlayer)
 
-Vue.prototype.Url = 'https://h5.nyjun.com/wldw2019/index/'
-Vue.prototype.Url2 = 'https://h5.nyjun.com/h5/wldw2019/static/php/'
+// Vue.prototype.Url = 'https://h5.nyjun.com/wldw2019/index/'
+// Vue.prototype.Url2 = 'https://h5.nyjun.com/h5/wldw2019/static/php/'
 
-// Vue.prototype.Url = 'http://localhost/tp5/public/index.php/wldw2019/index/'
-// Vue.prototype.Url2 = 'http://localhost/wldw2019/static/php/'
+// Vue.prototype.Url = 'http://localhost/tp5/public/index.php/wlsy2019/index/'
+// Vue.prototype.Url2 = 'http://localhost/wlsy2019/static/php/'
 
-Vue.prototype.isFudaoApp = function () {
-  var REGEXP_FUDAO_APP = /EducationApp/
-  if (typeof navigator !== 'undefined') {
-    return REGEXP_FUDAO_APP.test(navigator.userAgent)
-  }
-  return false
-}
+Vue.prototype.Url = process.env.BASE_API
+Vue.prototype.Url2 = process.env.BASE_API2
 
-Vue.prototype.hr = function (url) {
-  var isFudaoApp = this.isFudaoApp()
-  if (isFudaoApp) {
-    window.mqq.invoke('edu', 'openAppPage', {
-      url: 'tencentk12://openpage/webview?url=' + encodeURIComponent(url)
-    })
-  } else {
-    window.location.href = url
-  }
+if (process.env.NODE_ENV === 'development') {
+  window.Global.openid = 'oEMA252Dxr8bkVc37H6i630lgui8200b3'
+  window.Global.nickname = 'hj'
+  window.Global.unionid = 'oE5xYwF0pCMeCjM2Rcrzh24nRZMM'
+  window.Global.headimgurl = 'http://thirdwx.qlogo.cn/mmopen/vi_32/IK7mxEHHmUkg7EmZcqruiblibBickEa24iazEeThiaFPvNyeJZrrqkvgFTjU4GJKFDPC7Aicc7p9ee7fbAeKb643JkEA/132'
 }
 
 Vue.prototype.toShare = function (id, username) {
@@ -61,11 +55,11 @@ Vue.prototype.toShare = function (id, username) {
   let fudaoapp = {}
   let AppMShareContent = {}
   let imgurl = 'https://h5.nyjun.com/static/img/wl_share.jpg'
-  let weburl = 'https://h5.nyjun.com/h5/wldw2019/'
+  let weburl = 'https://h5.nyjun.com/h5/wlsy2019/'
   let tit = [
     {
       title: '这是' + username + '酷炫的物理实验作品！快来投票吧！',
-      summary: '第一届企鹅辅导物理实验大赛开始报名啦！动动手指，一起玩转物理！'
+      summary: '暑假企鹅辅导物理实验大赛开始报名啦！动动手指，一起玩转物理！'
     },
     {
       title: '谁是物理实验王？等你来投票，请支持' + username + '！',
@@ -87,7 +81,7 @@ Vue.prototype.toShare = function (id, username) {
     },
     {
       title: '快来，2019最炫酷好玩的物理实验比赛在这里！',
-      summary: '第一届企鹅辅导物理实验大赛热力开赛！是时候展现你真正的技术了！'
+      summary: '暑假企鹅辅导物理实验大赛热力开赛！是时候展现你真正的技术了！'
     }
   ]
   if (id) {

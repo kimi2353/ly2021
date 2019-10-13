@@ -3,7 +3,7 @@
     <iscroll-view class='scroll-view' ref='iscroll4' :options='scrollOptions' @pullUp='load'>
       <div class='pg4_main'>
         <div class='return' @click='ret'>返回</div>
-        <img src="../assets/img/wl_pg4_btn1.png" class='animated hinge infinite pulse wl_pg4_btn1' @click='hr("https://fudao.qq.com/activities/wlsyk1212/index.html?from=h5_2019wlsyds")'>
+        <img src="../assets/img/wl_pg4_btn1.png" class='animated hinge infinite pulse wl_pg4_btn1' @click='hr("https://fudao.qq.com/course_group_pack_detail.html?_lv=73364&course_package_id=1198&_bid=2379&fr=banner_0606wuli&_wv=2147483648")'>
         <ul class='wl_pg4_btnlist'>
           <li :class='{active:type===0}' @click='totype(0)'>最热</li>
           <li :class='{active:type===1}' @click='totype(1)'>最新</li>
@@ -216,38 +216,39 @@ export default {
     },
     goodBtn (id) {
       var that = this
-      let data = new FormData()
-      data.append('id', id)
-      data.append('tel', that.tel)
-      if (that.checkcookie(id) === true) {
-        that.axios.post(that.Url + 'zan', data).then(function (res) {
-          if (res.data.res === 'success') {
-            for (var i = 0; i < that.ulData.length; i++) {
-              if (that.ulData[i].id === id) {
-                that.ulData[i].num = res.data.info.num
-                that.ulData[i].zan = false
-                that.ulData[i].zanfr = true
-                break
-              }
-            }
-          }
-        })
-      } else {
-        var thiscookie = 'wuli_iszan_' + id
-        that.clearCookie(thiscookie)
-        that.axios.post(that.Url + 'cancelzan', data).then(function (res) {
-          if (res.data.res === 'success') {
-            for (var i = 0; i < that.ulData.length; i++) {
-              if (that.ulData[i].id === id) {
-                that.ulData[i].num = res.data.info.num
-                that.ulData[i].zan = true
-                that.ulData[i].zanfr = true
-                break
-              }
-            }
-          }
-        })
-      }
+      that.$toast('活动征集已结束，请耐心等待获奖结果')
+      // let data = new FormData()
+      // data.append('id', id)
+      // data.append('tel', that.tel)
+      // if (that.checkcookie(id) === true) {
+      //   that.axios.post(that.Url + 'zan', data).then(function (res) {
+      //     if (res.data.res === 'success') {
+      //       for (var i = 0; i < that.ulData.length; i++) {
+      //         if (that.ulData[i].id === id) {
+      //           that.ulData[i].num = res.data.info.num
+      //           that.ulData[i].zan = false
+      //           that.ulData[i].zanfr = true
+      //           break
+      //         }
+      //       }
+      //     }
+      //   })
+      // } else {
+      //   var thiscookie = 'wuli_iszan_' + id
+      //   that.clearCookie(thiscookie)
+      //   that.axios.post(that.Url + 'cancelzan', data).then(function (res) {
+      //     if (res.data.res === 'success') {
+      //       for (var i = 0; i < that.ulData.length; i++) {
+      //         if (that.ulData[i].id === id) {
+      //           that.ulData[i].num = res.data.info.num
+      //           that.ulData[i].zan = true
+      //           that.ulData[i].zanfr = true
+      //           break
+      //         }
+      //       }
+      //     }
+      //   })
+      // }
     },
     load () {
       let that = this

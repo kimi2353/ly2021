@@ -14,11 +14,11 @@ export default {
   data () {
     return {
       fileList: [
-        '/static/img/wl_pg1_bg.jpg',
-        '/static/img/wl_4.jpg',
-        '/static/img/wl_6.jpg',
-        '/static/img/wl_pg4.jpg',
-        '/static/img/wl_pg2_alert.png'
+        '/static/img/wl_pg1_bg.jpg?1',
+        '/static/img/wl_4.jpg?1',
+        '/static/img/wl_6.jpg?1',
+        '/static/img/wl_pg4.jpg?1',
+        '/static/img/wl_pg2_alert.png?1'
       ],
       imgIndex: 0
     }
