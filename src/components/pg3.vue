@@ -4,7 +4,7 @@
       <div class='pg3_main'>
         <div class='return' @click='ret'>返回</div>
         <div style="height: 1.53rem" />
-        <div class='pg3_tit'>{{nickname}}的作品</div>
+        <div class='pg3_tit'>{{child_name}}的作品</div>
         <div class='pg3_main1'>
           <div class='pg3_ctit'>{{tit}}</div>
           <div class='pg3_border'>
@@ -36,6 +36,7 @@ export default {
     return {
       nickname: '',
       tit: '',
+      child_name: '',
       playerOptions: {
         playbackRates: [0.7, 1.0, 1.5, 2.0],
         sources: [{
@@ -85,11 +86,11 @@ export default {
     const that = this
     const id = that.getQueryString('id')
     // console.log()
-    if (id) {
-      that.id = id
-      that.init()
-    } else if (that.obj && that.obj.id) {
+    if (that.obj && that.obj.id) {
       that.id = that.obj.id
+      that.init()
+    } else if (id) {
+      that.id = id
       that.init()
     } else {
       that.ret()
@@ -123,7 +124,8 @@ export default {
             }, 200)
             that.txt = that.info.comment
             that.nickname = that.info.nickname
-            that.tit = that.info.classname
+            that.tit = that.info.course_name
+            that.child_name = that.info.child_name
             that.voiceList = []
             const arr1 = that.info.voice.split(',')
             const arr2 = that.info.voiceTimes.split(',')

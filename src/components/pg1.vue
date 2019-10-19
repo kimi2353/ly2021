@@ -13,6 +13,9 @@
               <img :src="item.zuoye === '' ? 'https://festival.codemao.cn/static/img/yyl_share.png' : item.zuoye.video + '?vframe/jpg/offset/0'">
               <div class='info'>
                 <div class='info_txt1'>
+                  <span>{{ item.course_name }}</span>
+                </div>
+                <div class='info_txt1'>
                   <span>视频作业：</span>{{ item.zuoye === '' ? '未上传' : fmt(item.zuoye.flag) }}
                 </div>
               </div>

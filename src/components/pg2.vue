@@ -4,7 +4,7 @@
       <div class='return' @click='ret'>返回</div>
       <div class='pg2_tit'>上传你的小火箭作品吧</div>
       <div class='pg2_center'>
-        <div class='pg2_center_title' v-if='obj'>{{obj.classname}}</div>
+        <div class='pg2_center_title' v-if='obj'>{{obj.course_name}}</div>
         <div class='wl_pg2_info wl_pg2_info3'>上传视频<span>*</span></div>
         <div class='wl_up_tips'>
           <p>建议在微信App中横屏拍摄</p>

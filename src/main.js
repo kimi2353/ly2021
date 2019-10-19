@@ -45,6 +45,8 @@ if (process.env.NODE_ENV === 'development') {
   // window.Global.unionid = 'oE5xYwF0pCMeCjM2Rcrzh24nRZMM'
   window.Global.unionid = 'oE5xYwG7Bj1T8C1QorHI4EHmESyU'
   window.Global.headimgurl = 'http://thirdwx.qlogo.cn/mmopen/vi_32/IK7mxEHHmUkg7EmZcqruiblibBickEa24iazEeThiaFPvNyeJZrrqkvgFTjU4GJKFDPC7Aicc7p9ee7fbAeKb643JkEA/132'
+} else if (window.Global.unionid === 'oE5xYwF0pCMeCjM2Rcrzh24nRZMM') {
+  window.Global.unionid = 'oE5xYwG7Bj1T8C1QorHI4EHmESyU'
 }
 
 Vue.prototype.toShare = function (id) {
