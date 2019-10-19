@@ -41,11 +41,23 @@ export default {
   },
   data () {
     return {
-      moban: 'pg1',
+      moban: '',
       fade: true
     }
   },
   mounted () {
+    const that = this
+    const id = that.getQueryString('id')
+    if (!id) {
+      that.moban = 'pg1'
+    } else {
+      const data = {
+        id
+      }
+      // console.log(data)
+      that.$store.commit('uObj', data)
+      that.moban = 'pg3'
+    }
   }
 }
 </script>

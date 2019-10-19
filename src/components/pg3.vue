@@ -1,25 +1,29 @@
 <template>
-  <div class='pg pg3'>
-    <div class='return' @click='ret'>返回</div>
-    <div class='pg3_tit'>{{nickname}}的作品</div>
-    <div class='pg3_main1'>
-      <div class='pg3_ctit'>{{tit}}</div>
-      <div class='pg3_border'>
-        <video-player class="video-player-box vjs-big-play-centered" ref="videoPlayer" :options="playerOptions" :playsinline="false" />
+  <div class='pg3'>
+    <iscroll-view class='scroll-view' ref='iscroll1' :options='scrollOptions'>
+      <div class='pg3_main'>
+        <div class='return' @click='ret'>返回</div>
+        <div style="height: 1.53rem" />
+        <div class='pg3_tit'>{{nickname}}的作品</div>
+        <div class='pg3_main1'>
+          <div class='pg3_ctit'>{{tit}}</div>
+          <div class='pg3_border'>
+            <video-player class="video-player-box vjs-big-play-centered" ref="videoPlayer" :options="playerOptions" :playsinline="false" />
+          </div>
+        </div>
+        <div class='pg3_main2'>
+          <div class='piao' v-if='voiceList.length > 0'>
+            <div class='pg3_ctit'>老师语音留言</div>
+            <div class='txt1' @click='start(item, index)' v-for="(item, index) in voiceList" :key="index" :class="{voiceActive: item.voiceFlag}" >{{ item.voiceTimes }}秒</div>
+          </div>
+          <div class='pg3_ctit'>老师评语</div>
+          <div class='pg3_txt'>
+            <p v-html='txt'></p>
+          </div>
+        </div>
+        <div style="height: 2rem" />
       </div>
-      <div class='piao' v-if='info' v-show="info&&info.voice">
-        <div class='pg3_ctit'>老师语音留言</div>
-        <div class='txt1' @click='start' :class="{voiceActive: voiceFlag}" >{{ info.voiceTimes }}秒</div>
-      </div>
-    </div>
-    <div class='pg3_main2'>
-      <div class='pg3_ctit'>老师评语</div>
-      <div class='pg3_txt'>
-        <iscroll-view class='scroll-view' ref='iscroll1' :options='scrollOptions'>
-          <p v-html='txt'></p>
-        </iscroll-view>
-      </div>
-    </div>
+    </iscroll-view>
   </div>
 </template>
 
@@ -42,14 +46,17 @@ export default {
       scrollOptions: {
         mouseWheel: true,
         click: true,
-        tap: true,
-        scrollbars: true
+        tap: true
+        // scrollbars: true
       },
       video: '',
       txt: '',
       info: null,
       voice: null,
-      voiceFlag: false
+      voiceFlag: false,
+      id: '',
+      voiceList: [],
+      voiceId: ''
     }
   },
   computed: {
@@ -68,17 +75,25 @@ export default {
     if (that.voice) {
       that.voice.pause()
       that.voice.removeEventListener('ended', function () {})
-      that.voiceFlag = false
       that.voice = null
+      for (let i = 0; i < that.voiceList.length; i++) {
+        that.voiceList[i].voiceFlag = false
+      }
     }
   },
   mounted () {
     const that = this
-    if (!that.obj) {
+    const id = that.getQueryString('id')
+    // console.log()
+    if (id) {
+      that.id = id
+      that.init()
+    } else if (that.obj && that.obj.id) {
+      that.id = that.obj.id
+      that.init()
+    } else {
       that.ret()
-      return
     }
-    that.init()
   },
   methods: {
     init () {
@@ -89,12 +104,17 @@ export default {
         unionid: window.Global.unionid,
         nickname: window.Global.nickname,
         headimgurl: window.Global.headimgurl,
-        id: that.obj.id
+        id: that.id
       }
       classinfo(data).then(res => {
         that.$loading.close()
         if (res.res === 'success') {
           if (res.zuoye !== '') {
+            // console.log(res.zuoye)
+            if (res.zuoye.flag != 1 && res.zuoye.flag != 2) { //eslint-disable-line
+              that.ret()
+              return
+            }
             that.info = res.zuoye
             that.video = that.info.video
             setTimeout(function () {
@@ -104,6 +124,17 @@ export default {
             that.txt = that.info.comment
             that.nickname = that.info.nickname
             that.tit = that.info.classname
+            that.voiceList = []
+            const arr1 = that.info.voice.split(',')
+            const arr2 = that.info.voiceTimes.split(',')
+            for (let i = 0; i < arr1.length; i++) {
+              that.voiceList.push({
+                voice: arr1[i],
+                voiceTimes: arr2[i],
+                voiceFlag: false
+              })
+            }
+            that.toShare(res.zuoye.id)
             setTimeout(function () {
               that.iscroll1.refresh()
             }, 600)
@@ -119,24 +150,69 @@ export default {
       let that = this
       that.$emit('slideto', 1)
     },
-    start () {
+    start (obj, index) {
       const that = this
-      if (!that.voice) {
-        that.voice = new Audio()
-        that.voice.src = that.info.voice
-        that.voice.play()
-        that.voiceFlag = true
-        that.voice.addEventListener('ended', function () {
+      if (that.voiceId === index) {
+        if (!that.voice) {
+          that.voice = new Audio()
+          that.voice.src = obj.voice
+          that.voice.play()
+          that.voiceList[index].voiceFlag = true
+          that.voice.addEventListener('ended', function () {
+            that.voice.pause()
+            that.voice.removeEventListener('ended', function () {})
+            that.voice = null
+            that.voiceId = ''
+            for (let i = 0; i < that.voiceList.length; i++) {
+              that.voiceList[i].voiceFlag = false
+            }
+          })
+        } else {
+          that.voice.pause()
+          that.voiceId = ''
+          that.voice.removeEventListener('ended', function () {})
+          that.voice = null
+          for (let i = 0; i < that.voiceList.length; i++) {
+            that.voiceList[i].voiceFlag = false
+          }
+        }
+      } else {
+        that.voiceId = index
+        if (!that.voice) {
+          that.voice = new Audio()
+          that.voice.src = obj.voice
+          that.voice.play()
+          that.voiceList[index].voiceFlag = true
+          that.voice.addEventListener('ended', function () {
+            that.voice.pause()
+            that.voice.removeEventListener('ended', function () {})
+            that.voice = null
+            that.voiceId = ''
+            for (let i = 0; i < that.voiceList.length; i++) {
+              that.voiceList[i].voiceFlag = false
+            }
+          })
+        } else {
           that.voice.pause()
           that.voice.removeEventListener('ended', function () {})
           that.voice = null
-          that.voiceFlag = false
-        })
-      } else {
-        that.voice.pause()
-        that.voice.removeEventListener('ended', function () {})
-        that.voice = null
-        that.voiceFlag = false
+          for (let i = 0; i < that.voiceList.length; i++) {
+            that.voiceList[i].voiceFlag = false
+          }
+          that.voice = new Audio()
+          that.voice.src = obj.voice
+          that.voice.play()
+          that.voiceList[index].voiceFlag = true
+          that.voice.addEventListener('ended', function () {
+            that.voice.pause()
+            that.voice.removeEventListener('ended', function () {})
+            that.voice = null
+            that.voiceId = ''
+            for (let i = 0; i < that.voiceList.length; i++) {
+              that.voiceList[i].voiceFlag = false
+            }
+          })
+        }
       }
     }
   }

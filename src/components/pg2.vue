@@ -2,7 +2,7 @@
   <div class='pg2'>
     <div class='pg2_main'>
       <div class='return' @click='ret'>返回</div>
-      <div class='pg2_tit'>上传你最酷炫的作品吧</div>
+      <div class='pg2_tit'>上传你的小火箭作品吧</div>
       <div class='pg2_center'>
         <div class='pg2_center_title' v-if='obj'>{{obj.classname}}</div>
         <div class='wl_pg2_info wl_pg2_info3'>上传视频<span>*</span></div>
@@ -22,7 +22,7 @@
         </div>
         <div style='height: 0.853rem;'></div>
       </div>
-      <img src="../assets/img/wl_pg2_btn.png" class='wl_pg2_btn' @click='btnfn'>
+      <div class='wl_pg2_btn' @click='btnfn'>提交作业</div>
       <div style='height:1.216rem;'></div>
     </div>
   </div>
@@ -30,7 +30,7 @@
 
 <script>
 // import * as qiniu from 'qiniu-js'
-import { uptoken, classinfo, userinfo } from '@/api/login'
+import { uptoken, classinfo, videoUp } from '@/api/login'
 
 export default {
   name: 'pg2',
@@ -84,6 +84,32 @@ export default {
     },
     init () {
       const that = this
+      const data = {
+        openid: window.Global.openid,
+        unionid: window.Global.unionid,
+        nickname: window.Global.nickname,
+        headimgurl: window.Global.headimgurl,
+        ...that.obj
+      }
+      classinfo(data).then(res => {
+        if (res.res === 'success') {
+          if (res.zuoye !== '') {
+            if (res.zuoye.flag === 4) {
+              that.uploadDataUrl = res.zuoye.video
+              document.getElementById('upvideo').querySelector('source').src = that.uploadDataUrl
+              document.getElementById('upvideo').src = that.uploadDataUrl
+              document.getElementById('wl_up').querySelector('div').style.display = 'none'
+              document.getElementById('wl_up_btn').querySelector('div').style.width = '100%'
+              document.getElementById('wl_up_btn').querySelector('div').style.height = '100%'
+            } else if (res.zuoye.flag === 0) {
+              that.$toast('老师正在批改，请稍后查看...')
+              that.slideto(1)
+            } else {
+              that.slideto(3)
+            }
+          }
+        }
+      })
       uptoken().then((res) => {
         that.uptoken = res.uptoken
         that.domain = res.domain
@@ -137,10 +163,10 @@ export default {
                 unionid: window.Global.unionid,
                 nickname: window.Global.nickname,
                 headimgurl: window.Global.headimgurl,
-                id: that.obj.id,
+                ...that.obj,
                 video
               }
-              userinfo(data).then((res) => {
+              videoUp(data).then((res) => {
                 that.$loading.close()
                 if (res.res === 'success') {
                   that.$store.commit('uvid', res.id)
@@ -158,27 +184,8 @@ export default {
             },
             Key: function (up, file) {
               const vtype = '.mp4'
-              const key = window.Global.openid + '_' + that.obj.id + '_' + Date.parse(new Date()) + vtype
+              const key = window.Global.openid + '_' + that.obj.course_id + '_' + Date.parse(new Date()) + vtype
               return key
-            }
-          }
-        })
-        const data = {
-          openid: window.Global.openid,
-          unionid: window.Global.unionid,
-          nickname: window.Global.nickname,
-          headimgurl: window.Global.headimgurl,
-          id: that.obj.id
-        }
-        classinfo(data).then(res => {
-          if (res.res === 'success') {
-            if (res.zuoye !== '') {
-              that.uploadDataUrl = res.zuoye.video
-              document.getElementById('upvideo').querySelector('source').src = that.uploadDataUrl
-              document.getElementById('upvideo').src = that.uploadDataUrl
-              document.getElementById('wl_up').querySelector('div').style.display = 'none'
-              document.getElementById('wl_up_btn').querySelector('div').style.width = '100%'
-              document.getElementById('wl_up_btn').querySelector('div').style.height = '100%'
             }
           }
         })
@@ -208,7 +215,7 @@ export default {
         that.$toast('请选择视频上传')
         return
       }
-      console.log(that.uploader.files)
+      // console.log(that.uploader.files)
       that.uploader.files.splice(0, that.uploader.files.length - 1)
       that.$loading('上传中<br>请耐心等待')
       that.uploader.start()

@@ -40,6 +40,14 @@ export function userinfo (data) {
   })
 }
 
+export function videoUp (data) {
+  return request({
+    url: '/videoUp',
+    method: 'post',
+    data
+  })
+}
+
 export function submitHai (data) {
   return request({
     url: '/submitHai',

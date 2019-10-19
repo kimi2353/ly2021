@@ -2,23 +2,21 @@
 // (runtime-only or standalone) has been set in webpack.base.conf with an alias.
 import Vue from 'vue'
 import App from './App'
-import VueAwesomeSwiper from 'vue-awesome-swiper'
+// import VueAwesomeSwiper from 'vue-awesome-swiper'
 import Vuex from 'vuex'
 import store from './vuex/store'
 import IScrollView from 'vue-iscroll-view'
 import IScroll from 'iscroll/build/iscroll-probe.js'
-import axios from 'axios'
-import VueAxios from 'vue-axios'
 import Toast from 'vue2-toast'
 import VueVideoPlayer from 'vue-video-player'
 // import WeVue from 'we-vue'
 // import 'we-vue/lib/style.css'
-import 'swiper/dist/css/swiper.css'
-import './assets/scss/base.scss'
+// import 'swiper/dist/css/swiper.css'
 import 'vue2-toast/lib/toast.css'
 import 'video.js/dist/video-js.css'
+import './assets/scss/base.scss'
 
-axios.defaults.withCredentials = true
+// axios.defaults.withCredentials = true
 Vue.config.productionTip = false
 
 // Vue.use(WeVue)
@@ -27,9 +25,8 @@ Vue.use(Toast, {
   duration: 2000,
   wordWrap: true
 })
-Vue.use(VueAxios, axios)
 Vue.use(IScrollView, IScroll)
-Vue.use(VueAwesomeSwiper)
+// Vue.use(VueAwesomeSwiper)
 Vue.use(Vuex)
 Vue.use(VueVideoPlayer)
 
@@ -45,130 +42,29 @@ Vue.prototype.Url2 = process.env.BASE_API2
 if (process.env.NODE_ENV === 'development') {
   window.Global.openid = 'oEMA252Dxr8bkVc37H6i630lgui8200b3'
   window.Global.nickname = 'hj'
-  window.Global.unionid = 'oE5xYwF0pCMeCjM2Rcrzh24nRZMM'
+  // window.Global.unionid = 'oE5xYwF0pCMeCjM2Rcrzh24nRZMM'
+  window.Global.unionid = 'oE5xYwG7Bj1T8C1QorHI4EHmESyU'
   window.Global.headimgurl = 'http://thirdwx.qlogo.cn/mmopen/vi_32/IK7mxEHHmUkg7EmZcqruiblibBickEa24iazEeThiaFPvNyeJZrrqkvgFTjU4GJKFDPC7Aicc7p9ee7fbAeKb643JkEA/132'
 }
 
-Vue.prototype.toShare = function (id, username) {
-  let that = this
-  let isFD = that.isFudaoApp()
-  let fudaoapp = {}
-  let AppMShareContent = {}
-  let imgurl = 'https://h5.nyjun.com/static/img/wl_share.jpg'
-  let weburl = 'https://h5.nyjun.com/h5/wlsy2019/'
-  let tit = [
-    {
-      title: '这是' + username + '酷炫的物理实验作品！快来投票吧！',
-      summary: '暑假企鹅辅导物理实验大赛开始报名啦！动动手指，一起玩转物理！'
-    },
-    {
-      title: '谁是物理实验王？等你来投票，请支持' + username + '！',
-      summary: '2019企鹅辅导物理实验大赛火爆来袭！实验王者宝座，虚位以待。'
-    },
-    {
-      title: '嗨，快来为' + username + '酷炫的物理实验作品投票吧！',
-      summary: '2019企鹅辅导物理实验大赛火热进行中！做好准备，赢取属于你的荣耀！'
-    }
-  ]
-  let tit1 = [
-    {
-      title: '玩好物理正当时，物理实验王，C位就是你！',
-      summary: '2019企鹅辅导物理实验大赛重磅来袭！喜欢动手动脑的你准备好了么？'
-    },
-    {
-      title: '想捍卫物理实验的王者地位？就看你的了！',
-      summary: '2019企鹅辅导物理实验大赛强势来袭！让我们一起见证最强王者的诞生！'
-    },
-    {
-      title: '快来，2019最炫酷好玩的物理实验比赛在这里！',
-      summary: '暑假企鹅辅导物理实验大赛热力开赛！是时候展现你真正的技术了！'
-    }
-  ]
+Vue.prototype.toShare = function (id) {
+  const imgurl = 'https://festival.codemao.cn/static/img/yyl_share.png'
+  let weburl = 'https://festival.codemao.cn/h5/sp2019'
   if (id) {
-    let n = Math.floor(Math.random() * tit.length)
-    let rt = tit[n].title
-    let rs = tit[n].summary
-    if (isFD) {
-      fudaoapp = {
-        title: rt,
-        summary: rs,
-        url: weburl + '?id=' + id,
-        coverImageUrl: imgurl
-      }
-      window.mqq.invoke('edu', 'interceptBackEvent', {'enable': 1})
-      window.mqq.invoke('edu', 'setCenterTitle', {text: '企鹅辅导物理实验大赛'})
-      window.mqq.invoke('edu', 'setRightTitle', {
-        enable: 1,
-        imageIcon: 'https://9.url.cn/fudao/assets/images/shareBtnShadow_42019f5.png',
-        imageIconDefault: 'https://9.url.cn/fudao/assets/images/shareBtnShadow_42019f5.png'
-      })
-      window.mqq.removeEventListener('rightTitleClicked')
-      window.mqq.addEventListener('rightTitleClicked', function () {
-        window.mqq.invoke('edu', 'showShareSelectDlg', fudaoapp)
-      })
-    } else {
-      AppMShareContent = {
-        title: rt,
-        desc: rs,
-        link: weburl + '?id=' + id,
-        imgUrl: imgurl
-      }
-      window.wx.ready(function () {
-        window.wx.onMenuShareTimeline(AppMShareContent)
-        window.wx.onMenuShareAppMessage(AppMShareContent)
-        window.wx.onMenuShareQQ(AppMShareContent)
-        window.wx.onMenuShareWeibo(AppMShareContent)
-      })
-      window.setShareInfo({
-        title: rt,
-        summary: rs,
-        pic: imgurl,
-        url: weburl + '?id=' + id
-      })
-    }
-  } else {
-    let n = Math.floor(Math.random() * tit1.length)
-    let rt = tit1[n].title
-    let rs = tit1[n].summary
-    if (isFD) {
-      fudaoapp = {
-        title: rt,
-        summary: rs,
-        url: weburl,
-        coverImageUrl: imgurl
-      }
-      window.mqq.invoke('edu', 'interceptBackEvent', {'enable': 1})
-      window.mqq.invoke('edu', 'setCenterTitle', {text: '企鹅辅导物理实验大赛'})
-      window.mqq.invoke('edu', 'setRightTitle', {
-        enable: 1,
-        imageIcon: 'https://9.url.cn/fudao/assets/images/shareBtnShadow_42019f5.png',
-        imageIconDefault: 'https://9.url.cn/fudao/assets/images/shareBtnShadow_42019f5.png'
-      })
-      window.mqq.removeEventListener('rightTitleClicked')
-      window.mqq.addEventListener('rightTitleClicked', function () {
-        window.mqq.invoke('edu', 'showShareSelectDlg', fudaoapp)
-      })
-    } else {
-      AppMShareContent = {
-        title: rt,
-        desc: rs,
-        link: weburl,
-        imgUrl: imgurl
-      }
-      window.wx.ready(function () {
-        window.wx.onMenuShareTimeline(AppMShareContent)
-        window.wx.onMenuShareAppMessage(AppMShareContent)
-        window.wx.onMenuShareQQ(AppMShareContent)
-        window.wx.onMenuShareWeibo(AppMShareContent)
-      })
-      window.setShareInfo({
-        title: rt,
-        summary: rs,
-        pic: imgurl,
-        url: weburl
-      })
-    }
+    weburl = 'https://festival.codemao.cn/h5/sp2019/?id=' + id
   }
+  const AppMShareContent = {
+    title: '小火箭视频作业分享',
+    desc: '',
+    link: weburl,
+    imgUrl: imgurl
+  }
+  window.wx.ready(function () {
+    window.wx.onMenuShareTimeline(AppMShareContent)
+    window.wx.onMenuShareAppMessage(AppMShareContent)
+    window.wx.onMenuShareQQ(AppMShareContent)
+    window.wx.onMenuShareWeibo(AppMShareContent)
+  })
 }
 
 Vue.prototype.getQueryString = function (name) {

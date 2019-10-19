@@ -1,20 +1,28 @@
 <template>
   <div class='pg1'>
     <iscroll-view class='scroll-view' ref='iscroll1' :options='scrollOptions'>
-      <div class='pg1_tit'>学习记录</div>
-      <ul class='pg1_list'>
-        <li v-for='(item, index) in classlist' :key='index' @click.stop='up(item)' v-show="item.zuoye !== ''">
-          <div class='classname'>{{ item.classname }}</div>
-          <div class='classinfo'>
-            <img :src="item.zuoye === '' ? 'https://festival.codemao.cn/static/img/yyl_share.png' : item.zuoye.video + '?vframe/jpg/offset/0'">
-            <div class='info'>
-              <div class='info_txt1'>视频作业：{{ item.zuoye === '' ? '未上传' : fmt(item.zuoye.flag) }}</div>
-              <div class='info_txt2' v-if="item.zuoye !== ''">解锁时间：{{ format(item.zuoye.times) }}</div>
+      <div class='pg1_main'>
+        <div style="height: 6.53rem" />
+        <img :src='headimgurl' class='headimgurl'>
+        <div class='nickname'>{{ nickname }}</div>
+        <div class='pg1_tit'>学习记录</div>
+        <ul class='pg1_list'>
+          <li v-for='(item, index) in classlist' :key='index'>
+            <div class='classname'>{{ item.classname }}</div>
+            <div class='classinfo'>
+              <img :src="item.zuoye === '' ? 'https://festival.codemao.cn/static/img/yyl_share.png' : item.zuoye.video + '?vframe/jpg/offset/0'">
+              <div class='info'>
+                <div class='info_txt1'>
+                  <span>视频作业：</span>{{ item.zuoye === '' ? '未上传' : fmt(item.zuoye.flag) }}
+                </div>
+              </div>
+              <div class='info_txt3' v-show="item.zuoye===''" @click.stop='up(item)'>点击上传</div>
+              <div class='info_txt3' v-show="item.zuoye!==''" @click.stop='up(item)'>点击查看</div>
             </div>
-          </div>
-        </li>
-      </ul>
-      <div style="height: 3rem" />
+          </li>
+        </ul>
+        <div style="height: 2rem" />
+      </div>
     </iscroll-view>
   </div>
 </template>
@@ -31,7 +39,11 @@ export default {
         click: true,
         tap: true
       },
-      classlist: []
+      classlist: [],
+      headimgurl: '',
+      nickname: '',
+      child_name: '',
+      user_id: ''
     }
   },
   computed: {
@@ -49,31 +61,33 @@ export default {
   methods: {
     init () {
       const that = this
+      that.headimgurl = window.Global.headimgurl
+      that.nickname = window.Global.nickname
       const data = {
         openid: window.Global.openid,
         unionid: window.Global.unionid,
         nickname: window.Global.nickname,
         headimgurl: window.Global.headimgurl
       }
-      const classQs = that.getQueryString('class')
+      // const classQs = that.getQueryString('class')
       checkclass(data).then(res => {
-        // console.log(res)
-        if (res.res === 'success' || res.res === 'again') {
-          that.classlist = res.class
-          if (classQs && that.cla) {
-            for (let i = 0; i < that.classlist.length; i++) {
-              if (classQs == that.classlist[i].id) { // eslint-disable-line
-                that.$store.commit('uCla', false)
-                that.up(that.classlist[i])
-              }
-            }
-          }
-          // that.myclass = res.myclass
+        if (res.res === 'new' || res.res === 'again') {
+          that.classlist = res.myclass
+          that.user_id = res.user_id
+          that.child_name = res.child_name
+          that.toShare()
+        } else if (res.res === 'nouser') {
+          that.$loading('无法查到您的小火箭课程信息...')
+        } else if (res.res === 'sys') {
+          that.$loading('系统错误，请稍后重试...')
         }
+        setTimeout(function () {
+          that.iscroll1.refresh()
+        }, 400)
+        setTimeout(function () {
+          that.iscroll1.refresh()
+        }, 1000)
       })
-      setTimeout(function () {
-        that.iscroll1.refresh()
-      }, 600)
     },
     slideto (res) {
       const that = this
@@ -110,8 +124,25 @@ export default {
     },
     up (obj) {
       const that = this
-      // console.log(obj)
-      that.$store.commit('uObj', obj)
+      // console.log(that.user_id)
+      // console.log(obj.package_id)
+      // console.log(obj.term_id)
+      // console.log(obj.course_id)
+      // console.log(obj.class_id)
+      const data = {
+        'user_id': that.user_id,
+        'child_name': that.child_name,
+        'package_id': obj.package_id,
+        'term_id': obj.term_id,
+        'course_id': obj.course_id,
+        'class_id': obj.class_id,
+        'course_name': obj.course_name
+      }
+      if (obj.zuoye && obj.zuoye.id) {
+        data['id'] = obj.zuoye.id
+      }
+      // console.log(data)
+      that.$store.commit('uObj', data)
       if (obj.zuoye === '') {
         that.slideto(2)
       } else if (obj.zuoye.flag === 4) {
