@@ -4,7 +4,7 @@
       <div class='return' @click='ret'>返回</div>
       <div class='right' @click.once='to4(1)' v-show="videoIndex<videoList.length-1"/>
       <div class='left' @click.once='to4(-1)' v-show="videoIndex>0"/>
-      <div class='menu' @click='menunfn' v-show="videoList.length>0"/>
+      <!-- <div class='menu' @click='menunfn' v-show="videoList.length>0"/> -->
       <div class='pg2_tit' v-if='obj'>{{obj.course_name}}</div>
       <div class='pg2_center'>
         <div class='pg2_center_title'>上传你的小火箭作品吧</div>
@@ -22,7 +22,7 @@
           <input type="file" accept="video/*" id='wl_add_btn'>
           <span>点击重新上传</span>
         </div>
-        <div class='pg2_txt1' v-show="flag!==4||flag===0">老师正在快马加鞭批改中，批改完成后将会以微信通知的方式提醒您</div>
+        <div class='pg2_txt1' v-show="flag!==null&&(flag===4||flag===0)">老师正在快马加鞭批改中，批改完成后将会以微信通知的方式提醒您</div>
         <div style='height: 0.853rem;'></div>
       </div>
       <div class='wl_pg2_btn' @click='btnfn' v-show="flag!==0">提交作业</div>
@@ -35,7 +35,7 @@
           <iscroll-view class='scroll-view' ref='iscroll2' :options='scrollOptions2'>
             <div class="menu_txt">您的课程列表</div>
             <ul class='munulist'>
-              <li v-for="(item, index) in videoList" :key="index" @click="toPage(index)">{{ item.course_name }}</li>
+              <li v-for="(item, index) in videoList" :key="index" @click="toPage(index)" :class="{flag0:item.zuoye==='', flag1:item.zuoye&&(item.zuoye.flag===1||item.zuoye.flag===2), flag2:item.zuoye&&item.zuoye.flag===4, flag3:item.zuoye&&item.zuoye.flag===0}">{{ item.course_name }}</li>
             </ul>
           </iscroll-view>
         </div>
@@ -158,17 +158,18 @@ export default {
           if (res.zuoye !== '') {
             if (res.zuoye.flag === 4 || res.zuoye.flag === 0) {
               that.uploadDataUrl = res.zuoye.video
+              that.flag = res.zuoye.flag
               document.getElementById('upvideo').querySelector('source').src = that.uploadDataUrl
               document.getElementById('upvideo').src = that.uploadDataUrl
               document.getElementById('upvideo').poster = that.uploadDataUrl + '?vframe/jpg/offset/0'
               document.getElementById('wl_up').querySelector('div').style.display = 'none'
               document.getElementById('wl_up_btn').querySelector('div').style.width = '100%'
               document.getElementById('wl_up_btn').querySelector('div').style.height = '100%'
-              that.flag = res.zuoye.flag
             } else {
               that.slideto(3)
             }
           }
+          console.log(that.flag)
         }
       })
       uptoken().then((res) => {

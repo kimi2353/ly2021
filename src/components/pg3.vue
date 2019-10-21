@@ -2,10 +2,10 @@
   <div class='pg3'>
     <iscroll-view class='scroll-view' ref='iscroll1' :options='scrollOptions'>
       <div class='pg3_main'>
-        <div class='return' @click='ret' v-if='zhuType'>返回</div>
+        <div class='return' @click='ret'>返回</div>
         <div class='right' @click.once='to4(1)' v-show="videoIndex<videoList.length-1"/>
         <div class='left' @click.once='to4(-1)' v-show="videoIndex>0"/>
-        <div class='menu' @click='menunfn' v-show="videoList.length>0"/>
+        <!-- <div class='menu' @click='menunfn' v-show="videoList.length>0"/> -->
         <div style="height: 1.53rem" />
         <div class='pg3_tit'>{{tit}}</div>
         <div class='pg3_main1'>
@@ -15,7 +15,7 @@
           </div>
         </div>
         <div class='pg3_main2'>
-          <div class='pg3_ctit'>老师点评</div>
+          <div class='pg3_ctit' v-if="info">{{ info.teacher_name }}点评</div>
           <div class='piao' v-if='voiceList.length > 0'>
             <div class='txt1' @click='start(item, index)' v-for="(item, index) in voiceList" :key="index" :class="{voiceActive: item.voiceFlag}" >{{ item.voiceTimes }}秒</div>
           </div>
@@ -44,7 +44,7 @@
           <iscroll-view class='scroll-view' ref='iscroll2' :options='scrollOptions2'>
             <div class="menu_txt">您的课程列表</div>
             <ul class='munulist'>
-              <li v-for="(item, index) in videoList" :key="index" @click="toPage(index)">{{ item.course_name }}</li>
+              <li v-for="(item, index) in videoList" :key="index" @click="toPage(index)" :class="{flag0:item.zuoye==='', flag1:item.zuoye&&(item.zuoye.flag===1||item.zuoye.flag===2), flag2:item.zuoye&&item.zuoye.flag===4, flag3:item.zuoye&&item.zuoye.flag===0}" >{{ item.course_name }}</li>
             </ul>
           </iscroll-view>
         </div>
@@ -129,7 +129,6 @@ export default {
   mounted () {
     const that = this
     const id = that.getQueryString('id')
-    // console.log(that.videoIndex)
     if (that.obj && that.obj.id) {
       that.id = that.obj.id
       that.init()
@@ -199,10 +198,10 @@ export default {
             }
             that.info = res.zuoye
             that.video = that.info.video
-            setTimeout(function () {
-              that.player.src(that.info.video)
-              that.player.poster(that.info.video + '?vframe/jpg/offset/0')
-            }, 200)
+            // setTimeout(function () {
+            //   that.player.src(that.info.video)
+            //   that.player.poster(that.info.video + '?vframe/jpg/offset/0')
+            // }, 300)
             that.txt = that.info.comment
             that.nickname = that.info.nickname
             that.zhuType = that.info.openid === window.Global.openid
@@ -212,8 +211,12 @@ export default {
             that.tit = that.info.course_name
             that.child_name = that.info.child_name
             that.voiceList = []
-            const arr1 = that.info.voice.split(',')
-            const arr2 = that.info.voiceTimes.split(',')
+            let arr1 = []
+            let arr2 = []
+            if (that.info.voice) {
+              arr1 = that.info.voice.split(',')
+              arr2 = that.info.voiceTimes.split(',')
+            }
             for (let i = 0; i < arr1.length; i++) {
               that.voiceList.push({
                 voice: arr1[i],
@@ -222,8 +225,16 @@ export default {
               })
             }
             that.toShare(res.zuoye.id, res.zuoye.child_name, res.zuoye.course_name)
+            that.$nextTick(() => {
+              that.iscroll1.refresh()
+              that.player.src(that.info.video)
+              that.player.poster(that.info.video + '?vframe/jpg/offset/0')
+            })
             setTimeout(function () {
               that.iscroll1.refresh()
+              setTimeout(function () {
+                that.iscroll1.refresh()
+              }, 1000)
             }, 600)
           } else {
             that.ret()
@@ -234,7 +245,7 @@ export default {
       })
     },
     ret () {
-      let that = this
+      const that = this
       that.$emit('slideto', 1)
     },
     start (obj, index) {

@@ -5,7 +5,7 @@
         <div style="height: 6.53rem" />
         <img :src='headimgurl' class='headimgurl'>
         <div class='nickname'>{{ nickname }}</div>
-        <div class='pg1_tit' v-if="user&&classlist">今天是{{ user.child_name }}小朋友来编程猫学习的第{{ parseInt(user.learn_time / 86400) }}天，孩子已经完成了{{classlist.length-videonull}}次视频作业啦，还有{{videonull}}次课程未上传视频</div>
+        <div class='pg1_tit' v-if="user&&classlist.length>0">今天是{{ user.child_name }}小朋友来编程猫学习的第{{ parseInt(user.learn_time / 86400) }}天，孩子已经完成了{{classlist.length-videonull}}次视频作业啦，还有{{videonull}}次课程未上传视频</div>
         <ul class='pg1_list'>
           <li v-for='(item, index) in classlist' :key='index' @click.stop='up(item, index)'>
             <div class='classname'>{{ item.classname }}</div>
@@ -25,6 +25,10 @@
             </div>
           </li>
         </ul>
+        <div class="pg1_bottom_txt1" v-show="nouser">暂无学习记录，你还没有在编程猫学习过，快去购课学习吧</div>
+        <a v-show="nouser" class="pg1_bottom_btn" href="https://mobile.codemao.cn/codecamp_new/product/16?utm_source=miniapp&utm_medium=h5&utm_term=video_work_share" target="_blank">立即报名</a>
+        <div class="pg1_bottom_txt1" v-show="user&&classlist.length===0">暂无学习记录，你的课程还未开始，<br>耐心等待第一节课开始吧</div>
+        <div class="pg1_bottom_txt1" v-show="classlist.length>0">已显示全部内容</div>
         <div style="height: 2rem" />
       </div>
     </iscroll-view>
@@ -49,7 +53,8 @@ export default {
       child_name: '',
       user_id: '',
       user: null,
-      videonull: 0
+      videonull: 0,
+      nouser: false
     }
   },
   computed: {
@@ -80,8 +85,10 @@ export default {
       }
       // const classQs = that.getQueryString('class')
       checkclass(data).then(res => {
+        // res.res = 'nouser'
         if (res.res === 'new' || res.res === 'again') {
           that.classlist = res.myclass
+          // that.classlist = []
           that.$store.commit('uVideoList', that.classlist)
           that.user_id = res.user_id
           that.child_name = res.child_name
@@ -92,16 +99,25 @@ export default {
               that.videonull++
             }
           }
+          const course = that.getQueryString('course')
           if (that.videoIndex === -1) {
             for (let i = 0; i < that.classlist.length; i++) {
-              if (that.classlist[i].zuoye === '') {
-                that.up(that.classlist[i], i)
-                break
+              if (course) {
+                if (that.classlist[i].course_id == course) { // eslint-disable-line
+                  that.up(that.classlist[i], i)
+                  break
+                }
+              } else {
+                if (that.classlist[i].zuoye === '') {
+                  that.up(that.classlist[i], i)
+                  break
+                }
               }
             }
           }
         } else if (res.res === 'nouser') {
-          that.$loading('无法查到您的小火箭课程信息...')
+          that.nouser = true
+          // that.$loading('无法查到您的小火箭课程信息...')
         } else if (res.res === 'sys') {
           that.$loading('系统错误，请稍后重试...')
         }
@@ -159,7 +175,8 @@ export default {
         'course_name': obj.course_name,
         'package_name': obj.package_name,
         'term_name': obj.term_name,
-        'class_name': obj.class_name
+        'class_name': obj.class_name,
+        'teacher_name': obj.teacher_name
       }
       if (obj.zuoye && obj.zuoye.id) {
         data['id'] = obj.zuoye.id

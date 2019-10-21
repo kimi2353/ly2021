@@ -57,7 +57,8 @@ export default {
         'course_name': obj.course_name,
         'package_name': obj.package_name,
         'term_name': obj.term_name,
-        'class_name': obj.class_name
+        'class_name': obj.class_name,
+        'teacher_name': obj.teacher_name
       }
       if (obj.zuoye && obj.zuoye.id) {
         data['id'] = obj.zuoye.id

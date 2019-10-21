@@ -9,6 +9,7 @@ import IScrollView from 'vue-iscroll-view'
 import IScroll from 'iscroll/build/iscroll-probe.js'
 import Toast from 'vue2-toast'
 import VueVideoPlayer from 'vue-video-player'
+// import Vconsole from 'vconsole'
 // import WeVue from 'we-vue'
 // import 'we-vue/lib/style.css'
 // import 'swiper/dist/css/swiper.css'
@@ -19,6 +20,8 @@ import './assets/scss/base.scss'
 // axios.defaults.withCredentials = true
 Vue.config.productionTip = false
 
+// let vConsole = new Vconsole()
+// Vue.use(vConsole)
 // Vue.use(WeVue)
 Vue.use(Toast, {
   type: 'center',
@@ -50,10 +53,11 @@ if (process.env.NODE_ENV === 'development') {
 }
 
 Vue.prototype.toShare = function (id, name, course) {
+  // console.log(id, name, course)
   const imgUrl = 'https://festival.codemao.cn/static/img/yyl_share.png'
   let link = 'https://festival.codemao.cn/h5/sp2019'
-  let title = '小火箭视频作业分享'
-  let desc = ''
+  let title = '编程小火箭视频作业'
+  let desc = '点击查看孩子视频作业，和老师的点评吧！'
   if (id) {
     link = 'https://festival.codemao.cn/h5/sp2019/?id=' + id
     title = '恭喜' + name + '完成了课程《' + course + '》的视频作业'
@@ -65,6 +69,7 @@ Vue.prototype.toShare = function (id, name, course) {
     link,
     imgUrl
   }
+  // console.log(AppMShareContent)
   window.wx.ready(function () {
     window.wx.onMenuShareTimeline(AppMShareContent)
     window.wx.onMenuShareAppMessage(AppMShareContent)
