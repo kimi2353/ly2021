@@ -2,13 +2,15 @@
   <div class='pg2'>
     <div class='pg2_main'>
       <div class='return' @click='ret'>返回</div>
-      <div class='pg2_tit'>上传你的小火箭作品吧</div>
+      <div class='right' @click.once='to4(1)' v-show="videoIndex<videoList.length-1"/>
+      <div class='left' @click.once='to4(-1)' v-show="videoIndex>0"/>
+      <div class='menu' @click='menunfn' v-show="videoList.length>0"/>
+      <div class='pg2_tit' v-if='obj'>{{obj.course_name}}</div>
       <div class='pg2_center'>
-        <div class='pg2_center_title' v-if='obj'>{{obj.course_name}}</div>
+        <div class='pg2_center_title'>上传你的小火箭作品吧</div>
         <div class='wl_pg2_info wl_pg2_info3'>上传视频<span>*</span></div>
         <div class='wl_up_tips'>
-          <p>建议在微信App中横屏拍摄</p>
-          <p>建议白天拍摄，镜头不抖动，背景干净</p>
+          <p>建议在白天使用手机拍摄，镜头不抖动，背景干净</p>
         </div>
         <div class='wl_up' id='wl_up'>
           <input type="file" class="upload" @change="upload" id="upload" accept="video/*" v-show='uploadDataUrl===""'>
@@ -16,15 +18,29 @@
             <source type="video/mp4">
           </video>
         </div>
-        <div class='wl_up_btn' v-show='uploadDataUrl!==""' id='wl_up_btn'>
+        <div class='wl_up_btn' v-show='uploadDataUrl!==""&&flag!==0' id='wl_up_btn'>
           <input type="file" accept="video/*" id='wl_add_btn'>
           <span>点击重新上传</span>
         </div>
+        <div class='pg2_txt1' v-show="flag!==4||flag===0">老师正在快马加鞭批改中，批改完成后将会以微信通知的方式提醒您</div>
         <div style='height: 0.853rem;'></div>
       </div>
-      <div class='wl_pg2_btn' @click='btnfn'>提交作业</div>
+      <div class='wl_pg2_btn' @click='btnfn' v-show="flag!==0">提交作业</div>
       <div style='height:1.216rem;'></div>
     </div>
+    <transition name='fade'>
+      <div class='nav1' v-show="menunav">
+        <div class='closemenu' @click="menunav=false" />
+        <div class='menuborder'>
+          <iscroll-view class='scroll-view' ref='iscroll2' :options='scrollOptions2'>
+            <div class="menu_txt">您的课程列表</div>
+            <ul class='munulist'>
+              <li v-for="(item, index) in videoList" :key="index" @click="toPage(index)">{{ item.course_name }}</li>
+            </ul>
+          </iscroll-view>
+        </div>
+      </div>
+    </transition>
   </div>
 </template>
 
@@ -36,10 +52,11 @@ export default {
   name: 'pg2',
   data () {
     return {
-      scrollOptions: {
+      scrollOptions2: {
         mouseWheel: true,
         click: false,
-        tap: true
+        tap: true,
+        scrollbars: true
       },
       uploadDataUrl: '',
       uptoken: '',
@@ -51,7 +68,9 @@ export default {
       title: '',
       txt: '',
       imgsrc: '',
-      uploader: null
+      uploader: null,
+      flag: null,
+      menunav: false
     }
   },
   computed: {
@@ -60,6 +79,12 @@ export default {
     },
     obj () {
       return this.$store.state.obj
+    },
+    videoIndex () {
+      return this.$store.state.videoIndex
+    },
+    videoList () {
+      return this.$store.state.videoList
     }
   },
   mounted () {
@@ -71,6 +96,43 @@ export default {
     that.init()
   },
   methods: {
+    menunfn () {
+      const that = this
+      that.menunav = true
+      setTimeout(function () {
+        that.iscroll2.refresh()
+      }, 400)
+    },
+    slideto (res) {
+      const that = this
+      that.$emit('slideto', res)
+    },
+    toPage (i) {
+      const that = this
+      that.$store.commit('uVideoIndex', i)
+      that.slideto(4)
+    },
+    to4 (num) {
+      const that = this
+      let i = that.videoIndex
+      if (num === 1) {
+        if (i < (that.videoList.length - 1)) {
+          i++
+        } else {
+          i = that.videoList.length
+        }
+        that.$store.commit('uVideoIndex', i)
+        that.slideto(4)
+      } else if (num === -1) {
+        if (i < 1) {
+          i = 0
+        } else {
+          i--
+        }
+        that.$store.commit('uVideoIndex', i)
+        that.slideto(4)
+      }
+    },
     getObjectURL (file) {
       let url = null
       if (window.createObjectURL !== undefined) {
@@ -94,16 +156,15 @@ export default {
       classinfo(data).then(res => {
         if (res.res === 'success') {
           if (res.zuoye !== '') {
-            if (res.zuoye.flag === 4) {
+            if (res.zuoye.flag === 4 || res.zuoye.flag === 0) {
               that.uploadDataUrl = res.zuoye.video
               document.getElementById('upvideo').querySelector('source').src = that.uploadDataUrl
               document.getElementById('upvideo').src = that.uploadDataUrl
+              document.getElementById('upvideo').poster = that.uploadDataUrl + '?vframe/jpg/offset/0'
               document.getElementById('wl_up').querySelector('div').style.display = 'none'
               document.getElementById('wl_up_btn').querySelector('div').style.width = '100%'
               document.getElementById('wl_up_btn').querySelector('div').style.height = '100%'
-            } else if (res.zuoye.flag === 0) {
-              that.$toast('老师正在批改，请稍后查看...')
-              that.slideto(1)
+              that.flag = res.zuoye.flag
             } else {
               that.slideto(3)
             }
@@ -212,7 +273,7 @@ export default {
     btnfn () {
       const that = this
       if (that.uploader.files.length === 0) {
-        that.$toast('请选择视频上传')
+        that.$toast('您还未上传本节课视频作业，点击按钮上传吧')
         return
       }
       // console.log(that.uploader.files)

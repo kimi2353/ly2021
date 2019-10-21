@@ -2,28 +2,54 @@
   <div class='pg3'>
     <iscroll-view class='scroll-view' ref='iscroll1' :options='scrollOptions'>
       <div class='pg3_main'>
-        <div class='return' @click='ret'>返回</div>
+        <div class='return' @click='ret' v-if='zhuType'>返回</div>
+        <div class='right' @click.once='to4(1)' v-show="videoIndex<videoList.length-1"/>
+        <div class='left' @click.once='to4(-1)' v-show="videoIndex>0"/>
+        <div class='menu' @click='menunfn' v-show="videoList.length>0"/>
         <div style="height: 1.53rem" />
-        <div class='pg3_tit'>{{child_name}}的作品</div>
+        <div class='pg3_tit'>{{tit}}</div>
         <div class='pg3_main1'>
-          <div class='pg3_ctit'>{{tit}}</div>
+          <div class='pg3_ctit'>{{child_name}}的作品</div>
           <div class='pg3_border'>
             <video-player class="video-player-box vjs-big-play-centered" ref="videoPlayer" :options="playerOptions" :playsinline="false" />
           </div>
         </div>
         <div class='pg3_main2'>
+          <div class='pg3_ctit'>老师点评</div>
           <div class='piao' v-if='voiceList.length > 0'>
-            <div class='pg3_ctit'>老师语音留言</div>
             <div class='txt1' @click='start(item, index)' v-for="(item, index) in voiceList" :key="index" :class="{voiceActive: item.voiceFlag}" >{{ item.voiceTimes }}秒</div>
           </div>
-          <div class='pg3_ctit'>老师评语</div>
           <div class='pg3_txt'>
             <p v-html='txt'></p>
           </div>
         </div>
-        <div style="height: 2rem" />
+        <div style="height: 3rem" />
       </div>
     </iscroll-view>
+    <div class='wl_pg3_btn' @click="sharefn" v-if='zhuType'>快分享宝贝的作品给亲朋好友吧</div>
+    <div class='wl_pg3_btn' v-else>
+      快来报名，和他一起学编程吧
+      <a href="https://mobile.codemao.cn/codecamp_new/product/16?utm_source=miniapp&utm_medium=h5&utm_term=video_work_share" target="_blank">立即报名</a>
+    </div>
+    <transition name="fade">
+      <div class='nav1' v-show='sharenav'>
+        <img src="@/assets/img/f.png" class='shareimg'>
+        <div class='shareclose' @click.stop='sharenav=false'/>
+      </div>
+    </transition>
+    <transition name='fade'>
+      <div class='nav1' v-show="menunav">
+        <div class='closemenu' @click="menunav=false" />
+        <div class='menuborder'>
+          <iscroll-view class='scroll-view' ref='iscroll2' :options='scrollOptions2'>
+            <div class="menu_txt">您的课程列表</div>
+            <ul class='munulist'>
+              <li v-for="(item, index) in videoList" :key="index" @click="toPage(index)">{{ item.course_name }}</li>
+            </ul>
+          </iscroll-view>
+        </div>
+      </div>
+    </transition>
   </div>
 </template>
 
@@ -50,6 +76,12 @@ export default {
         tap: true
         // scrollbars: true
       },
+      scrollOptions2: {
+        mouseWheel: true,
+        click: false,
+        tap: true,
+        scrollbars: true
+      },
       video: '',
       txt: '',
       info: null,
@@ -57,18 +89,30 @@ export default {
       voiceFlag: false,
       id: '',
       voiceList: [],
-      voiceId: ''
+      voiceId: '',
+      zhuType: false,
+      sharenav: false,
+      menunav: false
     }
   },
   computed: {
     player () {
       return this.$refs.videoPlayer.player
     },
+    iscroll2 () {
+      return this.$refs.iscroll2
+    },
     iscroll1 () {
       return this.$refs.iscroll1
     },
     obj () {
       return this.$store.state.obj
+    },
+    videoIndex () {
+      return this.$store.state.videoIndex
+    },
+    videoList () {
+      return this.$store.state.videoList
     }
   },
   destroyed () {
@@ -85,7 +129,7 @@ export default {
   mounted () {
     const that = this
     const id = that.getQueryString('id')
-    // console.log()
+    // console.log(that.videoIndex)
     if (that.obj && that.obj.id) {
       that.id = that.obj.id
       that.init()
@@ -97,6 +141,43 @@ export default {
     }
   },
   methods: {
+    menunfn () {
+      const that = this
+      that.menunav = true
+      setTimeout(function () {
+        that.iscroll2.refresh()
+      }, 400)
+    },
+    toPage (i) {
+      const that = this
+      that.$store.commit('uVideoIndex', i)
+      that.slideto(4)
+    },
+    slideto (res) {
+      const that = this
+      that.$emit('slideto', res)
+    },
+    to4 (num) {
+      const that = this
+      let i = that.videoIndex
+      if (num === 1) {
+        if (i < (that.videoList.length - 1)) {
+          i++
+        } else {
+          i = that.videoList.length
+        }
+        that.$store.commit('uVideoIndex', i)
+        that.slideto(4)
+      } else if (num === -1) {
+        if (i < 1) {
+          i--
+        } else {
+          i = 0
+        }
+        that.$store.commit('uVideoIndex', i)
+        that.slideto(4)
+      }
+    },
     init () {
       const that = this
       that.$loading('正在加载，请稍后...')
@@ -124,6 +205,10 @@ export default {
             }, 200)
             that.txt = that.info.comment
             that.nickname = that.info.nickname
+            that.zhuType = that.info.openid === window.Global.openid
+            if (that.videoIndex === -1) {
+              that.$store.commit('uVideoIndex', 0)
+            }
             that.tit = that.info.course_name
             that.child_name = that.info.child_name
             that.voiceList = []
@@ -136,7 +221,7 @@ export default {
                 voiceFlag: false
               })
             }
-            that.toShare(res.zuoye.id)
+            that.toShare(res.zuoye.id, res.zuoye.child_name, res.zuoye.course_name)
             setTimeout(function () {
               that.iscroll1.refresh()
             }, 600)
@@ -216,6 +301,10 @@ export default {
           })
         }
       }
+    },
+    sharefn () {
+      const that = this
+      that.sharenav = true
     }
   }
 }

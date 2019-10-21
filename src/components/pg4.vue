@@ -1,59 +1,5 @@
 <template>
   <div class='pg4'>
-    <iscroll-view class='scroll-view' ref='iscroll4' :options='scrollOptions' @pullUp='load'>
-      <div class='pg4_main'>
-        <div class='return' @click='ret'>返回</div>
-        <img src="../assets/img/wl_pg4_btn1.png" class='animated hinge infinite pulse wl_pg4_btn1' @click='hr("https://fudao.qq.com/course_group_pack_detail.html?_lv=73364&course_package_id=1198&_bid=2379&fr=banner_0606wuli&_wv=2147483648")'>
-        <ul class='wl_pg4_btnlist'>
-          <li :class='{active:type===0}' @click='totype(0)'>最热</li>
-          <li :class='{active:type===1}' @click='totype(1)'>最新</li>
-          <li :class='{active:type===2}' @click='totype(2)'>我的作品</li>
-        </ul>
-        <ul class='wl_pg4_ul'>
-          <li v-for='(item, index) in ulData' :key='index'>
-            <div class='wl_jp' v-if='index<100&&jp'>{{index + 1}}</div>
-            <div class='up' @click='showinfo(item.id)'>
-              <div class='up_left' :style='"background-image:url(" + item.poster + ")"'>
-              </div>
-              <div class='up_right'>
-                <div class='tit'>{{item.title}}</div>
-                <div class='grade'>{{item.grade}}</div>
-                <div class='grade'>{{item.username}}</div>
-              </div>
-            </div>
-            <div class='down'>
-              <div class='down_left' @click='goodBtn(item.id)'>
-                <i :class='{"zan1":item.zan,"zan2":!item.zan,"zanfr":item.zanfr}'></i>
-                投票数 {{item.num}}
-              </div>
-              <div class='down_right'>
-                播放数 {{item.play}}
-              </div>
-            </div>
-          </li>
-          <li v-if='type===2&&ulData.length===0' class='wl_no_li'>
-            <img src="../assets/img/wl_no.png" class='wl_no'>
-            <img src="../assets/img/wl_pg4_return.png" class='animated hinge infinite pulse wl_pg4_return' @click='notel=true'>
-          </li>
-          <li style='background-color: #2f76f6;height: 1rem;'>
-          </li>
-        </ul>
-        <div style='height: 1rem;pointer-events: none;'></div>
-      </div>
-    </iscroll-view>
-    <transition name="fade">
-      <div class='nav' v-show='notel'>
-        <div class='notel'>
-          <div class='close' @click='notel=false'></div>
-          <div class='notel_tit'>登录</div>
-          <div class='notel_info'>
-            <span>手机号</span>
-            <input type="text" maxlength="11" v-model='addtel' placeholder="填写你提交视频时的手机号">
-          </div>
-          <img src="../assets/img/wl_notel_btn.png" class='wl_notel_btn' @click='wl_notel_btn'>
-        </div>
-      </div>
-    </transition>
   </div>
 </template>
 
@@ -62,211 +8,71 @@ export default {
   name: 'pg4',
   data () {
     return {
-      playerOptions: {
-        sources: [{
-          type: 'video/mp4',
-          src: 'https://1257805666.vod2.myqcloud.com/d9ef0cb0vodcq1257805666/5cfebd525285890784262281763/p18NyxHgJ2oA.mp4'
-        }]
-      },
-      scrollOptions: {
-        mouseWheel: true,
-        click: true,
-        tap: true
-      },
-      c_num: 0,
-      page: 0,
-      maxPage: 1,
-      tel: '',
-      ulData: [],
-      notel: false,
-      addtel: '',
-      jp: false
     }
   },
   computed: {
-    vid () {
-      return this.$store.state.vid
-    },
-    iscroll () {
-      return this.$refs.iscroll4
-    },
     type () {
       return this.$store.state.type
+    },
+    videoIndex () {
+      return this.$store.state.videoIndex
+    },
+    videoList () {
+      return this.$store.state.videoList
     }
   },
   mounted () {
-    let that = this
+    const that = this
     that.init()
   },
   methods: {
-    init () {
-      let that = this
-      that.notel = false
-      that.toShare()
-      that.tel = that.getCookie('wl_tel')
-      that.ul_info('f')
+    slideto (res) {
+      const that = this
+      that.$emit('slideto', res)
     },
-    ul_info (f) {
-      let that = this
-      if (f) {
-        that.page = 0
-        that.maxPage = 1
-        that.ulData = []
+    init () {
+      const that = this
+      let i = that.videoIndex
+      if (i < 0) {
+        i = 0
+      } else if (that.videoList.length - 1 < i) {
+        i = that.videoList.length - 1
       }
-      if (that.maxPage - that.page < 1) {
-        return
-      }
-      let data = new FormData()
-      data.append('type', that.type)
-      if (that.type === 2) {
-        data.append('tel', that.tel)
-      }
-      that.$loading('正在加载，请稍后...')
-      if (that.type !== 0) {
-        that.jp = false
-      }
-      that.axios.post(that.Url + 'checknum', data).then((res) => {
-        that.c_num = res.data.num
-        if (that.c_num === 0) {
-          that.ulData = []
-          that.page = 1
-          that.$loading.close()
-          setTimeout(function () {
-            that.iscroll.refresh()
-          }, 600)
-          return
-        }
-        that.maxPage = Math.ceil(that.c_num / 20)
-        that.page++
-        if (that.maxPage - that.page >= 0) {
-          let data2 = new FormData()
-          data2.append('page', that.page)
-          data2.append('type', that.type)
-          data2.append('tel', that.tel)
-          that.axios.post(that.Url + 'checkmsg', data2).then((res) => {
-            that.$loading.close()
-            if (res.data.res === 'success') {
-              if (f) {
-                that.ulData = []
-              }
-              for (let i = 0; i < res.data.info.length; i++) {
-                var a = res.data.info[i]
-                if (!a.szan) {
-                  var thiscookie = 'wuli_iszan_' + a.id
-                  that.setCookie(thiscookie, thiscookie, 99)
-                }
-                a.zan = that.checkzan(a.id)
-                a.poster = a.video + '?vframe/jpg/offset/0'
-                a.zanfr = false
-                that.ulData.push(a)
-              }
-            } else {
-              that.$toast('服务器繁忙<br>请稍后重试')
-              that.$emit('slideto', 1)
-            }
-            if (that.type === 0) {
-              that.jp = true
-            }
-            setTimeout(function () {
-              that.iscroll.refresh()
-            }, 600)
-          })
-        }
-      })
+      that.up(that.videoList[i], i)
     },
     ret () {
       let that = this
       that.$emit('slideto', 1)
     },
-    totype (i) {
-      let that = this
-      if (i === 2 && !that.tel) {
-        that.notel = true
-        return
+    up (obj, i) {
+      const that = this
+      that.$store.commit('uVideoIndex', i)
+      const data = {
+        'user_id': that.user_id,
+        'child_name': that.child_name,
+        'package_id': obj.package_id,
+        'term_id': obj.term_id,
+        'course_id': obj.course_id,
+        'class_id': obj.class_id,
+        'course_name': obj.course_name,
+        'package_name': obj.package_name,
+        'term_name': obj.term_name,
+        'class_name': obj.class_name
       }
-      that.notel = false
-      that.$store.commit('utype', i)
-      that.ul_info('f')
-    },
-    onPlayerPlay (id) {
-      let that = this
-      let isplay = that.getCookie('wuli_isplay_' + id)
-      if (!isplay) {
-        let data = new FormData()
-        data.append('id', id)
-        that.axios.post(that.Url + 'play', data).then((res) => {
-          that.setCookie('wuli_isplay_' + that.vid, 'wuli_isplay_' + that.vid, 99)
-          if (res.data.res === 'success') {
-            let play = res.data.info.play
-            for (let i = 0; i < that.ulData.length; i++) {
-              if (that.ulData[i].id === id) {
-                that.ulData[i].play = play
-                break
-              }
-            }
-          }
-        })
+      if (obj.zuoye && obj.zuoye.id) {
+        data['id'] = obj.zuoye.id
       }
-    },
-    showinfo (id) {
-      let that = this
-      that.$store.commit('uvid', id)
-      that.$store.commit('ureturn', 'pai')
-      that.$emit('slideto', 3)
-    },
-    goodBtn (id) {
-      var that = this
-      that.$toast('活动征集已结束，请耐心等待获奖结果')
-      // let data = new FormData()
-      // data.append('id', id)
-      // data.append('tel', that.tel)
-      // if (that.checkcookie(id) === true) {
-      //   that.axios.post(that.Url + 'zan', data).then(function (res) {
-      //     if (res.data.res === 'success') {
-      //       for (var i = 0; i < that.ulData.length; i++) {
-      //         if (that.ulData[i].id === id) {
-      //           that.ulData[i].num = res.data.info.num
-      //           that.ulData[i].zan = false
-      //           that.ulData[i].zanfr = true
-      //           break
-      //         }
-      //       }
-      //     }
-      //   })
-      // } else {
-      //   var thiscookie = 'wuli_iszan_' + id
-      //   that.clearCookie(thiscookie)
-      //   that.axios.post(that.Url + 'cancelzan', data).then(function (res) {
-      //     if (res.data.res === 'success') {
-      //       for (var i = 0; i < that.ulData.length; i++) {
-      //         if (that.ulData[i].id === id) {
-      //           that.ulData[i].num = res.data.info.num
-      //           that.ulData[i].zan = true
-      //           that.ulData[i].zanfr = true
-      //           break
-      //         }
-      //       }
-      //     }
-      //   })
-      // }
-    },
-    load () {
-      let that = this
-      that.ul_info()
-    },
-    wl_notel_btn () {
-      let that = this
-      if (that.addtel === '') {
-        that.$toast('请填写你提交视频时输入的手机号')
-        return
+      that.$store.commit('uObj', data)
+      if (obj.zuoye === '') {
+        that.slideto(2)
+      } else if (obj.zuoye.flag === 4) {
+        that.slideto(2)
+      } else if (obj.zuoye.flag === 0) {
+        that.slideto(2)
+        // that.$toast('老师正在批改，请稍后查看...')
+      } else {
+        that.slideto(3)
       }
-      if (!that.addtel.match(/^(((1[3-9][0-9]))+\d{8})$/)) {
-        that.$toast('请填正确的联系电话')
-        return
-      }
-      that.setCookie('wl_tel', that.addtel, 99)
-      that.tel = that.addtel
-      that.totype(2)
     }
   }
 }

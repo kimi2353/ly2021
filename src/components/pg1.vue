@@ -5,22 +5,23 @@
         <div style="height: 6.53rem" />
         <img :src='headimgurl' class='headimgurl'>
         <div class='nickname'>{{ nickname }}</div>
-        <div class='pg1_tit'>学习记录</div>
+        <div class='pg1_tit' v-if="user&&classlist">今天是{{ user.child_name }}小朋友来编程猫学习的第{{ parseInt(user.learn_time / 86400) }}天，孩子已经完成了{{classlist.length-videonull}}次视频作业啦，还有{{videonull}}次课程未上传视频</div>
         <ul class='pg1_list'>
-          <li v-for='(item, index) in classlist' :key='index'>
+          <li v-for='(item, index) in classlist' :key='index' @click.stop='up(item, index)'>
             <div class='classname'>{{ item.classname }}</div>
             <div class='classinfo'>
+              <div class='classinfo_txt1'>
+                <span>{{ item.course_name }}</span>
+              </div>
               <img :src="item.zuoye === '' ? 'https://festival.codemao.cn/static/img/yyl_share.png' : item.zuoye.video + '?vframe/jpg/offset/0'">
               <div class='info'>
                 <div class='info_txt1'>
-                  <span>{{ item.course_name }}</span>
+                  <span>解锁时间：</span>{{ format(item.unlock_time) }}
                 </div>
-                <div class='info_txt1'>
+                <div class='info_txt2'>
                   <span>视频作业：</span>{{ item.zuoye === '' ? '未上传' : fmt(item.zuoye.flag) }}
                 </div>
               </div>
-              <div class='info_txt3' v-show="item.zuoye===''" @click.stop='up(item)'>点击上传</div>
-              <div class='info_txt3' v-show="item.zuoye!==''" @click.stop='up(item)'>点击查看</div>
             </div>
           </li>
         </ul>
@@ -46,7 +47,9 @@ export default {
       headimgurl: '',
       nickname: '',
       child_name: '',
-      user_id: ''
+      user_id: '',
+      user: null,
+      videonull: 0
     }
   },
   computed: {
@@ -55,6 +58,9 @@ export default {
     },
     cla () {
       return this.$store.state.cla
+    },
+    videoIndex () {
+      return this.$store.state.videoIndex
     }
   },
   mounted () {
@@ -76,9 +82,24 @@ export default {
       checkclass(data).then(res => {
         if (res.res === 'new' || res.res === 'again') {
           that.classlist = res.myclass
+          that.$store.commit('uVideoList', that.classlist)
           that.user_id = res.user_id
           that.child_name = res.child_name
+          that.user = res.user
           that.toShare()
+          for (let i = 0; i < that.classlist.length; i++) {
+            if (that.classlist[i].zuoye === '') {
+              that.videonull++
+            }
+          }
+          if (that.videoIndex === -1) {
+            for (let i = 0; i < that.classlist.length; i++) {
+              if (that.classlist[i].zuoye === '') {
+                that.up(that.classlist[i], i)
+                break
+              }
+            }
+          }
         } else if (res.res === 'nouser') {
           that.$loading('无法查到您的小火箭课程信息...')
         } else if (res.res === 'sys') {
@@ -125,13 +146,9 @@ export default {
       }
       return y + '-' + shi(m) + '-' + shi(d) + ' ' + shi(h) + ':' + shi(mm) + ':' + shi(s)
     },
-    up (obj) {
+    up (obj, i) {
       const that = this
-      // console.log(that.user_id)
-      // console.log(obj.package_id)
-      // console.log(obj.term_id)
-      // console.log(obj.course_id)
-      // console.log(obj.class_id)
+      that.$store.commit('uVideoIndex', i)
       const data = {
         'user_id': that.user_id,
         'child_name': that.child_name,
@@ -139,19 +156,22 @@ export default {
         'term_id': obj.term_id,
         'course_id': obj.course_id,
         'class_id': obj.class_id,
-        'course_name': obj.course_name
+        'course_name': obj.course_name,
+        'package_name': obj.package_name,
+        'term_name': obj.term_name,
+        'class_name': obj.class_name
       }
       if (obj.zuoye && obj.zuoye.id) {
         data['id'] = obj.zuoye.id
       }
-      // console.log(data)
       that.$store.commit('uObj', data)
       if (obj.zuoye === '') {
         that.slideto(2)
       } else if (obj.zuoye.flag === 4) {
         that.slideto(2)
       } else if (obj.zuoye.flag === 0) {
-        that.$toast('老师正在批改，请稍后查看...')
+        that.slideto(2)
+        // that.$toast('老师正在批改，请稍后查看...')
       } else {
         that.slideto(3)
       }

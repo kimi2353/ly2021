@@ -49,17 +49,21 @@ if (process.env.NODE_ENV === 'development') {
   window.Global.unionid = 'oE5xYwG7Bj1T8C1QorHI4EHmESyU'
 }
 
-Vue.prototype.toShare = function (id) {
-  const imgurl = 'https://festival.codemao.cn/static/img/yyl_share.png'
-  let weburl = 'https://festival.codemao.cn/h5/sp2019'
+Vue.prototype.toShare = function (id, name, course) {
+  const imgUrl = 'https://festival.codemao.cn/static/img/yyl_share.png'
+  let link = 'https://festival.codemao.cn/h5/sp2019'
+  let title = '小火箭视频作业分享'
+  let desc = ''
   if (id) {
-    weburl = 'https://festival.codemao.cn/h5/sp2019/?id=' + id
+    link = 'https://festival.codemao.cn/h5/sp2019/?id=' + id
+    title = '恭喜' + name + '完成了课程《' + course + '》的视频作业'
+    desc = '点击查看孩子视频作业，和老师的点评吧！'
   }
   const AppMShareContent = {
-    title: '小火箭视频作业分享',
-    desc: '',
-    link: weburl,
-    imgUrl: imgurl
+    title,
+    desc,
+    link,
+    imgUrl
   }
   window.wx.ready(function () {
     window.wx.onMenuShareTimeline(AppMShareContent)

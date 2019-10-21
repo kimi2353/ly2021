@@ -28,8 +28,6 @@ export default {
         that.moban = 'pg' + res
       }
       that.fadefn()
-      // that.$refs.moban.init()
-      // that.swiper.slideTo(res, 50, false)
     },
     fadefn () {
       let that = this
@@ -54,7 +52,6 @@ export default {
       const data = {
         id
       }
-      // console.log(data)
       that.$store.commit('uObj', data)
       that.moban = 'pg3'
     }
