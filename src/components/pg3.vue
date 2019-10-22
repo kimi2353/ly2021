@@ -5,7 +5,7 @@
         <div class='return' @click='ret'>返回</div>
         <div class='right' @click.once='to4(1)' v-show="videoIndex<videoList.length-1"/>
         <div class='left' @click.once='to4(-1)' v-show="videoIndex>0"/>
-        <!-- <div class='menu' @click='menunfn' v-show="videoList.length>0"/> -->
+        <div class='menu' @click='ret'/>
         <div style="height: 1.53rem" />
         <div class='pg3_tit'>{{tit}}</div>
         <div class='pg3_main1'>
@@ -169,9 +169,9 @@ export default {
         that.slideto(4)
       } else if (num === -1) {
         if (i < 1) {
-          i--
-        } else {
           i = 0
+        } else {
+          i--
         }
         that.$store.commit('uVideoIndex', i)
         that.slideto(4)

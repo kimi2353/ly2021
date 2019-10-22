@@ -9,7 +9,7 @@ import IScrollView from 'vue-iscroll-view'
 import IScroll from 'iscroll/build/iscroll-probe.js'
 import Toast from 'vue2-toast'
 import VueVideoPlayer from 'vue-video-player'
-// import Vconsole from 'vconsole'
+import Vconsole from 'vconsole'
 // import WeVue from 'we-vue'
 // import 'we-vue/lib/style.css'
 // import 'swiper/dist/css/swiper.css'
@@ -20,8 +20,8 @@ import './assets/scss/base.scss'
 // axios.defaults.withCredentials = true
 Vue.config.productionTip = false
 
-// let vConsole = new Vconsole()
-// Vue.use(vConsole)
+let vConsole = new Vconsole()
+Vue.use(vConsole)
 // Vue.use(WeVue)
 Vue.use(Toast, {
   type: 'center',

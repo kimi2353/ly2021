@@ -5,7 +5,7 @@
         <div style="height: 6.53rem" />
         <img :src='headimgurl' class='headimgurl'>
         <div class='nickname'>{{ nickname }}</div>
-        <div class='pg1_tit' v-if="user&&classlist.length>0">今天是{{ user.child_name }}小朋友来编程猫学习的第{{ parseInt(user.learn_time / 86400) }}天，孩子已经完成了{{classlist.length-videonull}}次视频作业啦，还有{{videonull}}次课程未上传视频</div>
+        <div class='pg1_tit' v-if="user&&user.status==='normal'&&classlist.length>0">今天是{{ user.child_name }}小朋友来编程猫学习的第{{ parseInt(user.learn_time / 86400) }}天，孩子已经完成了{{classlist.length-videonull}}次视频作业啦，还有{{videonull}}次课程未上传视频</div>
         <ul class='pg1_list'>
           <li v-for='(item, index) in classlist' :key='index' @click.stop='up(item, index)'>
             <div class='classname'>{{ item.classname }}</div>
@@ -25,9 +25,9 @@
             </div>
           </li>
         </ul>
-        <div class="pg1_bottom_txt1" v-show="nouser">暂无学习记录，你还没有在编程猫学习过，快去购课学习吧</div>
-        <a v-show="nouser" class="pg1_bottom_btn" href="https://mobile.codemao.cn/codecamp_new/product/16?utm_source=miniapp&utm_medium=h5&utm_term=video_work_share" target="_blank">立即报名</a>
-        <div class="pg1_bottom_txt1" v-show="user&&classlist.length===0">暂无学习记录，你的课程还未开始，<br>耐心等待第一节课开始吧</div>
+        <div class="pg1_bottom_txt1" v-show="nouser||(user&&(user.status==='no_purchase'&&classlist.length===0))">暂无学习记录，你还没有在编程猫学习过，快去购课学习吧</div>
+        <a v-show="nouser||(user&&(user.status==='no_purchase'&&classlist.length===0))" class="pg1_bottom_btn" href="https://mobile.codemao.cn/codecamp_new/product/16?utm_source=miniapp&utm_medium=h5&utm_term=video_work_share" target="_blank">立即报名</a>
+        <div class="pg1_bottom_txt1" v-show="user&&(user.status==='no_start'&&classlist.length===0)">暂无学习记录，你的课程还未开始，<br>耐心等待第一节课开始吧</div>
         <div class="pg1_bottom_txt1" v-show="classlist.length>0">已显示全部内容</div>
         <div style="height: 2rem" />
       </div>
@@ -70,6 +70,10 @@ export default {
   },
   mounted () {
     let that = this
+    const list = that.getQueryString('list')
+    if (list) {
+      that.$store.commit('uVideoIndex', 0)
+    }
     that.init()
   },
   methods: {
@@ -88,11 +92,11 @@ export default {
         // res.res = 'nouser'
         if (res.res === 'new' || res.res === 'again') {
           that.classlist = res.myclass
-          // that.classlist = []
+          that.user = res.user
+          // console.log(that.user)
           that.$store.commit('uVideoList', that.classlist)
           that.user_id = res.user_id
           that.child_name = res.child_name
-          that.user = res.user
           that.toShare()
           for (let i = 0; i < that.classlist.length; i++) {
             if (that.classlist[i].zuoye === '') {

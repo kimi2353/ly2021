@@ -4,7 +4,7 @@
       <div class='return' @click='ret'>返回</div>
       <div class='right' @click.once='to4(1)' v-show="videoIndex<videoList.length-1"/>
       <div class='left' @click.once='to4(-1)' v-show="videoIndex>0"/>
-      <!-- <div class='menu' @click='menunfn' v-show="videoList.length>0"/> -->
+      <div class='menu' @click='ret'/>
       <div class='pg2_tit' v-if='obj'>{{obj.course_name}}</div>
       <div class='pg2_center'>
         <div class='pg2_center_title'>上传你的小火箭作品吧</div>
@@ -22,6 +22,7 @@
           <input type="file" accept="video/*" id='wl_add_btn'>
           <span>点击重新上传</span>
         </div>
+        <div class='pg2_txt1' v-show="flag!==null&&(flag===4||flag===0)">{{obj.teacher_name}}作品点评：</div>
         <div class='pg2_txt1' v-show="flag!==null&&(flag===4||flag===0)">老师正在快马加鞭批改中，批改完成后将会以微信通知的方式提醒您</div>
         <div style='height: 0.853rem;'></div>
       </div>
