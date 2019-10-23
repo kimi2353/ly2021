@@ -3,8 +3,8 @@
     <iscroll-view class='scroll-view' ref='iscroll1' :options='scrollOptions'>
       <div class='pg3_main'>
         <div class='return' @click='ret'>返回</div>
-        <div class='right' @click.once='to4(1)' v-show="videoIndex<videoList.length-1"/>
-        <div class='left' @click.once='to4(-1)' v-show="videoIndex>0"/>
+        <div class='left' @click.once='to4(1)' v-show="videoIndex<videoList.length-1"/>
+        <div class='right' @click.once='to4(-1)' v-show="videoIndex>0"/>
         <div class='menu' @click='ret'/>
         <div style="height: 1.53rem" />
         <div class='pg3_tit'>{{tit}}</div>

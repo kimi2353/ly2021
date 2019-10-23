@@ -2,8 +2,8 @@
   <div class='pg2'>
     <div class='pg2_main'>
       <div class='return' @click='ret'>返回</div>
-      <div class='right' @click.once='to4(1)' v-show="videoIndex<videoList.length-1"/>
-      <div class='left' @click.once='to4(-1)' v-show="videoIndex>0"/>
+      <div class='left' @click.once='to4(1)' v-show="videoIndex<videoList.length-1"/>
+      <div class='right' @click.once='to4(-1)' v-show="videoIndex>0"/>
       <div class='menu' @click='ret'/>
       <div class='pg2_tit' v-if='obj'>{{obj.course_name}}</div>
       <div class='pg2_center'>
@@ -47,7 +47,7 @@
 
 <script>
 // import * as qiniu from 'qiniu-js'
-import { uptoken, classinfo, videoUp } from '@/api/login'
+import { uptoken, classinfo, videoUp, checkclass } from '@/api/login'
 
 export default {
   name: 'pg2',
@@ -170,7 +170,7 @@ export default {
               that.slideto(3)
             }
           }
-          console.log(that.flag)
+          // console.log(that.flag)
         }
       })
       uptoken().then((res) => {
@@ -229,17 +229,40 @@ export default {
                 ...that.obj,
                 video
               }
+              console.log(data)
               videoUp(data).then((res) => {
-                that.$loading.close()
+                // that.$loading.close()
+                that.$store.commit('uVideoIndex', that.videoIndex)
                 if (res.res === 'success') {
                   that.$store.commit('uvid', res.id)
-                  that.$toast('视频作业上传成功')
-                  that.$emit('slideto', 1)
+                  const data2 = {
+                    openid: window.Global.openid,
+                    unionid: window.Global.unionid,
+                    nickname: window.Global.nickname,
+                    headimgurl: window.Global.headimgurl
+                  }
+                  checkclass(data2).then(res => {
+                    that.$loading.close()
+                    that.$store.commit('uVideoList', res.myclass)
+                    that.$toast('视频作业上传成功')
+                    that.$emit('slideto', 4)
+                  })
                 } else if (res.res === 'again') {
                   that.$store.commit('uvid', res.id)
-                  that.$toast('视频作业修改成功')
-                  that.$emit('slideto', 1)
+                  const data2 = {
+                    openid: window.Global.openid,
+                    unionid: window.Global.unionid,
+                    nickname: window.Global.nickname,
+                    headimgurl: window.Global.headimgurl
+                  }
+                  checkclass(data2).then(res => {
+                    that.$loading.close()
+                    that.$store.commit('uVideoList', res.myclass)
+                    that.$toast('视频作业修改成功')
+                    that.$emit('slideto', 4)
+                  })
                 } else if (res.res === 'old') {
+                  that.$loading.close()
                   that.$toast('视频作业不可修改啦')
                   that.$emit('slideto', 1)
                 }
