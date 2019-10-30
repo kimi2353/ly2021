@@ -229,7 +229,7 @@ export default {
                 ...that.obj,
                 video
               }
-              console.log(data)
+              // console.log(data)
               videoUp(data).then((res) => {
                 // that.$loading.close()
                 that.$store.commit('uVideoIndex', that.videoIndex)

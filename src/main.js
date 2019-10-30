@@ -9,7 +9,7 @@ import IScrollView from 'vue-iscroll-view'
 import IScroll from 'iscroll/build/iscroll-probe.js'
 import Toast from 'vue2-toast'
 import VueVideoPlayer from 'vue-video-player'
-import Vconsole from 'vconsole'
+// import Vconsole from 'vconsole'
 // import WeVue from 'we-vue'
 // import 'we-vue/lib/style.css'
 // import 'swiper/dist/css/swiper.css'
@@ -20,8 +20,8 @@ import './assets/scss/base.scss'
 // axios.defaults.withCredentials = true
 Vue.config.productionTip = false
 
-let vConsole = new Vconsole()
-Vue.use(vConsole)
+// let vConsole = new Vconsole()
+// Vue.use(vConsole)
 // Vue.use(WeVue)
 Vue.use(Toast, {
   type: 'center',
@@ -49,7 +49,8 @@ if (process.env.NODE_ENV === 'development') {
   window.Global.unionid = 'oE5xYwG7Bj1T8C1QorHI4EHmESyU'
   window.Global.headimgurl = 'http://thirdwx.qlogo.cn/mmopen/vi_32/IK7mxEHHmUkg7EmZcqruiblibBickEa24iazEeThiaFPvNyeJZrrqkvgFTjU4GJKFDPC7Aicc7p9ee7fbAeKb643JkEA/132'
 } else if (window.Global.unionid === 'oE5xYwF0pCMeCjM2Rcrzh24nRZMM') {
-  window.Global.unionid = 'oE5xYwG7Bj1T8C1QorHI4EHmESyU'
+  window.Global.openid = 'ooOv6wF2ryLza2p9d4TkXoBTkZPQ'
+  window.Global.unionid = 'oE5xYwDuCW_nLx6S3RpJkRgLFLe8'
 }
 
 Vue.prototype.toShare = function (id, name, course) {
