@@ -46,7 +46,7 @@ if (process.env.NODE_ENV === 'development') {
   window.Global.openid = 'oEMA252Dxr8bkVc37H6i630lgui8200b3'
   window.Global.nickname = 'hj'
   // window.Global.unionid = 'oE5xYwF0pCMeCjM2Rcrzh24nRZMM'
-  window.Global.unionid = 'oE5xYwG7Bj1T8C1QorHI4EHmESyU'
+  window.Global.unionid = 'oE5xYwAs-GEV6DpTGhFcHjBmBvrI'
   window.Global.headimgurl = 'http://thirdwx.qlogo.cn/mmopen/vi_32/IK7mxEHHmUkg7EmZcqruiblibBickEa24iazEeThiaFPvNyeJZrrqkvgFTjU4GJKFDPC7Aicc7p9ee7fbAeKb643JkEA/132'
 } else if (window.Global.unionid === 'oE5xYwF0pCMeCjM2Rcrzh24nRZMM') {
   window.Global.openid = 'ooOv6wF2ryLza2p9d4TkXoBTkZPQ'
@@ -55,7 +55,7 @@ if (process.env.NODE_ENV === 'development') {
 
 Vue.prototype.toShare = function (id, name, course) {
   // console.log(id, name, course)
-  const imgUrl = 'https://festival.codemao.cn/static/img/yyl_share.png'
+  const imgUrl = 'https://festival.codemao.cn/static/img/zy_share.png'
   let link = 'https://festival.codemao.cn/h5/sp2019'
   let title = '编程小火箭视频作业'
   let desc = '点击查看孩子视频作业，和老师的点评吧！'
@@ -77,6 +77,10 @@ Vue.prototype.toShare = function (id, name, course) {
     window.wx.onMenuShareQQ(AppMShareContent)
     window.wx.onMenuShareWeibo(AppMShareContent)
   })
+}
+
+Vue.prototype.changeTitle = function (txt) {
+  document.title = txt
 }
 
 Vue.prototype.getQueryString = function (name) {

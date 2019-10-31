@@ -2,34 +2,52 @@
   <div class='pg1'>
     <iscroll-view class='scroll-view' ref='iscroll1' :options='scrollOptions'>
       <div class='pg1_main'>
-        <div style="height: 6.53rem" />
-        <img :src='headimgurl' class='headimgurl'>
-        <div class='nickname'>{{ nickname }}</div>
-        <div class='pg1_tit' v-if="user&&user.status==='normal'&&classlist.length>0">今天是{{ user.child_name }}小朋友来编程猫学习的第{{ parseInt(user.learn_time / 86400) }}天，孩子已经完成了{{classlist.length-videonull}}次视频作业啦，还有{{videonull}}次课程未上传视频</div>
-        <ul class='pg1_list'>
-          <li v-for='(item, index) in classlist' :key='index' @click.stop='up(item, index)'>
-            <div class='classname'>{{ item.classname }}</div>
-            <div class='classinfo'>
+        <div v-show="user&&user.status==='normal'&&classlist.length>0">
+          <div class='pg1_tit' v-if="user&&user.status==='normal'&&classlist.length>0">今天是{{ user.child_name }}小朋友来编程猫学习的第{{ parseInt(user.learn_time / 86400) }}天，孩子已经完成了{{classlist.length-videonull}}次视频作业啦，还有{{videonull}}次课程未上传视频</div>
+          <div class='pg1_tit1'>学习详情</div>
+          <ul class='pg1_list'>
+            <li v-for='(item, index) in classlist' :key='index' @click.stop='up(item, index)'>
               <div class='classinfo_txt1'>
                 <span>{{ item.course_name }}</span>
               </div>
               <img :src="item.zuoye === '' ? 'https://festival.codemao.cn/static/img/yyl_share.png' : item.zuoye.video + '?vframe/jpg/offset/0'">
               <div class='info'>
+                <div class='info_txt1'>视频作业：</div>
+                <div class='info_txt2' :class="{green: item.zuoye}">
+                  <i class="flag" :class="{yellow: !item.zuoye, green: item.zuoye}" />
+                  <span>{{ item.zuoye === '' ? '未上传' : fmt(item.zuoye.flag) }}</span>
+                </div>
+                <div class='info_txt3'>
+                  <i class="flag luck" />
+                  <span>{{ format1(item.unlock_time) }} 解锁</span>
+                </div>
+                <!-- <div class='info_txt2'>
+                  <span>视频作业：</span>
+                  <span>{{ item.zuoye === '' ? '未上传' : fmt(item.zuoye.flag) }}</span>
+                </div>
                 <div class='info_txt1'>
-                  <span>解锁时间：</span>{{ format(item.unlock_time) }}
-                </div>
-                <div class='info_txt2'>
-                  <span>视频作业：</span>{{ item.zuoye === '' ? '未上传' : fmt(item.zuoye.flag) }}
-                </div>
+                  <span>解锁时间：</span>{{ format1(item.unlock_time) }}
+                </div> -->
               </div>
-            </div>
-          </li>
-        </ul>
-        <div class="pg1_bottom_txt1" v-show="nouser||(user&&(user.status==='no_purchase'&&classlist.length===0))">暂无学习记录，你还没有在编程猫学习过，快去购课学习吧</div>
-        <a v-show="nouser||(user&&(user.status==='no_purchase'&&classlist.length===0))" class="pg1_bottom_btn" href="https://mobile.codemao.cn/codecamp_new/product/16?utm_source=miniapp&utm_medium=h5&utm_term=video_work_share" target="_blank">立即报名</a>
-        <div class="pg1_bottom_txt1" v-show="user&&(user.status==='no_start'&&classlist.length===0)">暂无学习记录，你的课程还未开始，<br>耐心等待第一节课开始吧</div>
-        <div class="pg1_bottom_txt1" v-show="classlist.length>0">已显示全部内容</div>
-        <div style="height: 2rem" />
+            </li>
+          </ul>
+          <div class="pg1_bottom_txt1" v-show="classlist.length>0">已显示全部内容</div>
+          <div style="height: 2rem" />
+        </div>
+        <div v-show="nouser||(user&&(user.status==='no_purchase'&&classlist.length===0))">
+          <div style="height: 6.29rem" />
+          <img src="@/assets/img/zuoye_null.png" class='zuoye_null'>
+          <div class="pg1_bottom_add_txt1">暂无学习记录</div>
+          <div class="pg1_bottom_add_txt2">暂无学习记录，你还没有在编程猫学习过，快去购课学习吧</div>
+          <a class="pg1_bottom_btn" href="https://mobile.codemao.cn/codecamp_new/product/16?utm_source=miniapp&utm_medium=h5&utm_term=video_work_share" target="_blank">立即报名</a>
+        </div>
+        <div v-show="(user&&(user.status==='no_start'&&classlist.length===0))">
+          <div style="height: 6.29rem" />
+          <img src="@/assets/img/zuoye_null.png" class='zuoye_null'>
+          <div class="pg1_bottom_add_txt1">暂无学习记录</div>
+          <div class="pg1_bottom_add_txt2">你的课程还未开始，耐心等待第一节课吧</div>
+        </div>
+        <!-- <div class="pg1_bottom_txt1" v-show="user&&(user.status==='no_start'&&classlist.length===0)">暂无学习记录，你的课程还未开始，<br>耐心等待第一节课开始吧</div> -->
       </div>
     </iscroll-view>
   </div>
@@ -87,14 +105,14 @@ export default {
         nickname: window.Global.nickname,
         headimgurl: window.Global.headimgurl
       }
-      // const classQs = that.getQueryString('class')
+      that.changeTitle('学习记录')
       checkclass(data).then(res => {
         // res.res = 'nouser'
         if (res.res === 'new' || res.res === 'again') {
           that.classlist = res.myclass
           that.user = res.user
-          console.log(that.user)
-          // that.user.status = 'no_purchase'
+          // console.log(that.user)
+          // that.user.status = 'no_start'
           // that.classlist = []
           that.$store.commit('uVideoList', that.classlist)
           that.user_id = res.user_id
@@ -167,6 +185,26 @@ export default {
         return s
       }
       return y + '-' + shi(m) + '-' + shi(d) + ' ' + shi(h) + ':' + shi(mm) + ':' + shi(s)
+    },
+    format1 (shijianchuo) {
+      if (!shijianchuo) {
+        return ''
+      }
+      const time = new Date(shijianchuo * 1000)
+      // const y = time.getFullYear()
+      const m = time.getMonth() + 1
+      const d = time.getDate()
+      const h = time.getHours()
+      const mm = time.getMinutes()
+      // const s = time.getSeconds()
+      function shi (s) {
+        s = '' + s
+        if (s.length < 2) {
+          s = '0' + s
+        }
+        return s
+      }
+      return shi(m) + '-' + shi(d) + ' ' + shi(h) + ':' + shi(mm)
     },
     up (obj, i) {
       const that = this
