@@ -2,52 +2,45 @@
   <div class='pg3'>
     <iscroll-view class='scroll-view' ref='iscroll1' :options='scrollOptions'>
       <div class='pg3_main'>
-        <div class='return' @click='ret'>返回</div>
-        <div class='left' @click.once='to4(1)' v-show="videoIndex<videoList.length-1"/>
-        <div class='right' @click.once='to4(-1)' v-show="videoIndex>0"/>
-        <div class='menu' @click='ret'/>
-        <div style="height: 1.53rem" />
-        <div class='pg3_tit'>{{tit}}</div>
+        <div v-if='zhuType'>
+          <div class='left' @click.once='to4(1)' v-show="videoIndex<videoList.length-1"/>
+          <div class='right' @click.once='to4(-1)' v-show="videoIndex>0"/>
+          <div class='menu' @click='ret'>全部</div>
+          <div class='pg3_tit'>{{tit}}</div>
+        </div>
+        <div v-else>
+          <div class='pg3_tit1'>{{child_name}}正在编程猫学习“{{tit}}”，快来看看她完成的出色作业吧。</div>
+        </div>
         <div class='pg3_main1'>
-          <div class='pg3_ctit'>{{child_name}}的作品</div>
           <div class='pg3_border'>
             <video-player class="video-player-box vjs-big-play-centered" ref="videoPlayer" :options="playerOptions" :playsinline="false" />
           </div>
         </div>
         <div class='pg3_main2'>
-          <div class='pg3_ctit' v-if="info">{{ info.teacher_name }}点评</div>
-          <div class='piao' v-if='voiceList.length > 0'>
-            <div class='txt1' @click='start(item, index)' v-for="(item, index) in voiceList" :key="index" :class="{voiceActive: item.voiceFlag}" >{{ item.voiceTimes }}秒</div>
-          </div>
-          <div class='pg3_txt'>
+          <div class='pg3_txt1' v-if="info">{{ info.teacher_name }}点评</div>
+          <div class='pg3_txt2'>
             <p v-html='txt'></p>
           </div>
+          <div class='piao' v-if='voiceList.length > 0'>
+            <div class='txt1' :style="'width:' + item.width + 'rem;'" @click='start(item, index)' v-for="(item, index) in voiceList" :key="index" :class="{red: item.red, voiceActive: item.voiceFlag}" >{{ item.voiceTimes }}''</div>
+          </div>
         </div>
-        <div style="height: 3rem" />
+        <div style="height: 4rem" />
       </div>
     </iscroll-view>
-    <div class='wl_pg3_btn' @click="sharefn" v-if='zhuType'>快分享宝贝的作品给亲朋好友吧</div>
-    <div class='wl_pg3_btn' v-else>
-      快来报名，和他一起学编程吧
+    <div class='pg3_btn' @click="sharefn" v-if='zhuType'>
+      <div class='pg3_btn1' @click="sharefn">快分享宝贝的作品给亲朋好友吧</div>
+    </div>
+    <div class='pg3_btn' v-else>
+      <img src='@/assets/img/btn_flag.png' class='btn_flag'>
+      <span class='pg3_btn_txt'>快来报名和{{ child_name }}<br>一起学编程吧</span>
       <a href="https://mobile.codemao.cn/codecamp_new/product/16?utm_source=miniapp&utm_medium=h5&utm_term=video_work_share" target="_blank">立即报名</a>
     </div>
     <transition name="fade">
       <div class='nav1' v-show='sharenav'>
         <img src="@/assets/img/f.png" class='shareimg'>
-        <div class='shareclose' @click.stop='sharenav=false'/>
-      </div>
-    </transition>
-    <transition name='fade'>
-      <div class='nav1' v-show="menunav">
-        <div class='closemenu' @click="menunav=false" />
-        <div class='menuborder'>
-          <iscroll-view class='scroll-view' ref='iscroll2' :options='scrollOptions2'>
-            <div class="menu_txt">您的课程列表</div>
-            <ul class='munulist'>
-              <li v-for="(item, index) in videoList" :key="index" @click="toPage(index)" :class="{flag0:item.zuoye==='', flag1:item.zuoye&&(item.zuoye.flag===1||item.zuoye.flag===2), flag2:item.zuoye&&item.zuoye.flag===4, flag3:item.zuoye&&item.zuoye.flag===0}" >{{ item.course_name }}</li>
-            </ul>
-          </iscroll-view>
-        </div>
+        <div class='sharenav_txt'>点击右上角分享，让好友看到孩子的成长</div>
+        <div class='shareclose' @click.stop='sharenav=false'>好的</div>
       </div>
     </transition>
   </div>
@@ -90,7 +83,7 @@ export default {
       id: '',
       voiceList: [],
       voiceId: '',
-      zhuType: false,
+      zhuType: true,
       sharenav: false,
       menunav: false
     }
@@ -179,6 +172,7 @@ export default {
     },
     init () {
       const that = this
+      that.changeTitle('作业详情')
       that.$loading('正在加载，请稍后...')
       const data = {
         openid: window.Global.openid,
@@ -204,12 +198,15 @@ export default {
             // }, 300)
             that.txt = that.info.comment
             that.nickname = that.info.nickname
-            that.zhuType = that.info.openid === window.Global.openid
+            that.zhuType = that.info.openid !== window.Global.openid
             if (that.videoIndex === -1) {
               that.$store.commit('uVideoIndex', 0)
             }
             that.tit = that.info.course_name
             that.child_name = that.info.child_name
+            if (!that.zhuType) {
+              that.changeTitle(that.child_name + '的视频作业')
+            }
             that.voiceList = []
             let arr1 = []
             let arr2 = []
@@ -218,10 +215,17 @@ export default {
               arr2 = that.info.voiceTimes.split(',')
             }
             for (let i = 0; i < arr1.length; i++) {
+              let voiceTimes = parseInt(arr2[i])
+              const width = 3.5 + ((voiceTimes - 2) / 60) * 10
+              if (voiceTimes < 10) {
+                voiceTimes = '0' + voiceTimes
+              }
               that.voiceList.push({
                 voice: arr1[i],
-                voiceTimes: arr2[i],
-                voiceFlag: false
+                voiceTimes,
+                voiceFlag: false,
+                red: that.checkzan(that.id + '_' + i),
+                width
               })
             }
             that.toShare(res.zuoye.id, res.zuoye.child_name, res.zuoye.course_name)
@@ -250,6 +254,14 @@ export default {
     },
     start (obj, index) {
       const that = this
+      // console.log(that.voiceList[index].red)
+      if (that.voiceList[index].red) {
+        const it = that.voiceList[index]
+        it.red = false
+        that.$set(that.voiceList, index, it)
+        that.checkcookie(that.id + '_' + index)
+        // that.voiceList[index].red = false
+      }
       if (that.voiceId === index) {
         if (!that.voice) {
           that.voice = new Audio()

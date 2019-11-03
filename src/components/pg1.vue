@@ -111,9 +111,6 @@ export default {
         if (res.res === 'new' || res.res === 'again') {
           that.classlist = res.myclass
           that.user = res.user
-          // console.log(that.user)
-          // that.user.status = 'no_start'
-          // that.classlist = []
           that.$store.commit('uVideoList', that.classlist)
           that.user_id = res.user_id
           that.child_name = res.child_name

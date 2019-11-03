@@ -1,47 +1,38 @@
 <template>
   <div class='pg2'>
     <div class='pg2_main'>
-      <div class='return' @click='ret'>返回</div>
       <div class='left' @click.once='to4(1)' v-show="videoIndex<videoList.length-1"/>
       <div class='right' @click.once='to4(-1)' v-show="videoIndex>0"/>
-      <div class='menu' @click='ret'/>
+      <div class='menu' @click='ret'>全部</div>
       <div class='pg2_tit' v-if='obj'>{{obj.course_name}}</div>
-      <div class='pg2_center'>
-        <div class='pg2_center_title'>上传你的小火箭作品吧</div>
-        <div class='wl_pg2_info wl_pg2_info3'>上传视频<span>*</span></div>
-        <div class='wl_up_tips'>
-          <p>建议在白天使用手机拍摄，镜头不抖动，背景干净</p>
-        </div>
+      <div class='pg2_center' v-show="uploadDataUrl!==''">
         <div class='wl_up' id='wl_up'>
-          <input type="file" class="upload" @change="upload" id="upload" accept="video/*" v-show='uploadDataUrl===""'>
+          <!-- <input type="file" class="upload" @change="upload" id="upload" accept="video/*" v-show='uploadDataUrl===""' capture="camcorder"> -->
           <video data-setup="{}" controls v-show='uploadDataUrl!==""' id='upvideo'>
             <source type="video/mp4">
           </video>
         </div>
-        <div class='wl_up_btn' v-show='uploadDataUrl!==""&&flag!==0' id='wl_up_btn'>
-          <input type="file" accept="video/*" id='wl_add_btn'>
-          <span>点击重新上传</span>
+        <div style='margin-top: .98rem;font-size: 0;'>
+          <div class='wl_up_btn' v-show='uploadDataUrl!==""&&flag!==0' id='wl_up_btn'>
+            <input type="file" accept="video/*" id='wl_add_btn' capture="camcorder">
+            <i class='reupload'/><span>重新上传</span>
+          </div>
+          <div class='wl_pg2_btn' @click='btnfn' v-show="flag!==0">提交作业</div>
         </div>
-        <div class='pg2_txt1' v-show="flag!==null&&(flag===4||flag===0)">{{obj.teacher_name}}作品点评：</div>
-        <div class='pg2_txt1' v-show="flag!==null&&(flag===4||flag===0)">老师正在快马加鞭批改中，批改完成后将会以微信通知的方式提醒您</div>
-        <div style='height: 0.853rem;'></div>
+        <div v-show="flag!==null&&(flag===4||flag===0)">
+          <div class='pg2_txt1'>{{obj.teacher_name}}点评：</div>
+          <div class='pg2_txt2'>老师正在快马加鞭批改中，批改完成后将会以微信通知的方式提醒您</div>
+        </div>
       </div>
-      <div class='wl_pg2_btn' @click='btnfn' v-show="flag!==0">提交作业</div>
-      <div style='height:1.216rem;'></div>
+      <div class='pg2_center1' v-show="uploadDataUrl===''">
+        <div class='pg2_center1_txt1'>您还未上传本节课视频作业</div>
+        <div class='zuoyeShowBtn' id='zuoyeShowBtn'>
+          <input type="file" accept="video/*" id='zuoye_add_btn' capture="camcorder">
+          <span class='btnname'>上传视频</span>
+        </div>
+      </div>
+      <!-- <div class='wl_pg2_btn' @click='btnfn' v-show="flag!==0">提交作业</div> -->
     </div>
-    <transition name='fade'>
-      <div class='nav1' v-show="menunav">
-        <div class='closemenu' @click="menunav=false" />
-        <div class='menuborder'>
-          <iscroll-view class='scroll-view' ref='iscroll2' :options='scrollOptions2'>
-            <div class="menu_txt">您的课程列表</div>
-            <ul class='munulist'>
-              <li v-for="(item, index) in videoList" :key="index" @click="toPage(index)" :class="{flag0:item.zuoye==='', flag1:item.zuoye&&(item.zuoye.flag===1||item.zuoye.flag===2), flag2:item.zuoye&&item.zuoye.flag===4, flag3:item.zuoye&&item.zuoye.flag===0}">{{ item.course_name }}</li>
-            </ul>
-          </iscroll-view>
-        </div>
-      </div>
-    </transition>
   </div>
 </template>
 
@@ -71,7 +62,8 @@ export default {
       imgsrc: '',
       uploader: null,
       flag: null,
-      menunav: false
+      menunav: false,
+      zuoyeshow: false
     }
   },
   computed: {
@@ -94,16 +86,11 @@ export default {
       that.ret()
       return
     }
+    // console.log(that.obj)
+    that.changeTitle('作业详情')
     that.init()
   },
   methods: {
-    menunfn () {
-      const that = this
-      that.menunav = true
-      setTimeout(function () {
-        that.iscroll2.refresh()
-      }, 400)
-    },
     slideto (res) {
       const that = this
       that.$emit('slideto', res)
@@ -157,18 +144,24 @@ export default {
       classinfo(data).then(res => {
         if (res.res === 'success') {
           if (res.zuoye !== '') {
+            that.zuoyeshow = true
             if (res.zuoye.flag === 4 || res.zuoye.flag === 0) {
               that.uploadDataUrl = res.zuoye.video
               that.flag = res.zuoye.flag
               document.getElementById('upvideo').querySelector('source').src = that.uploadDataUrl
               document.getElementById('upvideo').src = that.uploadDataUrl
               document.getElementById('upvideo').poster = that.uploadDataUrl + '?vframe/jpg/offset/0'
-              document.getElementById('wl_up').querySelector('div').style.display = 'none'
+              // document.getElementById('wl_up').querySelector('div').style.display = 'none'
               document.getElementById('wl_up_btn').querySelector('div').style.width = '100%'
               document.getElementById('wl_up_btn').querySelector('div').style.height = '100%'
             } else {
               that.slideto(3)
             }
+          } else {
+            that.zuoyeshow = false
+            document.getElementById('zuoyeShowBtn').querySelector('div').style.width = '100%'
+            document.getElementById('zuoyeShowBtn').querySelector('div').style.height = '100%'
+            document.getElementById('zuoyeShowBtn').querySelector('div').style.left = '0'
           }
           // console.log(that.flag)
         }
@@ -178,7 +171,7 @@ export default {
         that.domain = res.domain
         that.uploader = window.Qiniu.uploader({
           runtimes: 'html5,flash,html4',
-          browse_button: ['upload', 'wl_add_btn'],
+          browse_button: ['wl_add_btn', 'zuoye_add_btn'],
           get_new_uptoken: false,
           uptoken: that.uptoken,
           domain: that.domain,
@@ -197,10 +190,11 @@ export default {
                   self.files.splice(self.files.length - 1, 1)
                   return
                 }
-                let size = parseInt(file.size / 1000000)
+                const size = parseInt(file.size / 1000000)
                 if (size >= 500) {
                   that.$toast('视频太大啦<br>请重新录制~')
-                  document.getElementById('upload').value = ''
+                  // document.getElementById('upload').value = ''
+                  document.getElementById('zuoye_add_btn').value = ''
                   self.files.splice(self.files.length - 1, 1)
                   return
                 }
@@ -209,7 +203,8 @@ export default {
                 that.uploadDataUrl = that.getObjectURL(file.getNative())
                 document.getElementById('upvideo').querySelector('source').src = that.uploadDataUrl
                 document.getElementById('upvideo').src = that.uploadDataUrl
-                document.getElementById('wl_up').querySelector('div').style.display = 'none'
+                document.getElementById('upvideo').poster = ''
+                // document.getElementById('wl_up').querySelector('div').style.display = 'none'
                 document.getElementById('wl_up_btn').querySelector('div').style.width = '100%'
                 document.getElementById('wl_up_btn').querySelector('div').style.height = '100%'
               })
@@ -265,6 +260,8 @@ export default {
                   that.$loading.close()
                   that.$toast('视频作业不可修改啦')
                   that.$emit('slideto', 1)
+                } else if (res.res === 'sys' || res.res === 'nouser') {
+                  that.$toast('系统异常，请刷新重试')
                 }
               })
             },
@@ -281,24 +278,24 @@ export default {
       let that = this
       that.$emit('slideto', 1)
     },
-    upload () {
-      let that = this
-      let files = document.getElementById('upload').files[0]
-      if (!files) {
-        return
-      }
-      let size = parseInt(files.size / 1000000)
-      if (size >= 200) {
-        that.$toast('视频太大啦<br>请重新录制~')
-        document.getElementById('upload').value = ''
-        return
-      }
-      that.uploadDataUrl = that.getObjectURL(files)
-    },
+    // upload () {
+    //   let that = this
+    //   let files = document.getElementById('upload').files[0]
+    //   if (!files) {
+    //     return
+    //   }
+    //   let size = parseInt(files.size / 1000000)
+    //   if (size >= 200) {
+    //     that.$toast('视频太大啦<br>请重新录制~')
+    //     document.getElementById('upload').value = ''
+    //     return
+    //   }
+    //   that.uploadDataUrl = that.getObjectURL(files)
+    // },
     btnfn () {
       const that = this
       if (that.uploader.files.length === 0) {
-        that.$toast('您还未上传本节课视频作业，点击按钮上传吧')
+        that.$toast('您还未选择视频作业，点击按钮选择视频吧')
         return
       }
       // console.log(that.uploader.files)

@@ -46,11 +46,14 @@ if (process.env.NODE_ENV === 'development') {
   window.Global.openid = 'oEMA252Dxr8bkVc37H6i630lgui8200b3'
   window.Global.nickname = 'hj'
   // window.Global.unionid = 'oE5xYwF0pCMeCjM2Rcrzh24nRZMM'
-  window.Global.unionid = 'oE5xYwAs-GEV6DpTGhFcHjBmBvrI'
+  // window.Global.unionid = 'oE5xYwAs-GEV6DpTGhFcHjBmBvrI'
+  window.Global.unionid = 'oE5xYwBW7pJYqTfV47JaRuJQHmHs'
   window.Global.headimgurl = 'http://thirdwx.qlogo.cn/mmopen/vi_32/IK7mxEHHmUkg7EmZcqruiblibBickEa24iazEeThiaFPvNyeJZrrqkvgFTjU4GJKFDPC7Aicc7p9ee7fbAeKb643JkEA/132'
 } else if (window.Global.unionid === 'oE5xYwF0pCMeCjM2Rcrzh24nRZMM') {
-  window.Global.openid = 'ooOv6wF2ryLza2p9d4TkXoBTkZPQ'
-  window.Global.unionid = 'oE5xYwDuCW_nLx6S3RpJkRgLFLe8'
+  window.Global.openid = 'ooOv6wKk3PtMaNZR4n4z6evl-HYo'
+  window.Global.unionid = 'oE5xYwBW7pJYqTfV47JaRuJQHmHs'
+  window.Global.nickname = 'Molly'
+  window.Global.headimgurl = 'http://thirdwx.qlogo.cn/mmopen/vi_32/w6PB0WPSSfKNBTk6m6S18fG00DRnB1yqoaLkqueQ6vTiaDRcRia67iaUZHeoIC6SI5MhVUIhLpLomShibRlTMdxAFQ/132'
 }
 
 Vue.prototype.toShare = function (id, name, course) {
@@ -124,9 +127,10 @@ Vue.prototype.clearCookie = function (name) {
 }
 
 Vue.prototype.checkzan = function (gindex) {
-  var that = this
-  var thiscookie = 'wuli_iszan_' + gindex
-  var mapcookie = that.getCookie(thiscookie)
+  const that = this
+  const thiscookie = 'sp_iszan_' + gindex
+  // console.log(thiscookie)
+  const mapcookie = that.getCookie(thiscookie)
   if (mapcookie !== null && mapcookie !== '') {
     return false
   } else {
@@ -135,9 +139,9 @@ Vue.prototype.checkzan = function (gindex) {
 }
 
 Vue.prototype.checkcookie = function (gindex) {
-  var that = this
-  var thiscookie = 'wuli_iszan_' + gindex
-  var mapcookie = that.getCookie(thiscookie)
+  const that = this
+  const thiscookie = 'sp_iszan_' + gindex
+  const mapcookie = that.getCookie(thiscookie)
   if (mapcookie !== null && mapcookie !== '') {
     return false
   } else {

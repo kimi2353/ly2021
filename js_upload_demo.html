@@ -31,12 +31,12 @@
   
   function upload(){	
     var timestamp1 = Date.parse(new Date());
-  	var token ='AZu4n0X_3CFhAmZUESMSgRxuzppa-eIRUwKH9MXd:u0LUR9JC3y8QWqE1GIBmmLxEcfI=:eyJzY29wZSI6InN0YXRpYy1rMTJlZHUtY2FtcHJlY29yZCIsImRlYWRsaW5lIjoxNTQ3NDQwNDI4fQ==';
+  	var token ='AZu4n0X_3CFhAmZUESMSgRxuzppa-eIRUwKH9MXd:xIJ3ro33HHvreIRAJ3bhDQ5PMXA=:eyJzY29wZSI6InN0YXRpYy1rMTJlZHUtY2FtcHJlY29yZCIsImRlYWRsaW5lIjoxNTcyNjA2MDI2fQ==';
   	var putExtra = {
-  		fname: file.name + timestamp1,
+  		fname: timestamp1 + file.name,
   		params: {}
   	};
-  	var observable = qiniu.upload(file, file.name + timestamp1, token, putExtra, config)
+  	var observable = qiniu.upload(file, timestamp1 + file.name, token, putExtra, config)
   	var subscription = observable.subscribe(observer)
   }
 
