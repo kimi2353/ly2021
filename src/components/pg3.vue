@@ -216,7 +216,10 @@ export default {
             }
             for (let i = 0; i < arr1.length; i++) {
               let voiceTimes = parseInt(arr2[i])
-              const width = 3.5 + ((voiceTimes - 2) / 60) * 10
+              let width = 3.5 + ((voiceTimes - 2) / 60) * 10
+              if (width > 13.5) {
+                width = 13.5
+              }
               if (voiceTimes < 10) {
                 voiceTimes = '0' + voiceTimes
               }

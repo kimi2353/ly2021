@@ -17,7 +17,7 @@
             <input type="file" accept="video/*" id='wl_add_btn' capture="camcorder">
             <i class='reupload'/><span>重新上传</span>
           </div>
-          <div class='wl_pg2_btn' @click='btnfn' v-show="flag!==0">提交作业</div>
+          <div class='wl_pg2_btn' @click='btnfn' v-show="flag!==0&&btnshow">提交作业</div>
         </div>
         <div v-show="flag!==null&&(flag===4||flag===0)">
           <div class='pg2_txt1'>{{obj.teacher_name}}点评：</div>
@@ -63,7 +63,8 @@ export default {
       uploader: null,
       flag: null,
       menunav: false,
-      zuoyeshow: false
+      zuoyeshow: false,
+      btnshow: false
     }
   },
   computed: {
@@ -88,6 +89,7 @@ export default {
     }
     // console.log(that.obj)
     that.changeTitle('作业详情')
+    that.btnshow = false
     that.init()
   },
   methods: {
@@ -199,6 +201,7 @@ export default {
                   return
                 }
                 that.$toast('已选择视频~')
+                that.btnshow = true
                 that.uploadDataUrl = ''
                 that.uploadDataUrl = that.getObjectURL(file.getNative())
                 document.getElementById('upvideo').querySelector('source').src = that.uploadDataUrl
