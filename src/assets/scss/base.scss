@@ -603,6 +603,16 @@ img::selection{background:0}
           z-index: 0;
           right: 0;
         }
+        input{
+          width: 100%;
+          position: absolute;
+          opacity: 0;
+          height: 0;
+          left: 0;
+          top: 0;
+          z-index: 5;
+          height: 100%;
+        }
       }
     }
     .wl_up{

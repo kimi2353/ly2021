@@ -198,7 +198,7 @@ export default {
             // }, 300)
             that.txt = that.info.comment
             that.nickname = that.info.nickname
-            that.zhuType = that.info.openid !== window.Global.openid
+            that.zhuType = that.info.openid === window.Global.openid
             if (that.videoIndex === -1) {
               that.$store.commit('uVideoIndex', 0)
             }
