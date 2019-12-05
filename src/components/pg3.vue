@@ -29,12 +29,12 @@
       </div>
     </iscroll-view>
     <div class='pg3_btn' @click="sharefn" v-if='zhuType'>
-      <div class='pg3_btn1' @click="sharefn">快分享宝贝的作品给亲朋好友吧</div>
+      <div class='pg3_btn1' @click="sharefn">快邀请朋友学习吧</div>
     </div>
     <div class='pg3_btn' v-else>
       <img src='@/assets/img/btn_flag.png' class='btn_flag'>
       <span class='pg3_btn_txt'>快来报名和{{ child_name }}<br>一起学编程吧</span>
-      <a href="https://mobile.codemao.cn/codecamp_new/product/16?utm_source=miniapp&utm_medium=h5&utm_term=video_work_share" target="_blank">立即报名</a>
+      <a :href="url" target="_blank">立即报名</a>
     </div>
     <transition name="fade">
       <div class='nav1' v-show='sharenav'>
@@ -85,7 +85,8 @@ export default {
       voiceId: '',
       zhuType: true,
       sharenav: false,
-      menunav: false
+      menunav: false,
+      url: '#'
     }
   },
   computed: {
@@ -237,6 +238,7 @@ export default {
               that.player.src(that.info.video)
               that.player.poster(that.info.video + '?vframe/jpg/offset/0')
             })
+            that.url = that.info.referral_url + that.info.referral
             setTimeout(function () {
               that.iscroll1.refresh()
               setTimeout(function () {
@@ -257,13 +259,11 @@ export default {
     },
     start (obj, index) {
       const that = this
-      // console.log(that.voiceList[index].red)
       if (that.voiceList[index].red) {
         const it = that.voiceList[index]
         it.red = false
         that.$set(that.voiceList, index, it)
         that.checkcookie(that.id + '_' + index)
-        // that.voiceList[index].red = false
       }
       if (that.voiceId === index) {
         if (!that.voice) {

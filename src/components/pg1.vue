@@ -106,8 +106,10 @@ export default {
         headimgurl: window.Global.headimgurl
       }
       that.changeTitle('学习记录')
+      that.$loading('加载中...')
       checkclass(data).then(res => {
         // res.res = 'nouser'
+        that.$loading.close()
         if (res.res === 'new' || res.res === 'again') {
           that.classlist = res.myclass
           that.user = res.user
@@ -217,11 +219,14 @@ export default {
         'package_name': obj.package_name,
         'term_name': obj.term_name,
         'class_name': obj.class_name,
-        'teacher_name': obj.teacher_name
+        'teacher_name': obj.teacher_name,
+        'teacher_id': obj.teacher_id,
+        'teacher_email': obj.teacher_email
       }
       if (obj.zuoye && obj.zuoye.id) {
         data['id'] = obj.zuoye.id
       }
+      console.log(data)
       that.$store.commit('uObj', data)
       if (obj.zuoye === '') {
         that.slideto(2)

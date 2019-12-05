@@ -43,11 +43,11 @@ Vue.prototype.Url = process.env.BASE_API
 Vue.prototype.Url2 = process.env.BASE_API2
 
 if (process.env.NODE_ENV === 'development') {
-  window.Global.openid = 'oEMA252Dxr8bkVc37H6i630lgui8200b3'
+  window.Global.openid = 'ooOv6wF2ryLza2p9d4TkXoBTkZPQ1'
   window.Global.nickname = 'hj'
-  // window.Global.unionid = 'oE5xYwF0pCMeCjM2Rcrzh24nRZMM'
-  // window.Global.unionid = 'oE5xYwAs-GEV6DpTGhFcHjBmBvrI'
-  window.Global.unionid = 'oE5xYwBW7pJYqTfV47JaRuJQHmHs'
+  window.Global.unionid = 'oE5xYwDuCW_nLx6S3RpJkRgLFLe8'
+  // window.Global.unionid = 'oE5xYwLLti_2hBQWeIBAMUZDkcNw'
+  // window.Global.unionid = 'oE5xYwBW7pJYqTfV47JaRuJQHmHs'
   window.Global.headimgurl = 'http://thirdwx.qlogo.cn/mmopen/vi_32/IK7mxEHHmUkg7EmZcqruiblibBickEa24iazEeThiaFPvNyeJZrrqkvgFTjU4GJKFDPC7Aicc7p9ee7fbAeKb643JkEA/132'
 } else if (window.Global.unionid === 'oE5xYwF0pCMeCjM2Rcrzh24nRZMM') {
   window.Global.openid = 'ooOv6wKk3PtMaNZR4n4z6evl-HYo'

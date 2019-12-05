@@ -64,7 +64,8 @@ export default {
       flag: null,
       menunav: false,
       zuoyeshow: false,
-      btnshow: false
+      btnshow: false,
+      videoinfo: null
     }
   },
   computed: {
@@ -136,13 +137,20 @@ export default {
     },
     init () {
       const that = this
-      const data = {
+      const data = Object.assign({
         openid: window.Global.openid,
         unionid: window.Global.unionid,
         nickname: window.Global.nickname,
-        headimgurl: window.Global.headimgurl,
-        ...that.obj
-      }
+        headimgurl: window.Global.headimgurl
+      }, that.obj)
+      // const data = {
+      //   openid: window.Global.openid,
+      //   unionid: window.Global.unionid,
+      //   nickname: window.Global.nickname,
+      //   headimgurl: window.Global.headimgurl,
+      //   ...that.obj
+      // }
+      // console.log(that.obj)
       classinfo(data).then(res => {
         if (res.res === 'success') {
           if (res.zuoye !== '') {
@@ -210,6 +218,9 @@ export default {
                 // document.getElementById('wl_up').querySelector('div').style.display = 'none'
                 document.getElementById('wl_up_btn').querySelector('div').style.width = '100%'
                 document.getElementById('wl_up_btn').querySelector('div').style.height = '100%'
+                // console.log(that.obj)
+                that.videoinfo = that.obj
+                // that.videoinfo.teacher_email = 1
               })
             },
             UploadProgress: function (up, file) {
@@ -219,15 +230,24 @@ export default {
             FileUploaded: function (up, file, info) {
               const res = JSON.parse(info.response)
               const video = 'https://static-k12edu-camprecord.codemao.cn/' + res.key
-              const data = {
+              // const data = {
+              //   openid: window.Global.openid,
+              //   unionid: window.Global.unionid,
+              //   nickname: window.Global.nickname,
+              //   headimgurl: window.Global.headimgurl,
+              //   ...that.obj,
+              //   video
+              // }
+              // console.log(that.videoinfo)
+              const data = Object.assign({
                 openid: window.Global.openid,
                 unionid: window.Global.unionid,
                 nickname: window.Global.nickname,
                 headimgurl: window.Global.headimgurl,
-                ...that.obj,
                 video
-              }
+              }, that.videoinfo)
               // console.log(data)
+              // return
               videoUp(data).then((res) => {
                 // that.$loading.close()
                 that.$store.commit('uVideoIndex', that.videoIndex)
