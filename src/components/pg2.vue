@@ -7,8 +7,7 @@
       <div class='pg2_tit' v-if='obj'>{{obj.course_name}}</div>
       <div class='pg2_center' v-show="uploadDataUrl!==''">
         <div class='wl_up' id='wl_up'>
-          <!-- <input type="file" class="upload" @change="upload" id="upload" accept="video/*" v-show='uploadDataUrl===""' capture="camcorder"> -->
-          <video data-setup="{}" controls v-show='uploadDataUrl!==""' id='upvideo'>
+          <video data-setup="{}" controls v-show='uploadDataUrl!==""' id='upvideo' oncontextmenu="return false" controlslist="nodownload">
             <source type="video/mp4">
           </video>
         </div>
@@ -31,13 +30,11 @@
           <span class='btnname'>上传视频</span>
         </div>
       </div>
-      <!-- <div class='wl_pg2_btn' @click='btnfn' v-show="flag!==0">提交作业</div> -->
     </div>
   </div>
 </template>
 
 <script>
-// import * as qiniu from 'qiniu-js'
 import { uptoken, classinfo, videoUp, checkclass } from '@/api/login'
 
 export default {
@@ -88,7 +85,6 @@ export default {
       that.ret()
       return
     }
-    // console.log(that.obj)
     that.changeTitle('作业详情')
     that.btnshow = false
     that.init()
@@ -143,13 +139,6 @@ export default {
         nickname: window.Global.nickname,
         headimgurl: window.Global.headimgurl
       }, that.obj)
-      // const data = {
-      //   openid: window.Global.openid,
-      //   unionid: window.Global.unionid,
-      //   nickname: window.Global.nickname,
-      //   headimgurl: window.Global.headimgurl,
-      //   ...that.obj
-      // }
       // console.log(that.obj)
       classinfo(data).then(res => {
         if (res.res === 'success') {
@@ -164,6 +153,10 @@ export default {
               // document.getElementById('wl_up').querySelector('div').style.display = 'none'
               document.getElementById('wl_up_btn').querySelector('div').style.width = '100%'
               document.getElementById('wl_up_btn').querySelector('div').style.height = '100%'
+              setTimeout(() => {
+                document.getElementById('wl_up_btn').querySelector('div').style.width = '100%'
+                document.getElementById('wl_up_btn').querySelector('div').style.height = '100%'
+              }, 800)
             } else {
               that.slideto(3)
             }
@@ -173,7 +166,6 @@ export default {
             document.getElementById('zuoyeShowBtn').querySelector('div').style.height = '100%'
             document.getElementById('zuoyeShowBtn').querySelector('div').style.left = '0'
           }
-          // console.log(that.flag)
         }
       })
       uptoken().then((res) => {
@@ -218,9 +210,7 @@ export default {
                 // document.getElementById('wl_up').querySelector('div').style.display = 'none'
                 document.getElementById('wl_up_btn').querySelector('div').style.width = '100%'
                 document.getElementById('wl_up_btn').querySelector('div').style.height = '100%'
-                // console.log(that.obj)
                 that.videoinfo = that.obj
-                // that.videoinfo.teacher_email = 1
               })
             },
             UploadProgress: function (up, file) {
@@ -230,15 +220,6 @@ export default {
             FileUploaded: function (up, file, info) {
               const res = JSON.parse(info.response)
               const video = 'https://static-k12edu-camprecord.codemao.cn/' + res.key
-              // const data = {
-              //   openid: window.Global.openid,
-              //   unionid: window.Global.unionid,
-              //   nickname: window.Global.nickname,
-              //   headimgurl: window.Global.headimgurl,
-              //   ...that.obj,
-              //   video
-              // }
-              // console.log(that.videoinfo)
               const data = Object.assign({
                 openid: window.Global.openid,
                 unionid: window.Global.unionid,
@@ -246,10 +227,8 @@ export default {
                 headimgurl: window.Global.headimgurl,
                 video
               }, that.videoinfo)
-              // console.log(data)
-              // return
+
               videoUp(data).then((res) => {
-                // that.$loading.close()
                 that.$store.commit('uVideoIndex', that.videoIndex)
                 if (res.res === 'success') {
                   that.$store.commit('uvid', res.id)
@@ -301,27 +280,12 @@ export default {
       let that = this
       that.$emit('slideto', 1)
     },
-    // upload () {
-    //   let that = this
-    //   let files = document.getElementById('upload').files[0]
-    //   if (!files) {
-    //     return
-    //   }
-    //   let size = parseInt(files.size / 1000000)
-    //   if (size >= 200) {
-    //     that.$toast('视频太大啦<br>请重新录制~')
-    //     document.getElementById('upload').value = ''
-    //     return
-    //   }
-    //   that.uploadDataUrl = that.getObjectURL(files)
-    // },
     btnfn () {
       const that = this
       if (that.uploader.files.length === 0) {
         that.$toast('您还未选择视频作业，点击按钮选择视频吧')
         return
       }
-      // console.log(that.uploader.files)
       that.uploader.files.splice(0, that.uploader.files.length - 1)
       that.$loading('上传中<br>请耐心等待')
       that.uploader.start()

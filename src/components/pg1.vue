@@ -68,8 +68,6 @@ export default {
       classlist: [],
       headimgurl: '',
       nickname: '',
-      child_name: '',
-      user_id: '',
       user: null,
       videonull: 0,
       nouser: false
@@ -84,10 +82,16 @@ export default {
     },
     videoIndex () {
       return this.$store.state.videoIndex
+    },
+    user_id () {
+      return this.$store.state.user_id
+    },
+    child_name () {
+      return this.$store.state.child_name
     }
   },
   mounted () {
-    let that = this
+    const that = this
     const list = that.getQueryString('list')
     if (list) {
       that.$store.commit('uVideoIndex', 0)
@@ -114,8 +118,9 @@ export default {
           that.classlist = res.myclass
           that.user = res.user
           that.$store.commit('uVideoList', that.classlist)
-          that.user_id = res.user_id
-          that.child_name = res.child_name
+          that.$store.commit('uUserId', res.user_id)
+          that.$store.commit('uChildName', res.child_name)
+          // that.child_name = res.child_name
           that.toShare()
           for (let i = 0; i < that.classlist.length; i++) {
             if (that.classlist[i].zuoye === '') {
@@ -137,6 +142,13 @@ export default {
                 }
               }
             }
+          } else {
+            setTimeout(function () {
+              that.iscroll1.refresh()
+            }, 400)
+            setTimeout(function () {
+              that.iscroll1.refresh()
+            }, 1000)
           }
         } else if (res.res === 'nouser') {
           that.nouser = true
@@ -144,12 +156,6 @@ export default {
         } else if (res.res === 'sys') {
           that.$loading('系统错误，请稍后重试...')
         }
-        setTimeout(function () {
-          that.iscroll1.refresh()
-        }, 400)
-        setTimeout(function () {
-          that.iscroll1.refresh()
-        }, 1000)
       })
     },
     slideto (res) {
@@ -221,7 +227,8 @@ export default {
         'class_name': obj.class_name,
         'teacher_name': obj.teacher_name,
         'teacher_id': obj.teacher_id,
-        'teacher_email': obj.teacher_email
+        'teacher_email': obj.teacher_email,
+        'type': obj.type
       }
       if (obj.zuoye && obj.zuoye.id) {
         data['id'] = obj.zuoye.id

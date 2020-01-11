@@ -22,7 +22,7 @@ export default {
   },
   methods: {
     slideto (res) {
-      let that = this
+      const that = this
       that.fade = false
       if (res) {
         that.moban = 'pg' + res
@@ -30,7 +30,7 @@ export default {
       that.fadefn()
     },
     fadefn () {
-      let that = this
+      const that = this
       setTimeout(function () {
         // that.$refs.moban.init()
         that.fade = true
@@ -39,7 +39,7 @@ export default {
   },
   data () {
     return {
-      moban: '',
+      moban: 'pg1',
       fade: true
     }
   },

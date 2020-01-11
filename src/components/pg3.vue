@@ -13,7 +13,10 @@
         </div>
         <div class='pg3_main1'>
           <div class='pg3_border'>
-            <video-player class="video-player-box vjs-big-play-centered" ref="videoPlayer" :options="playerOptions" :playsinline="false" />
+            <video data-setup="{}" controls id='videozuoye' oncontextmenu="return false" controlslist="nodownload">
+              <source type="video/mp4">
+            </video>
+            <!-- <video-player class="video-player-box vjs-big-play-centered" ref="videoPlayer" :options="playerOptions" :playsinline="false" /> -->
           </div>
         </div>
         <div class='pg3_main2'>
@@ -193,10 +196,6 @@ export default {
             }
             that.info = res.zuoye
             that.video = that.info.video
-            // setTimeout(function () {
-            //   that.player.src(that.info.video)
-            //   that.player.poster(that.info.video + '?vframe/jpg/offset/0')
-            // }, 300)
             that.txt = that.info.comment
             that.nickname = that.info.nickname
             that.zhuType = that.info.openid === window.Global.openid
@@ -235,8 +234,11 @@ export default {
             that.toShare(res.zuoye.id, res.zuoye.child_name, res.zuoye.course_name)
             that.$nextTick(() => {
               that.iscroll1.refresh()
-              that.player.src(that.info.video)
-              that.player.poster(that.info.video + '?vframe/jpg/offset/0')
+              document.getElementById('videozuoye').querySelector('source').src = that.info.video
+              document.getElementById('videozuoye').src = that.info.video
+              document.getElementById('videozuoye').poster = that.info.video + '?vframe/jpg/offset/0'
+              // that.player.src(that.info.video)
+              // that.player.poster(that.info.video + '?vframe/jpg/offset/0')
             })
             that.url = that.info.referral_url + that.info.referral
             setTimeout(function () {

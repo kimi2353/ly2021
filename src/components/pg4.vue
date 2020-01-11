@@ -19,6 +19,12 @@ export default {
     },
     videoList () {
       return this.$store.state.videoList
+    },
+    user_id () {
+      return this.$store.state.user_id
+    },
+    child_name () {
+      return this.$store.state.child_name
     }
   },
   mounted () {
@@ -58,7 +64,10 @@ export default {
         'package_name': obj.package_name,
         'term_name': obj.term_name,
         'class_name': obj.class_name,
-        'teacher_name': obj.teacher_name
+        'teacher_name': obj.teacher_name,
+        'teacher_id': obj.teacher_id,
+        'teacher_email': obj.teacher_email,
+        'type': obj.type
       }
       if (obj.zuoye && obj.zuoye.id) {
         data['id'] = obj.zuoye.id

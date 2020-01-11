@@ -15,7 +15,9 @@ const store = new Vuex.Store({
     obj: null,
     cla: true,
     videoIndex: -1,
-    videoList: []
+    videoList: [],
+    user_id: '',
+    child_name: ''
   },
   mutations: {
     uVdinfo: (state, data) => {
@@ -56,6 +58,14 @@ const store = new Vuex.Store({
     uVideoList: (state, data) => {
       const obj = state
       obj.videoList = data
+    },
+    uUserId: (state, data) => {
+      const obj = state
+      obj.user_id = data
+    },
+    uChildName: (state, data) => {
+      const obj = state
+      obj.child_name = data
     }
   }
 })

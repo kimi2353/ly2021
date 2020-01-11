@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
-    <title>小火箭视频作业分享</title>
+    <title>视频作业分享</title>
     <script>
       var _hmt = _hmt || [];
       (function() {
@@ -71,11 +71,16 @@
       } else {
         document.documentElement.classList.add("ios");
       }
-      var Global = {};
-      Global.openid = '<?php echo $openid;?>';
-      Global.nickname = '<?php echo $nickname;?>';
-      Global.headimgurl = '<?php echo $headimgurl;?>';
-      Global.unionid = '<?php echo $unionid;?>';
+      window.Global = {
+        openid: '',
+        nickname: '',
+        headimgurl: '',
+        unionid: ''
+      };
+      window.Global.openid = '<?php echo $openid;?>';
+      window.Global.nickname = '<?php echo $nickname;?>';
+      window.Global.headimgurl = '<?php echo $headimgurl;?>';
+      window.Global.unionid = '<?php echo $unionid;?>';
     </script>
   </head>
   <body>
