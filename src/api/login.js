@@ -24,6 +24,22 @@ export function uptoken (data) {
   })
 }
 
+export function imgUpLoad (data) {
+  return request({
+    url: '/imgUpLoad',
+    method: 'post',
+    data
+  })
+}
+
+export function checkTaskInfo (data) {
+  return request({
+    url: '/checkTaskInfo',
+    method: 'post',
+    data
+  })
+}
+
 export function classinfo (data) {
   return request({
     url: '/classinfo',

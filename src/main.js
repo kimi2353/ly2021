@@ -9,7 +9,7 @@ import IScrollView from 'vue-iscroll-view'
 import IScroll from 'iscroll/build/iscroll-probe.js'
 import Toast from 'vue2-toast'
 import VueVideoPlayer from 'vue-video-player'
-import Vconsole from 'vconsole'
+// import Vconsole from 'vconsole'
 // import 'we-vue/lib/style.css'
 // import 'swiper/dist/css/swiper.css'
 import 'vue2-toast/lib/toast.css'
@@ -19,8 +19,8 @@ import './assets/scss/base.scss'
 // axios.defaults.withCredentials = true
 Vue.config.productionTip = false
 
-let vConsole = new Vconsole()
-Vue.use(vConsole)
+// let vConsole = new Vconsole()
+// Vue.use(vConsole)
 Vue.use(Toast, {
   type: 'center',
   duration: 2000,
@@ -35,12 +35,12 @@ Vue.prototype.Url = process.env.BASE_API
 Vue.prototype.Url2 = process.env.BASE_API2
 
 if (process.env.NODE_ENV === 'development') {
-  window.Global.openid = 'ooOv6wF2ryLza2p9d4TkXoBTkZPQ1'
-  window.Global.nickname = 'hj'
+  window.Global.openid = 'ooOv6wG0kHChmZfTL9NQDCbmD2JY'
+  window.Global.nickname = '熊俊玮'
   // window.Global.unionid = 'oE5xYwDuCW_nLx6S3RpJkRgLFLe8'
-  window.Global.unionid = 'oE5xYwHaDG3fjBnkOS5EDICKVFbQ'
+  window.Global.unionid = 'oE5xYwCkp948I1whODvX7yma9oZg'
   // window.Global.unionid = 'oE5xYwBW7pJYqTfV47JaRuJQHmHs'
-  window.Global.headimgurl = 'http://thirdwx.qlogo.cn/mmopen/vi_32/IK7mxEHHmUkg7EmZcqruiblibBickEa24iazEeThiaFPvNyeJZrrqkvgFTjU4GJKFDPC7Aicc7p9ee7fbAeKb643JkEA/132'
+  window.Global.headimgurl = 'http://thirdwx.qlogo.cn/mmopen/vi_32/PiajxSqBRaELia5d3yhhnPrqfG0RC7sDqTsryX19ghe6mMJznic4KxGwgktCZ1WIiaiceK1unfoXhuFDibIuGlSGn2Lw/132'
 } else {
   // if (window.Global.unionid === 'oE5xYwF0pCMeCjM2Rcrzh24nRZMM')
   // window.Global.openid = 'ooOv6wKk3PtMaNZR4n4z6evl-HYo'
@@ -49,21 +49,12 @@ if (process.env.NODE_ENV === 'development') {
   // window.Global.headimgurl = 'http://thirdwx.qlogo.cn/mmopen/vi_32/w6PB0WPSSfKNBTk6m6S18fG00DRnB1yqoaLkqueQ6vTiaDRcRia67iaUZHeoIC6SI5MhVUIhLpLomShibRlTMdxAFQ/132'
 }
 
-Vue.prototype.toShare = function (id, name, course) {
-  const imgUrl = 'https://festival.codemao.cn/static/img/zy_share.png'
-  let link = 'https://festival.codemao.cn/h5/sp2019'
-  let title = '编程视频作业'
-  let desc = '点击查看孩子视频作业，和老师的点评吧！'
-  if (id) {
-    link = 'https://festival.codemao.cn/h5/sp2019/?id=' + id
-    title = '恭喜' + name + '完成了课程《' + course + '》的视频作业'
-    desc = '点击查看孩子视频作业，和老师的点评吧！'
-  }
+Vue.prototype.toShare = function (id, sharetit, sharedec) {
   const AppMShareContent = {
-    title,
-    desc,
-    link,
-    imgUrl
+    title: sharetit,
+    desc: sharedec,
+    link: 'https://festival.codemao.cn/h5/task2020?id=' + id,
+    imgUrl: 'https://festival.codemao.cn/static/img/zy_share.png'
   }
   // console.log(AppMShareContent)
   window.wx.ready(function () {

@@ -7,65 +7,22 @@ Vue.use(Vuex)
 
 const store = new Vuex.Store({
   state: {
-    tel: '',
-    token: '',
-    vid: '0',
-    tru: '1',
-    type: 1,
-    obj: null,
-    cla: true,
-    videoIndex: -1,
-    videoList: [],
-    user_id: '',
-    child_name: ''
+    imginfo: null,
+    task: null,
+    user_id: 0
   },
   mutations: {
-    uVdinfo: (state, data) => {
+    uTask: (state, data) => {
       const obj = state
-      for (let i = 0; i < obj.videoinfo.length; i++) {
-        let val = obj.videoinfo[i]
-        val.active = false
-        Vue.set(obj.videoinfo, i, val)
-      }
-      let val = obj.videoinfo[data]
-      val.active = true
-      Vue.set(obj.videoinfo, data, val)
+      obj.task = data
     },
-    uvid: (state, data) => {
+    uImgInfo: (state, data) => {
       const obj = state
-      obj.vid = data
-    },
-    uObj: (state, data) => {
-      const obj = state
-      obj.obj = data
-    },
-    ureturn: (state, data) => {
-      const obj = state
-      obj.tru = data
-    },
-    utype: (state, data) => {
-      const obj = state
-      obj.type = data
-    },
-    uCla: (state, data) => {
-      const obj = state
-      obj.cla = data
-    },
-    uVideoIndex: (state, data) => {
-      const obj = state
-      obj.videoIndex = data
-    },
-    uVideoList: (state, data) => {
-      const obj = state
-      obj.videoList = data
+      obj.imginfo = data
     },
     uUserId: (state, data) => {
       const obj = state
       obj.user_id = data
-    },
-    uChildName: (state, data) => {
-      const obj = state
-      obj.child_name = data
     }
   }
 })
