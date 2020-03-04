@@ -38,7 +38,7 @@ if (process.env.NODE_ENV === 'development') {
   window.Global.openid = 'ooOv6wG0kHChmZfTL9NQDCbmD2JY'
   window.Global.nickname = '熊俊玮'
   // window.Global.unionid = 'oE5xYwDuCW_nLx6S3RpJkRgLFLe8'
-  window.Global.unionid = 'oE5xYwCkp948I1whODvX7yma9oZg'
+  window.Global.unionid = 'oE5xYwDuCW_nLx6S3RpJkRgLFLe8'
   // window.Global.unionid = 'oE5xYwBW7pJYqTfV47JaRuJQHmHs'
   window.Global.headimgurl = 'http://thirdwx.qlogo.cn/mmopen/vi_32/PiajxSqBRaELia5d3yhhnPrqfG0RC7sDqTsryX19ghe6mMJznic4KxGwgktCZ1WIiaiceK1unfoXhuFDibIuGlSGn2Lw/132'
 } else {

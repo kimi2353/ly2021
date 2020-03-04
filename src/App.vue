@@ -57,6 +57,8 @@ export default {
             that.$store.commit('uUserId', res.user_id)
             that.toShare(id, res.info.sharetit, res.info.sharedec)
             that.moban = pg2
+          } else if (res.res === 'user') {
+            that.$loading('暂无法参与活动，请联系您的班主任')
           } else {
             that.$loading('异常，请刷新重试。')
           }
