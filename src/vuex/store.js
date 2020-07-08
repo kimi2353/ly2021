@@ -7,22 +7,32 @@ Vue.use(Vuex)
 
 const store = new Vuex.Store({
   state: {
-    imginfo: null,
-    task: null,
-    user_id: 0
+    sid: null,
+    user_id: '',
+    package_id: '',
+    id: '',
+    haiinfo: []
   },
   mutations: {
-    uTask: (state, data) => {
+    uSid: (state, data) => {
       const obj = state
-      obj.task = data
-    },
-    uImgInfo: (state, data) => {
-      const obj = state
-      obj.imginfo = data
+      obj.sid = data
     },
     uUserId: (state, data) => {
       const obj = state
       obj.user_id = data
+    },
+    uPackageId: (state, data) => {
+      const obj = state
+      obj.package_id = data
+    },
+    uId: (state, data) => {
+      const obj = state
+      obj.id = data
+    },
+    uHaiinfo: (state, data) => {
+      const obj = state
+      obj.haiinfo = data
     }
   }
 })

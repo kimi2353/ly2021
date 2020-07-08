@@ -1,160 +1,144 @@
 <template>
   <div class='pg1'>
-    <iscroll-view class='scroll-view' ref='iscroll1' :options='scrollOptions'>
-      <div class='pg1_main'>
-        <div v-show="user&&user.status==='normal'&&classlist.length>0">
-          <div class='pg1_tit' v-if="user&&user.status==='normal'&&classlist.length>0">今天是{{ user.child_name }}小朋友来编程猫学习的第{{ parseInt(user.learn_time / 86400) }}天，孩子已经完成了{{classlist.length-videonull}}次视频作业啦，还有{{videonull}}次课程未上传视频</div>
-          <div class='pg1_tit1'>学习详情</div>
-          <ul class='pg1_list'>
-            <li v-for='(item, index) in classlist' :key='index' @click.stop='up(item, index)'>
-              <div class='classinfo_txt1'>
-                <span>{{ item.course_name }}</span>
-              </div>
-              <img :src="item.zuoye === '' ? 'https://festival.codemao.cn/static/img/yyl_share.png' : item.zuoye.video + '?vframe/jpg/offset/0'">
-              <div class='info'>
-                <div class='info_txt1'>视频作业：</div>
-                <div class='info_txt2' :class="{green: item.zuoye}">
-                  <i class="flag" :class="{yellow: !item.zuoye, green: item.zuoye}" />
-                  <span>{{ item.zuoye === '' ? '未上传' : fmt(item.zuoye.flag) }}</span>
-                </div>
-                <div class='info_txt3'>
-                  <i class="flag luck" />
-                  <span>{{ format1(item.unlock_time) }} 解锁</span>
-                </div>
-                <!-- <div class='info_txt2'>
-                  <span>视频作业：</span>
-                  <span>{{ item.zuoye === '' ? '未上传' : fmt(item.zuoye.flag) }}</span>
-                </div>
-                <div class='info_txt1'>
-                  <span>解锁时间：</span>{{ format1(item.unlock_time) }}
-                </div> -->
-              </div>
-            </li>
-          </ul>
-          <div class="pg1_bottom_txt1" v-show="classlist.length>0">已显示全部内容</div>
-          <div style="height: 2rem" />
-        </div>
-        <div v-show="nouser||(user&&(user.status==='no_purchase'&&classlist.length===0))">
-          <div style="height: 6.29rem" />
-          <img src="@/assets/img/zuoye_null.png" class='zuoye_null'>
-          <div class="pg1_bottom_add_txt1">暂无学习记录</div>
-          <div class="pg1_bottom_add_txt2">暂无学习记录，你还没有在编程猫学习过，快去购课学习吧</div>
-          <a class="pg1_bottom_btn" href="https://mobile.codemao.cn/codecamp_new/product/16?utm_source=miniapp&utm_medium=h5&utm_term=video_work_share" target="_blank">立即报名</a>
-        </div>
-        <div v-show="(user&&(user.status==='no_start'&&classlist.length===0))">
-          <div style="height: 6.29rem" />
-          <img src="@/assets/img/zuoye_null.png" class='zuoye_null'>
-          <div class="pg1_bottom_add_txt1">暂无学习记录</div>
-          <div class="pg1_bottom_add_txt2">你的课程还未开始，耐心等待第一节课吧</div>
-        </div>
-        <!-- <div class="pg1_bottom_txt1" v-show="user&&(user.status==='no_start'&&classlist.length===0)">暂无学习记录，你的课程还未开始，<br>耐心等待第一节课开始吧</div> -->
+    <div class="pg1_main">
+      <img style="display:block;width: 100%;" src="@/assets/img/sh_banner.jpg" />
+      <div class="pg1_info">
+        <img :src="headimgurl" class="headimgurl">
+        <span class="nickname">{{ nickname }}</span>
+        <span class="pg1_txt1" @click="upmenu">上传记录</span>
       </div>
-    </iscroll-view>
+      <ul class="list">
+        <li v-for="(item, index) in slist" :key="index" @click="totab(item)">
+          <img :src="'https://static-k12edu-camprecord.codemao.cn/' + item.banner">
+          <div class="tag tag1" v-if="item.tag==='未开始'">{{ item.tag }}</div>
+          <div class="tag tag2" v-else-if="item.tag==='进行中'">{{ item.tag }}</div>
+          <div class="tag tag3" v-else-if="item.tag==='已结束'">{{ item.tag }}</div>
+          <!-- <van-tag class="tag2">活动时间：{{format(item.begin)}} - {{format(item.end)}}</van-tag> -->
+          <!-- <van-tag :type="item.tag==='进行中'?'success':(item.tag==='未开始'?'warning':(item.tag==='已结束'?'danger':''))" class="tag">{{ item.tag }}</van-tag> -->
+        </li>
+      </ul>
+    </div>
   </div>
 </template>
 
 <script>
-import { checkclass } from '@/api/login'
-
+import { checkShenheInfo, checkShenheMsg } from '@/api/login'
+import { Toast } from 'vant'
+// import { Image as VanImage, Cell, CellGroup } from 'vant'
+// import { Cell, CellGroup } from 'vant'
 export default {
   name: 'pg1',
   data () {
     return {
-      scrollOptions: {
-        mouseWheel: true,
-        click: true,
-        tap: true
-      },
-      classlist: [],
       headimgurl: '',
       nickname: '',
-      user: null,
-      videonull: 0,
-      nouser: false
+      slist: [],
+      now: 0
     }
   },
   computed: {
-    iscroll1 () {
-      return this.$refs.iscroll1
-    },
-    cla () {
-      return this.$store.state.cla
-    },
-    videoIndex () {
-      return this.$store.state.videoIndex
-    },
     user_id () {
       return this.$store.state.user_id
     },
-    child_name () {
-      return this.$store.state.child_name
+    package_id () {
+      return this.$store.state.package_id
+    },
+    id () {
+      return this.$store.state.id
     }
   },
   mounted () {
     const that = this
-    const list = that.getQueryString('list')
-    if (list) {
-      that.$store.commit('uVideoIndex', 0)
-    }
+    that.nickname = window.Global.nickname
+    that.headimgurl = window.Global.headimgurl
+    document.title = '编程猫宣传官'
+    const pagename = '编程猫宣传官首页'
+    that.$emit('pageInfo', pagename)
     that.init()
   },
   methods: {
+    upmenu () {
+      const that = this
+      const bp = {
+        'element': '上传记录',
+        'page_name': '编程猫宣传官首页'
+      }
+      that.$emit('btnInfo', bp)
+      that.slideto(3)
+    },
+    totab (item) {
+      const that = this
+      const bp = {
+        'element': item.remark + '项目Tab',
+        'page_name': '编程猫宣传官首页'
+      }
+      that.$emit('btnInfo', bp)
+      if (item.tag === '未开始') {
+        Toast('项目还未开始，参与其他项目吧')
+      } else if (item.tag === '进行中' || item.tag === '已结束') {
+        const data = {
+          unionid: window.Global.unionid,
+          user_id: that.user_id,
+          sid: item.id,
+          package_id: that.package_id
+        }
+        that.$loading('加载中...')
+        checkShenheMsg(data).then(res => {
+          // console.log(res)
+          that.$loading.close()
+          if (res.res === 'error') {
+            Toast('系统错误，请刷新重试')
+          } else if (res.res === 'package_id') {
+            Toast('对不起，您暂无参与资格')
+          } else if (res.res === 'success') {
+            if (res.package_id) {
+              that.$store.commit('uPackageId', res.package_id)
+            }
+            that.$store.commit('uSid', item.id)
+            that.slideto('2')
+          } else if (res.res === 'time') {
+            Toast('项目已结束')
+          }
+        })
+      }
+    },
     init () {
       const that = this
-      that.headimgurl = window.Global.headimgurl
-      that.nickname = window.Global.nickname
+      const userId = that.getQueryString('user_id')
+      const utmContent = that.getQueryString('utm_content')
+      const utmTerm = that.getQueryString('utm_term')
+      const utmSource = that.getQueryString('utm_source')
       const data = {
         openid: window.Global.openid,
         unionid: window.Global.unionid,
+        headimgurl: window.Global.headimgurl,
         nickname: window.Global.nickname,
-        headimgurl: window.Global.headimgurl
+        userId,
+        utm_content: utmContent,
+        utm_term: utmTerm,
+        utm_source: utmSource
       }
-      that.changeTitle('学习记录')
-      that.$loading('加载中...')
-      checkclass(data).then(res => {
-        // res.res = 'nouser'
-        that.$loading.close()
-        if (res.res === 'new' || res.res === 'again') {
-          that.classlist = res.myclass
-          that.user = res.user
-          that.$store.commit('uVideoList', that.classlist)
+      checkShenheInfo(data).then(res => {
+        // console.log(res)
+        if (res.res === 'success') {
+          that.$store.commit('uPackageId', res.package_id)
           that.$store.commit('uUserId', res.user_id)
-          that.$store.commit('uChildName', res.child_name)
-          // that.child_name = res.child_name
-          that.toShare()
-          for (let i = 0; i < that.classlist.length; i++) {
-            if (that.classlist[i].zuoye === '') {
-              that.videonull++
-            }
+          that.now = res.now
+          for (let i = 0; i < res.shenhe.length; i++) {
+            res.shenhe[i].tag = that.fmt(res.shenhe[i].begin, res.shenhe[i].end)
           }
-          const course = that.getQueryString('course')
-          if (that.videoIndex === -1) {
-            for (let i = 0; i < that.classlist.length; i++) {
-              if (course) {
-                if (that.classlist[i].course_id == course) { // eslint-disable-line
-                  that.up(that.classlist[i], i)
-                  break
-                }
-              } else {
-                if (that.classlist[i].zuoye === '') {
-                  that.up(that.classlist[i], i)
-                  break
-                }
+          that.slist = res.shenhe
+          that.toShare()
+          if (that.id) {
+            for (let i = 0; i < that.slist.length; i++) {
+              if (that.id == that.slist[i].id) { // eslint-disable-line
+                that.$store.commit('uId', '')
+                that.totab(that.slist[i])
+                break
               }
             }
-          } else {
-            setTimeout(function () {
-              that.iscroll1.refresh()
-            }, 400)
-            setTimeout(function () {
-              that.iscroll1.refresh()
-            }, 1000)
+            that.$store.commit('uId', '')
           }
-        } else if (res.res === 'nouser') {
-          that.nouser = true
-          // that.$loading('无法查到您的小火箭课程信息...')
-        } else if (res.res === 'sys') {
-          that.$loading('系统错误，请稍后重试...')
         }
       })
     },
@@ -162,14 +146,16 @@ export default {
       const that = this
       that.$emit('slideto', res)
     },
-    fmt (flag) {
-      const f = {
-        0: '正在批改',
-        1: '已批改',
-        2: '已批改',
-        4: '已上传未批改'
+    fmt (begin, end) {
+      const that = this
+      if (that.now < begin) {
+        return '未开始'
+      } else if (that.now > end) {
+        return '已结束'
+      } else if (that.now >= begin && that.now <= end) {
+        return '进行中'
       }
-      return f[flag]
+      return ''
     },
     format (shijianchuo) {
       if (!shijianchuo) {
@@ -179,28 +165,8 @@ export default {
       const y = time.getFullYear()
       const m = time.getMonth() + 1
       const d = time.getDate()
-      const h = time.getHours()
-      const mm = time.getMinutes()
-      const s = time.getSeconds()
-      function shi (s) {
-        s = '' + s
-        if (s.length < 2) {
-          s = '0' + s
-        }
-        return s
-      }
-      return y + '-' + shi(m) + '-' + shi(d) + ' ' + shi(h) + ':' + shi(mm) + ':' + shi(s)
-    },
-    format1 (shijianchuo) {
-      if (!shijianchuo) {
-        return ''
-      }
-      const time = new Date(shijianchuo * 1000)
-      // const y = time.getFullYear()
-      const m = time.getMonth() + 1
-      const d = time.getDate()
-      const h = time.getHours()
-      const mm = time.getMinutes()
+      // const h = time.getHours()
+      // const mm = time.getMinutes()
       // const s = time.getSeconds()
       function shi (s) {
         s = '' + s
@@ -209,42 +175,7 @@ export default {
         }
         return s
       }
-      return shi(m) + '-' + shi(d) + ' ' + shi(h) + ':' + shi(mm)
-    },
-    up (obj, i) {
-      const that = this
-      that.$store.commit('uVideoIndex', i)
-      const data = {
-        'user_id': that.user_id,
-        'child_name': that.child_name,
-        'package_id': obj.package_id,
-        'term_id': obj.term_id,
-        'course_id': obj.course_id,
-        'class_id': obj.class_id,
-        'course_name': obj.course_name,
-        'package_name': obj.package_name,
-        'term_name': obj.term_name,
-        'class_name': obj.class_name,
-        'teacher_name': obj.teacher_name,
-        'teacher_id': obj.teacher_id,
-        'teacher_email': obj.teacher_email,
-        'type': obj.type
-      }
-      if (obj.zuoye && obj.zuoye.id) {
-        data['id'] = obj.zuoye.id
-      }
-      console.log(data)
-      that.$store.commit('uObj', data)
-      if (obj.zuoye === '') {
-        that.slideto(2)
-      } else if (obj.zuoye.flag === 4) {
-        that.slideto(2)
-      } else if (obj.zuoye.flag === 0) {
-        that.slideto(2)
-        // that.$toast('老师正在批改，请稍后查看...')
-      } else {
-        that.slideto(3)
-      }
+      return y + '-' + shi(m) + '-' + shi(d)
     }
   }
 }

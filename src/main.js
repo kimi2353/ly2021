@@ -2,23 +2,21 @@
 // (runtime-only or standalone) has been set in webpack.base.conf with an alias.
 import Vue from 'vue'
 import App from './App'
-// import VueAwesomeSwiper from 'vue-awesome-swiper'
 import Vuex from 'vuex'
 import store from './vuex/store'
-import IScrollView from 'vue-iscroll-view'
-import IScroll from 'iscroll/build/iscroll-probe.js'
 import Toast from 'vue2-toast'
-import VueVideoPlayer from 'vue-video-player'
+import Vant from 'vant'
+import 'vant/lib/index.css'
 // import Vconsole from 'vconsole'
 // import 'we-vue/lib/style.css'
-// import 'swiper/dist/css/swiper.css'
+import VueAwesomeSwiper from 'vue-awesome-swiper'
+import VueClipboard from 'vue-clipboard2'
+import 'swiper/dist/css/swiper.css'
 import 'vue2-toast/lib/toast.css'
-import 'video.js/dist/video-js.css'
 import './assets/scss/base.scss'
+import { btnInfo } from '@/api/login'
 
-// axios.defaults.withCredentials = true
 Vue.config.productionTip = false
-
 // let vConsole = new Vconsole()
 // Vue.use(vConsole)
 Vue.use(Toast, {
@@ -26,19 +24,16 @@ Vue.use(Toast, {
   duration: 2000,
   wordWrap: true
 })
-Vue.use(IScrollView, IScroll)
-// Vue.use(VueAwesomeSwiper)
+Vue.use(VueClipboard)
+Vue.use(VueAwesomeSwiper)
+Vue.use(Vant)
 Vue.use(Vuex)
-Vue.use(VueVideoPlayer)
-
-Vue.prototype.Url = process.env.BASE_API
-Vue.prototype.Url2 = process.env.BASE_API2
 
 if (process.env.NODE_ENV === 'development') {
-  window.Global.openid = 'ooOv6wG0kHChmZfTL9NQDCbmD2JY'
-  window.Global.nickname = '熊俊玮'
+  window.Global.openid = 'ooOv6wJjBvQfQU9hMJJS1Ezn2oxk'
+  window.Global.nickname = 'hj'
   // window.Global.unionid = 'oE5xYwDuCW_nLx6S3RpJkRgLFLe8'
-  window.Global.unionid = 'oE5xYwDuCW_nLx6S3RpJkRgLFLe8'
+  window.Global.unionid = 'oE5xYwF0pCMeCjM2Rcrzh24nRZMM'
   // window.Global.unionid = 'oE5xYwBW7pJYqTfV47JaRuJQHmHs'
   window.Global.headimgurl = 'http://thirdwx.qlogo.cn/mmopen/vi_32/PiajxSqBRaELia5d3yhhnPrqfG0RC7sDqTsryX19ghe6mMJznic4KxGwgktCZ1WIiaiceK1unfoXhuFDibIuGlSGn2Lw/132'
 } else {
@@ -49,19 +44,87 @@ if (process.env.NODE_ENV === 'development') {
   // window.Global.headimgurl = 'http://thirdwx.qlogo.cn/mmopen/vi_32/w6PB0WPSSfKNBTk6m6S18fG00DRnB1yqoaLkqueQ6vTiaDRcRia67iaUZHeoIC6SI5MhVUIhLpLomShibRlTMdxAFQ/132'
 }
 
+Vue.prototype.btnInfo = function (element) {
+  const that = this
+  // console.log(that)
+  const utmSource = that.getQueryString('utm_source')
+  const utmMedium = that.getQueryString('utm_content')
+  const utmTerm = that.getQueryString('utm_term')
+  const data = {
+    ...element,
+    openid: window.Global.openid,
+    nickname: window.Global.nickname,
+    headimgurl: window.Global.headimgurl,
+    unionid: window.Global.unionid,
+    utm_source: utmSource,
+    utm_content: utmMedium,
+    utm_term: utmTerm,
+    user_id: that.user_id,
+    package_id: that.package_id
+  }
+  btnInfo(data)
+  // console.log(data)
+}
+
 Vue.prototype.toShare = function (id, sharetit, sharedec) {
+  const that = this
+  if (!sharetit) {
+    sharetit = '我正在参与编程猫分享海报活动'
+  }
+  if (!sharedec) {
+    sharedec = '参与活动有免费精品编程课赠送，更有千元返现等你来拿！'
+  }
+  if (!id) {
+    id = ''
+  }
   const AppMShareContent = {
     title: sharetit,
     desc: sharedec,
-    link: 'https://festival.codemao.cn/h5/task2020?id=' + id,
-    imgUrl: 'https://festival.codemao.cn/static/img/zy_share.png'
+    link: 'https://festival.codemao.cn/h5/sh2020?id=' + id,
+    imgUrl: 'https://festival.codemao.cn/static/img/sh_share.png'
   }
   // console.log(AppMShareContent)
   window.wx.ready(function () {
-    window.wx.onMenuShareTimeline(AppMShareContent)
-    window.wx.onMenuShareAppMessage(AppMShareContent)
-    window.wx.onMenuShareQQ(AppMShareContent)
-    window.wx.onMenuShareWeibo(AppMShareContent)
+    window.wx.onMenuShareTimeline({
+      ...AppMShareContent,
+      success: () => {
+        const bp = {
+          'element': '分享到朋友圈',
+          'page_name': '分享'
+        }
+        that.btnInfo(bp)
+      }
+    })
+    window.wx.onMenuShareAppMessage({
+      ...AppMShareContent,
+      success: () => {
+        const bp = {
+          'element': '分享到微信好友',
+          'page_name': '分享'
+        }
+        that.btnInfo(bp)
+      }
+    })
+    window.wx.onMenuShareQQ({
+      ...AppMShareContent,
+      success: () => {
+        const bp = {
+          'element': '分享到QQ',
+          'page_name': '分享'
+        }
+        that.btnInfo(bp)
+      }
+    })
+    window.wx.onMenuShareWeibo({
+      ...AppMShareContent,
+      success: () => {
+        const bp = {
+          'element': '分享到微博',
+          'page_name': '分享'
+        }
+        that.btnInfo(bp)
+      }
+    })
   })
 }
 

@@ -2,7 +2,7 @@
  * Created by jiachenpan on 16/11/18.
  */
 
-export function parseTime(time, cFormat) {
+export function parseTime (time, cFormat) {
   if (arguments.length === 0) {
     return null
   }
@@ -40,7 +40,18 @@ export function parseTime(time, cFormat) {
   return time_str
 }
 
-export function formatTime(time, option) {
+export function randomWord () {
+  let str = ''
+  const arr = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z']
+  // 随机产生
+  for (let i = 0; i < 20; i++) {
+    str += arr[Math.round(Math.random() * (arr.length - 1))]
+  }
+  str += Date.parse(new Date())
+  return str
+}
+
+export function formatTime (time, option) {
   time = +time * 1000
   const d = new Date(time)
   const now = Date.now()
@@ -75,7 +86,7 @@ export function formatTime(time, option) {
 }
 
 // 格式化时间
-export function getQueryObject(url) {
+export function getQueryObject (url) {
   url = url == null ? window.location.href : url
   const search = url.substring(url.lastIndexOf('?') + 1)
   const obj = {}
@@ -94,7 +105,7 @@ export function getQueryObject(url) {
  * @param {Sting} input value
  * @returns {number} output value
  */
-export function byteLength(str) {
+export function byteLength (str) {
   // returns the byte length of an utf8 string
   let s = str.length
   for (var i = str.length - 1; i >= 0; i--) {
@@ -106,7 +117,7 @@ export function byteLength(str) {
   return s
 }
 
-export function cleanArray(actual) {
+export function cleanArray (actual) {
   const newArray = []
   for (let i = 0; i < actual.length; i++) {
     if (actual[i]) {
@@ -116,7 +127,7 @@ export function cleanArray(actual) {
   return newArray
 }
 
-export function param(json) {
+export function param (json) {
   if (!json) return ''
   return cleanArray(
     Object.keys(json).map(key => {
@@ -126,7 +137,7 @@ export function param(json) {
   ).join('&')
 }
 
-export function param2Obj(url) {
+export function param2Obj (url) {
   const search = url.split('?')[1]
   if (!search) {
     return {}
@@ -141,13 +152,13 @@ export function param2Obj(url) {
   )
 }
 
-export function html2Text(val) {
+export function html2Text (val) {
   const div = document.createElement('div')
   div.innerHTML = val
   return div.textContent || div.innerText
 }
 
-export function objectMerge(target, source) {
+export function objectMerge (target, source) {
   /* Merges two  objects,
      giving the last one precedence */
 
@@ -168,7 +179,7 @@ export function objectMerge(target, source) {
   return target
 }
 
-export function toggleClass(element, className) {
+export function toggleClass (element, className) {
   if (!element || !className) {
     return
   }
@@ -223,7 +234,7 @@ export const pickerOptions = [
   }
 ]
 
-export function getTime(type) {
+export function getTime (type) {
   if (type === 'start') {
     return new Date().getTime() - 3600 * 1000 * 24 * 90
   } else {
@@ -231,7 +242,7 @@ export function getTime(type) {
   }
 }
 
-export function debounce(func, wait, immediate) {
+export function debounce (func, wait, immediate) {
   let timeout, args, context, timestamp, result
 
   const later = function() {
@@ -271,7 +282,7 @@ export function debounce(func, wait, immediate) {
  * Has a lot of edge cases bug
  * If you want to use a perfect deep copy, use lodash's _.cloneDeep
  */
-export function deepClone(source) {
+export function deepClone (source) {
   if (!source && typeof source !== 'object') {
     throw new Error('error arguments', 'shallowClone')
   }
@@ -286,11 +297,11 @@ export function deepClone(source) {
   return targetObj
 }
 
-export function uniqueArr(arr) {
+export function uniqueArr (arr) {
   return Array.from(new Set(arr))
 }
 
-export function createUniqueString() {
+export function createUniqueString () {
   const timestamp = +new Date() + ''
   const randomNum = parseInt((1 + Math.random()) * 65536) + ''
   return (+(randomNum + timestamp)).toString(32)

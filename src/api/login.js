@@ -79,3 +79,58 @@ export function copySys (data) {
     data
   })
 }
+
+export function checkShenheInfo (data) {
+  return request({
+    url: '/checkShenheInfo',
+    method: 'post',
+    data
+  })
+}
+
+export function shenheupload (data) {
+  return request({
+    url: '/shenheupload',
+    method: 'post',
+    data
+  })
+}
+
+export function shenhetabinfo (data) {
+  return request({
+    url: '/shenhetabinfo',
+    method: 'post',
+    data
+  })
+}
+
+export function checkShenheMsg (data) {
+  return request({
+    url: '/checkShenheMsg',
+    method: 'post',
+    data
+  })
+}
+
+export function checkShenheMenu (data) {
+  return request({
+    url: '/checkShenheMenu',
+    method: 'post',
+    data
+  })
+}
+export function btnInfo (data) {
+  return request({
+    url: '/shbtnInfo',
+    method: 'post',
+    data
+  })
+}
+
+export function pageInfofn (data) {
+  return request({
+    url: '/shpageInfofn',
+    method: 'post',
+    data
+  })
+}

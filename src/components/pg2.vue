@@ -1,52 +1,94 @@
 <template>
   <div class='pg2'>
-    <div class='pg2_main' v-if='task'>
-      <div class='pg2_tit'>{{task.taskname}}</div>
-      <img :src="'https://static-k12edu-camprecord.codemao.cn/' + task.banner" class="pg2_banner">
-      <div class='pg2_center1' v-if="uploadDataUrl===''">
-        <div class='zuoyeShowBtn' id='zuoyeShowBtn'>
-          <input type="file" id='zuoye_add_btn'>
-          <span class='btnname'>上传图片</span>
-        </div>
-        <div class='pg2_center1_txt1'>仅支持jpg/png图片格式，图片1M内</div>
-      </div>
-      <div class='pg2_center' v-if="uploadDataUrl!==''&&(!imginfo||(imginfo&&imginfo.flag!==2))">
-        <img :src="uploadDataUrl" class="pg2_userimg">
-        <div style='margin-top: .48rem;font-size: 0;' >
-          <div class='wl_up_btn' v-show='uploadDataUrl!==""&&flag!==0' id='wl_up_btn'>
-            <input type="file" id='wl_add_btn'>
-            <i class='reupload'/><span>重新上传图片</span>
-          </div>
-          <div class='wl_pg2_btn' @click='btnfn' v-show="flag!==0&&btnshow">提交图片</div>
-        </div>
-        <div class='pg2_center1_txt1'>仅支持jpg/png图片格式，图片1M内</div>
-        <div class='pg2_center1_txt1' style="font-weight: 600;" v-if="imginfo&&imginfo.flag===1">您的图片已上传成功，正在审核阶段，请耐心等待</div>
-        <div class='pg2_center1_txt1' style="font-weight: 600;" v-if="imginfo&&imginfo.flag===3">您的图片已没有通过审核，<br>请重新上传符合规定的图片哦！</div>
-      </div>
-      <div class='pg2_center' v-if="imginfo&&imginfo.flag===2">
-        <img :src="uploadDataUrl" class="pg2_userimg">
-        <div class='pg2_center1_txt1' style="font-weight: 600;">您的图片已审核通过，快去查看活动详情吧！</div>
-        <a :href="task.url" class='wl_pg2_btn' style='margin-top: .7rem;'>点击查看详情</a>
-      </div>
+    <div class='pg2_main'>
       <div class='main4'>
-        <div class="rule_tit">活动规则</div>
-        <div class="rule_body">
-          <ul class="rule">
-            <li class='' v-for="(item, index) in rules" :key="index">
-              <span>{{ index + 1 }}</span>
-              <div>{{ item }}</div>
-            </li>
-          </ul>
-          <span class='rule_bottom'>———本此活动的最终解释权归编程猫所有———</span>
+        <div class="p2_btn1" @click="slideto(1)">返回</div>
+        <div class="rule_content">
+          <div class="rule_tit" />
+          <div class="rule_body">
+            <ul class="rule">
+              <li v-for="(item, index) in rules" :key="index">
+                <span>{{ index + 1 }}</span>
+                <div>{{ item }}</div>
+              </li>
+            </ul>
+          </div>
         </div>
+        <div v-show="zjtab" class="tohai" @click="topic">生成专属海报</div>
       </div>
+      <div class="main2">
+        <div class='pg2_txt1'>{{ zuoye_num===0 ? '分享截图，赢丰厚奖品' : ('再完成' + (shenhetab.length - zuoye_num) + '个任务有机会得到丰厚奖品~') }}</div>
+      </div>
+      <ul class="shenhetab">
+        <li v-for="(item, index) in shenhetab" :key="index">
+          <span class='sh_txt1'>{{ item.name }}</span>
+          <span class='sh_txt2'>{{ format(item.begin) }}-{{ format(item.end) }}</span>
+          <div class='upload'>
+            <van-uploader
+              v-model="item.zuoye.fileList"
+              :preview-full-image="false"
+              :show-upload="!item.zuoye.flag||item.zuoye.flag==3"
+              :max-count="item.num"
+              :max-size="5 * 1024 * 1024"
+              :deletable="(!item.zuoye.flag||item.zuoye.flag==3)&&!(item.zuoye.disabled||shenhe.begin>now||shenhe.end<now)"
+              :disabled="item.zuoye.disabled||shenhe.begin>now||shenhe.end<now"
+              multiple
+              @oversize="onOversize"/>
+            <!-- <div class="upload_info">
+              <span v-if="item.zuoye.disabled" class="upload_info1">不在活动参与期内</span>
+              <span v-else-if="item.zuoye.fileList.length===0" class="upload_info1">未上传任何截图</span>
+              <span v-else-if="item.zuoye.flag===1" class="upload_info1">审核中<br>请耐心等待哟...</span>
+              <div v-else-if="item.zuoye.flag===2">
+                <span class="upload_info1">审核通过</span>
+                <div v-if="shenhe.url" style="height:.3rem;"/>
+                <van-button v-if="shenhe.url" type="primary" size="small" class="zuoye_btn" @click="tourl(shenhe.url)">活动详情</van-button>
+              </div>
+              <van-button v-else-if="!item.zuoye.flag&&item.zuoye.fileList.length>0" type="primary" size="small" class="zuoye_btn" @click="uploadfn(index)">提交截图</van-button>
+              <div v-else-if="item.zuoye.flag===3">
+                <span class="upload_info1">审核不通过</span>
+                <div style="height:.3rem;"/>
+                <van-button type="warning" size="mini" class="zuoye_btn" @click="bofn(item.zuoye.bo)">驳回原因</van-button>
+                <div style="height:.3rem;"/>
+                <van-button v-if="!(item.zuoye.disabled||shenhe.begin>now||shenhe.end<now)" type="primary" size="mini" class="zuoye_btn" @click="uploadfn(index)">提交截图</van-button>
+              </div>
+            </div> -->
+          </div>
+          <div class="tab_info">
+            <span v-if="item.zuoye.disabled" class="upload_info1">不在活动参与期内</span>
+            <div v-else-if="!item.zuoye.flag&&item.zuoye.fileList.length>0" class="upload_info2" @click="uploadfn(index)">
+              提交截图
+            </div>
+            <span v-else-if="item.zuoye.fileList.length===0" class="upload_info1 upload_info4">还未上传任何截图</span>
+            <span v-if="item.zuoye.flag===1" class="upload_info1 upload_info3">审核中，耐心等待哦~</span>
+            <span v-else-if="item.zuoye.flag===2" class="upload_info1 upload_info7">已通过，再接再厉哦~</span>
+            <div v-else-if="item.zuoye.flag===3">
+              <span class="upload_info1 upload_info5">审核不通过（{{item.zuoye.bo}}）</span>
+              <div v-if="!(item.zuoye.disabled||shenhe.begin>now||shenhe.end<now)" class="upload_info6" @click="uploadfn(index)">
+                重新提交
+              </div>
+            </div>
+          </div>
+        </li>
+      </ul>
       <div style="height:2rem;"/>
     </div>
+    <transition name="fade">
+      <div class='nav' v-show="suc_nav">
+        <div class='p2_nav'>
+          <img src="@/assets/img/p2_nav.png" class='p2_nav_img'>
+          <span class="p2_nav_tit">截图提交成功</span>
+          <span class="p2_nav_msg">请耐心等待截图审核</span>
+          <div class='p2_nav_btn' @click="suc_nav=false">确定</div>
+        </div>
+      </div>
+    </transition>
   </div>
 </template>
 
 <script>
-import { uptoken, imgUpLoad } from '@/api/login'
+import { uptoken, shenhetabinfo, shenheupload } from '@/api/login'
+import { Toast } from 'vant'
+import axios from 'axios'
 
 export default {
   name: 'pg2',
@@ -55,41 +97,159 @@ export default {
       uploadDataUrl: '',
       uptoken: '',
       domain: '',
-      username: '',
-      grade: '',
-      qq: '',
-      tel: '',
-      title: '',
-      txt: '',
-      imgsrc: '',
       uploader: null,
       flag: null,
-      menunav: false,
-      zuoyeshow: false,
-      btnshow: false,
-      videoinfo: null,
-      rules: []
+      rules: [],
+      task: null,
+      imginfo: null,
+      pg2_txt1: '',
+      zuoye_num: 0,
+      shenhetab: [],
+      readindex: null,
+      now: 0,
+      files: [],
+      shenhe: {},
+      workid: 40,
+      suc_nav: false,
+      zjtab: false
     }
   },
   computed: {
-    task () {
-      return this.$store.state.task
+    sid () {
+      return this.$store.state.sid
     },
     user_id () {
       return this.$store.state.user_id
     },
-    imginfo () {
-      return this.$store.state.imginfo
+    package_id () {
+      return this.$store.state.package_id
     }
   },
   mounted () {
     const that = this
-    that.changeTitle(that.task.tit)
-    // console.log(that.task.rules)
-    that.rules = that.task.rules.split('|')
+    uptoken().then(res => {
+      that.uptoken = res.uptoken
+      that.domain = res.domain
+    })
     that.init()
   },
   methods: {
+    topic () {
+      const that = this
+      const bp = {
+        'element': '生成专属海报',
+        'page_name': '详情页-' + that.shenhe.remark
+      }
+      that.$emit('btnInfo', bp)
+      that.$emit('createImg')
+      // window.location.href = 'https://festival.codemao.cn/h5/zj2020?page=hai&workid=' + that.workid
+    },
+    tourl (url) {
+      const that = this
+      const bp = {
+        'element': '活动详情',
+        'page_name': '详情页-' + that.shenhe.remark
+      }
+      that.$emit('btnInfo', bp)
+      window.location.href = url
+    },
+    upload () {
+      const that = this
+      let img = []
+      for (let i = 0; i < that.files.length && i < 3; i++) {
+        img.push(that.files[i].url)
+      }
+      img = img.join(',')
+      const utmContent = that.getQueryString('utm_content')
+      const utmTerm = that.getQueryString('utm_term')
+      const utmSource = that.getQueryString('utm_source')
+      const data = {
+        openid: window.Global.openid,
+        unionid: window.Global.unionid,
+        headimgurl: window.Global.headimgurl,
+        nickname: window.Global.nickname,
+        user_id: that.user_id,
+        package_id: that.package_id,
+        utm_content: utmContent,
+        utm_term: utmTerm,
+        utm_source: utmSource,
+        sid: that.sid,
+        img,
+        shid: that.shenhetab[that.readindex].id
+      }
+      shenheupload(data).then(res => {
+        // console.log(res)
+        that.$loading.close()
+        if (res.res === 'time') {
+          Toast('不在活动参与期内')
+        } else if (res.res === 'package_id') {
+          Toast('对不起，您暂无参与资格')
+        } else if (res.res === 'noflag') {
+          Toast('对不起，您暂时无法更新您的上传图片')
+        } else if (res.res === 'success') {
+          that.suc_nav = true
+          that.init()
+        }
+      })
+    },
+    uploadVoice (index) {
+      const that = this
+      let i = index
+      if (that.files.length > i) {
+        if (that.files[i].url) {
+          that.uploadVoice(++i)
+        } else {
+          const formData = new FormData()
+          // console.log(that.files[i].file.type)
+          let j = '.png'
+          if (that.files[i].file.type === 'image/jpeg') {
+            j = '.jpg'
+          } else if (that.files[i].file.type === 'image/gif') {
+            j = '.gif'
+          }
+          const key = that.randomWord() + j
+          formData.append('resource_key', key)
+          formData.append('token', that.uptoken)
+          formData.append('file', that.files[i].file)
+          formData.append('key', key)
+          axios.post('https://upload.qiniup.com', formData).then(res => {
+            that.files[i].url = 'https://static-k12edu-camprecord.codemao.cn/' + res.data.key
+            that.uploadVoice(++i)
+          })
+        }
+      } else {
+        that.upload()
+      }
+    },
+    uploadfn (index) {
+      const that = this
+      // console.log(this.shenhetab[index].zuoye.fileList)
+      if (that.shenhetab[index].zuoye.fileList.length > 0) {
+        that.readindex = index
+        that.files = that.shenhetab[that.readindex].zuoye.fileList
+        that.$loading('上传中<br>请耐心等待')
+        const bp = {
+          'element': '提交截图',
+          'page_name': '详情页-' + that.shenhe.remark
+        }
+        that.$emit('btnInfo', bp)
+        that.uploadVoice(0)
+      }
+    },
+    randomWord () {
+      let str = ''
+      const arr = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z']
+      // 随机产生
+      for (let i = 0; i < 20; i++) {
+        str += arr[Math.round(Math.random() * (arr.length - 1))]
+      }
+      str += Date.parse(new Date())
+      return str
+    },
+    onOversize (file) {
+      // console.log(file)
+      Toast('图片太大啦~')
+    },
     slideto (res) {
       const that = this
       that.$emit('slideto', res)
@@ -107,119 +267,107 @@ export default {
     },
     init () {
       const that = this
-      // console.log(that.imginfo)
-      if (that.imginfo) {
-        that.uploadDataUrl = 'https://static-k12edu-camprecord.codemao.cn/' + that.imginfo.img
+      const utmContent = that.getQueryString('utm_content')
+      const utmTerm = that.getQueryString('utm_term')
+      const utmSource = that.getQueryString('utm_source')
+      const data = {
+        openid: window.Global.openid,
+        unionid: window.Global.unionid,
+        headimgurl: window.Global.headimgurl,
+        nickname: window.Global.nickname,
+        user_id: that.user_id,
+        package_id: that.package_id,
+        utm_content: utmContent,
+        utm_term: utmTerm,
+        utm_source: utmSource,
+        sid: that.sid
       }
-      // console.log(that.imginfo)
-      uptoken().then((res) => {
-        that.uptoken = res.uptoken
-        that.domain = res.domain
-        that.uploader = window.Qiniu.uploader({
-          runtimes: 'html5,flash,html4',
-          browse_button: ['wl_add_btn', 'zuoye_add_btn'],
-          get_new_uptoken: false,
-          uptoken: that.uptoken,
-          domain: that.domain,
-          chunk_size: '0mb',
-          auto_start: false,
-          multi_selection: false,
-          init: {
-            FilesAdded: function (up, files) {
-              const self = this
-              window.plupload.each(files, function (file) {
-                if (!file) {
-                  return
-                }
-                if (file.name.indexOf('jpg') === -1 && file.name.indexOf('jpeg') === -1 && file.name.indexOf('png') === -1 && file.name.indexOf('JPG') === -1 && file.name.indexOf('PNG') === -1 && file.name.indexOf('JPEG') === -1) {
-                  that.$toast('请上传jpg或者png格式文件')
-                  self.files.splice(self.files.length - 1, 1)
-                  return
-                }
-                const size = parseInt(file.size / 1000000)
-                if (size >= 1) {
-                  that.$toast('图片太大啦<br>请重新选择~')
-                  document.getElementById('zuoye_add_btn').value = ''
-                  self.files.splice(self.files.length - 1, 1)
-                  return
-                }
-                that.$toast('已选择图片~')
-                that.btnshow = true
-                that.uploadDataUrl = ''
-                that.uploadDataUrl = that.getObjectURL(file.getNative())
-                // console.log(that.uploadDataUrl)
-                // document.getElementById('upvideo').querySelector('source').src = that.uploadDataUrl
-                // document.getElementById('upvideo').src = that.uploadDataUrl
-                // document.getElementById('upvideo').poster = ''
-                // document.getElementById('wl_up_btn').querySelector('div').style.width = '100%'
-                // document.getElementById('wl_up_btn').querySelector('div').style.height = '100%'
-                // that.videoinfo = that.obj
-              })
-            },
-            UploadProgress: function (up, file) {
-              that.$loading('上传中（' + Math.floor(up.total.percent) + '%）<br>请耐心等待')
-            },
-            FileUploaded: function (up, file, info) {
-              const res = JSON.parse(info.response)
-              const img = res.key
-              const data = {
-                openid: window.Global.openid,
-                unionid: window.Global.unionid,
-                nickname: window.Global.nickname,
-                headimgurl: window.Global.headimgurl,
-                img,
-                id: that.task.id,
-                user_id: that.user_id,
-                taskname: that.task.remark,
-                remark: that.task.remark
+      that.readindex = null
+      that.now = 0
+      that.files = []
+      const toast = Toast.loading({
+        duration: 0, // 持续展示 toast
+        forbidClick: true,
+        message: '加载中...'
+      })
+      shenhetabinfo(data).then(res => {
+        // console.log(res)
+        toast.clear()
+        if (res.res === 'error') {
+          Toast('参数错误')
+          that.slideto(1)
+        } else {
+          that.shenhe = res.shenhe
+          document.title = that.shenhe.remark
+          const pagename = '详情页-' + that.shenhe.remark
+          that.$emit('pageInfo', pagename)
+          that.rules = that.shenhe.rules.split('|')
+          that.zuoye_num = 0
+          that.now = res.now
+          that.zjtab = that.shenhe.zjtab === 1
+          if (res.zj) {
+            that.workid = res.zj[0].id
+          }
+          const haiinfo = []
+          for (let i = 0; i < res.haiinfo.length; i++) {
+            res.haiinfo[i].img = process.env.IMG_URL + 'img/' + res.haiinfo[i].img
+            res.haiinfo[i].qrurl = process.env.QRC_URL + 'er_' + window.Global.openid + '_' + that.workid + '_' + res.haiinfo[i].package_id + '.png'
+            if (res.haiinfo[i].sys) {
+              res.haiinfo[i].sys = res.haiinfo[i].sys.split('|')
+            } else {
+              res.haiinfo[i].sys = []
+            }
+            haiinfo.push(res.haiinfo[i])
+          }
+          // console.log(that.haiinfo)
+          that.$store.commit('uHaiinfo', haiinfo)
+          for (let i = 0; i < res.shenhetab.length; i++) {
+            if (res.shenhetab[i].zuoye) {
+              that.zuoye_num++
+              res.shenhetab[i].zuoye.fileList = []
+              res.shenhetab[i].zuoye.disabled = !(that.now >= res.shenhetab[i].begin && that.now <= res.shenhetab[i].end)
+              const img = res.shenhetab[i].zuoye.img.split(',')
+              for (let j = 0; j < img.length; j++) {
+                res.shenhetab[i].zuoye.fileList.push({
+                  url: img[j],
+                  size: 200
+                })
               }
-              imgUpLoad(data).then(res => {
-                that.$loading.close()
-                if (res.res === 'success') {
-                  that.$toast('图片上传成功，请等待审核~')
-                  that.$emit('init')
-                  that.$emit('slideto', 4)
-                } else if (res.res === 'update') {
-                  that.$toast('图片通过审核了，无法修改~')
-                  that.$emit('init')
-                  that.$emit('slideto', 4)
-                }
-              })
-              // videoUp(data).then((res) => {
-              //   that.$store.commit('uVideoIndex', that.videoIndex)
-              //   if (res.res === 'success') {
-              //   } else if (res.res === 'again') {
-              //   } else if (res.res === 'old') {
-              //     that.$loading.close()
-              //     that.$toast('图片不可修改啦')
-              //     that.$emit('slideto', 1)
-              //   } else if (res.res === 'sys' || res.res === 'nouser') {
-              //     that.$toast('系统异常，请刷新重试')
-              //   }
-              // })
-            },
-            Key: function (up, file) {
-              const vtype = '.jpg'
-              const key = window.Global.openid + '_' + Date.parse(new Date()) + vtype
-              return key
+            } else {
+              res.shenhetab[i].zuoye = {
+                fileList: [],
+                disabled: !(that.now >= res.shenhetab[i].begin && that.now <= res.shenhetab[i].end)
+              }
             }
           }
-        })
+          that.shenhetab = res.shenhetab
+          that.toShare(that.shenhe.id, that.shenhe.sharetit, that.shenhe.sharedec)
+        }
       })
     },
     ret () {
       let that = this
       that.$emit('slideto', 1)
     },
-    btnfn () {
-      const that = this
-      if (that.uploader.files.length === 0) {
-        that.$toast('您还未选择图片，点击按钮选择图片吧')
-        return
+    format (shijianchuo) {
+      if (!shijianchuo) {
+        return ''
       }
-      that.uploader.files.splice(0, that.uploader.files.length - 1)
-      that.$loading('上传中<br>请耐心等待')
-      that.uploader.start()
+      const time = new Date(shijianchuo * 1000)
+      const y = time.getFullYear()
+      const m = time.getMonth() + 1
+      const d = time.getDate()
+      // const h = time.getHours()
+      // const mm = time.getMinutes()
+      // const s = time.getSeconds()
+      function shi (s) {
+        s = '' + s
+        if (s.length < 2) {
+          s = '0' + s
+        }
+        return s
+      }
+      return y + '.' + shi(m) + '.' + shi(d)
     }
   }
 }
