@@ -89,7 +89,7 @@ export default {
           if (res.res === 'error') {
             Toast('系统错误，请刷新重试')
           } else if (res.res === 'package_id') {
-            Toast('对不起，您暂无参与资格')
+            Toast('尚未购课，购买课程后即可参与活动')
           } else if (res.res === 'success') {
             if (res.package_id) {
               that.$store.commit('uPackageId', res.package_id)

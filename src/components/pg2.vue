@@ -15,6 +15,7 @@
           </div>
         </div>
         <div v-show="zjtab" class="tohai" @click="topic">生成专属海报</div>
+        <div v-show="jytab" class="tohai" @click="tojy">我的结营证书</div>
       </div>
       <div class="main2">
         <div class='pg2_txt1'>{{ zuoye_num===0 ? '分享截图，赢丰厚奖品' : ('再完成' + (shenhetab.length - zuoye_num) + '个任务有机会得到丰厚奖品~') }}</div>
@@ -111,7 +112,8 @@ export default {
       shenhe: {},
       workid: 40,
       suc_nav: false,
-      zjtab: false
+      zjtab: false,
+      jytab: false
     }
   },
   computed: {
@@ -143,6 +145,16 @@ export default {
       that.$emit('btnInfo', bp)
       that.$emit('createImg')
       // window.location.href = 'https://festival.codemao.cn/h5/zj2020?page=hai&workid=' + that.workid
+    },
+    tojy () {
+      const that = this
+      const bp = {
+        'element': '我的结营证书',
+        'page_name': '详情页-' + that.shenhe.remark
+      }
+      that.$emit('btnInfo', bp)
+      // that.$emit('createImg')
+      window.location.href = 'https://festival.codemao.cn/h5/jyzs2019'
     },
     tourl (url) {
       const that = this
@@ -305,6 +317,7 @@ export default {
           that.zuoye_num = 0
           that.now = res.now
           that.zjtab = that.shenhe.zjtab === 1
+          that.jytab = that.shenhe.jytab === 1
           if (res.zj) {
             that.workid = res.zj[0].id
           }
