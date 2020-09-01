@@ -24,6 +24,14 @@ export function uptoken (data) {
   })
 }
 
+export function alluserback (data) {
+  return request({
+    url: '/alluserback',
+    method: 'post',
+    data
+  })
+}
+
 export function imgUpLoad (data) {
   return request({
     url: '/imgUpLoad',

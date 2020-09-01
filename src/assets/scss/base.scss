@@ -51,6 +51,15 @@ img::selection{background:0}
   50%{transform:scale3d(2,2,2);}
   100%{transform:scale3d(1,1,1);}
 }
+.lout{
+  position: absolute;
+  right: .5rem;
+  top: .5rem;
+  font-size: .6rem;
+  color: #fff;
+  text-shadow: 2px 2px 2px #333;
+  text-decoration: underline;
+}
 #app {
   display: block;
   height: 100%;
@@ -232,7 +241,8 @@ img::selection{background:0}
       .nickname{
         height: 1.36rem;
         line-height: 1.36rem;
-        width: 8rem;
+        // width: 8rem;
+        margin-right: 1rem;
         display: inline-block;
         vertical-align: top;
         font-size:0.59rem;
