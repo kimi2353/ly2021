@@ -65,7 +65,7 @@ export default {
     const pagename = '编程猫宣传官首页'
     that.$emit('pageInfo', pagename)
     iris.init({
-      env: 'test',
+      env: process.env.IRIS,
       domain: ''
     })
     iris.auth.init({
@@ -195,6 +195,7 @@ export default {
       }
       checkShenheInfo(data).then(res => {
         // console.log(res)
+        that.$store.commit('uRes', res)
         if (res.res === 'success') {
           that.loading = false
           that.lbtn = res.lbtn

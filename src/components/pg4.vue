@@ -2,6 +2,7 @@
   <div class="pg1 pg4 home">
     <div class='haiinfo'>
       <div class="p4_btn1" @click="toPage(2)">返回</div>
+      <div v-if="user_id&&res.lbtn" class="lout lout2" @click="tologout">登出</div>
       <div class='swiperborder2' v-if='haiinfo.length>0'>
         <swiper :options="swiperOption2" ref="mySwiper">
           <swiper-slide v-for='(item, index) in haiinfo' :key='index'>
@@ -29,12 +30,22 @@
 </template>
 
 <script>
-// import { copySys, longTap } from '@/api/login'
+import { alluserback } from '@/api/login'
 import { Toast } from 'vant'
+import * as iris from '@cmao/iris'
+const Base64 = require('js-base64').Base64
+// import { copySys, longTap } from '@/api/login'
+// import { Toast } from 'vant'
 
 export default {
   name: 'pg4',
   computed: {
+    res () {
+      return this.$store.state.res
+    },
+    user_id () {
+      return this.$store.state.user_id
+    },
     haiinfo () {
       return this.$store.state.haiinfo
     },
@@ -59,7 +70,11 @@ export default {
       sysindex: 0,
       syslist: [],
       sys: '',
-      timeOutEvent: null
+      timeOutEvent: null,
+      lbtn: true,
+      codemaoCaptcha: null,
+      CodemaoAuth: null,
+      pid: 'UvOFXx2tfv'
     }
   },
   mounted () {
@@ -70,8 +85,38 @@ export default {
     }
     const pagename = '海报邀请页'
     that.$emit('pageInfo', pagename)
+    iris.init({
+      env: process.env.IRIS,
+      domain: ''
+    })
+    iris.auth.init({
+      pid: that.pid,
+      product_code: 'kids',
+      platform: 'h5'
+    })
+    that.codemaoCaptcha = new iris.captcha.CodemaoCaptcha({
+      pid: that.pid
+    })
+    that.CodemaoAuth = iris.auth.get_auth_instance()
   },
   methods: {
+    async tologout () {
+      const that = this
+      alluserback({
+        'unionid': window.Global.unionid
+      })
+      try {
+        await that.CodemaoAuth.logout().cache(e => {
+          console.log(e)
+        })
+      } catch (e) {
+        console.log(e)
+      }
+      const toback = Base64.encode(window.location.href + '&back=back')
+      setTimeout(() => {
+        window.location.href = this.res.boundPhoneUrl2 + toback
+      }, 200)
+    },
     gotouchstart (item) {
       const that = this
       if (that.timeOutEvent) {

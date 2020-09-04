@@ -11,9 +11,14 @@ const store = new Vuex.Store({
     user_id: '',
     package_id: '',
     id: '',
-    haiinfo: []
+    haiinfo: [],
+    res: null
   },
   mutations: {
+    uRes: (state, data) => {
+      const obj = state
+      obj.res = data
+    },
     uSid: (state, data) => {
       const obj = state
       obj.sid = data

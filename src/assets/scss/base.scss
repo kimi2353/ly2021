@@ -59,6 +59,10 @@ img::selection{background:0}
   color: #fff;
   text-shadow: 2px 2px 2px #333;
   text-decoration: underline;
+  &.lout2{
+    z-index: 10;
+    text-shadow: none;
+  }
 }
 #app {
   display: block;
