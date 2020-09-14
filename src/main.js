@@ -7,7 +7,7 @@ import store from './vuex/store'
 import Toast from 'vue2-toast'
 import Vant from 'vant'
 import 'vant/lib/index.css'
-import Vconsole from 'vconsole'
+// import Vconsole from 'vconsole'
 // import 'we-vue/lib/style.css'
 import VueAwesomeSwiper from 'vue-awesome-swiper'
 import VueClipboard from 'vue-clipboard2'
@@ -17,8 +17,8 @@ import './assets/scss/base.scss'
 import { btnInfo } from '@/api/login'
 
 Vue.config.productionTip = false
-let vConsole = new Vconsole()
-Vue.use(vConsole)
+// let vConsole = new Vconsole()
+// Vue.use(vConsole)
 Vue.use(Toast, {
   type: 'center',
   duration: 2000,
