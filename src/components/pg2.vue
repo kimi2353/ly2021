@@ -3,17 +3,8 @@
     <div class='pg2_main'>
       <div class='main4'>
         <div class="p2_btn1" @click="slideto(1)">返回</div>
-        <div class="rule_content">
-          <div class="rule_tit" />
-          <div class="rule_body">
-            <ul class="rule">
-              <li v-for="(item, index) in rules" :key="index">
-                <span>{{ index + 1 }}</span>
-                <div>{{ item }}</div>
-              </li>
-            </ul>
-          </div>
-        </div>
+        <div class="p2_btn2" @click="rule_nav=true"/>
+        <img v-if="shenhe" :src="'https://static-k12edu-camprecord.codemao.cn/' + shenhe.tab_banner" class="tab_banner">
         <div v-show="zjtab" class="tohai" @click="topic">生成专属海报</div>
         <div v-show="jytab" class="tohai" @click="tojy">我的结营证书</div>
       </div>
@@ -22,48 +13,52 @@
       </div>
       <ul class="shenhetab">
         <li v-for="(item, index) in shenhetab" :key="index">
-          <span class='sh_txt1'>{{ item.name }}</span>
+          <div>
+            <span class='sh_txt1'>{{ item.name }}</span>
+            <span v-if="item.zuoye.disabled_begin" class="sh_upload_info sh_upload_info1">（活动未开始）</span>
+            <span v-if="item.zuoye.disabled_end" class="sh_upload_info sh_upload_info2">（活动已过期）</span>
+            <span v-if="!item.zuoye.disabled" class="sh_upload_info sh_upload_info3">（活动进行中）</span>
+          </div>
           <span class='sh_txt2'>{{ format(item.begin) }}-{{ format(item.end) }}</span>
           <div class='upload'>
             <van-uploader
               v-model="item.zuoye.fileList"
               :preview-full-image="false"
-              :show-upload="!item.zuoye.flag||item.zuoye.flag==3"
+              :show-upload="!item.zuoye.flag||item.zuoye.flag==3||item.zuoye.flag==1"
               :max-count="item.num"
               :max-size="5 * 1024 * 1024"
-              :deletable="(!item.zuoye.flag||item.zuoye.flag==3)&&!(item.zuoye.disabled||shenhe.begin>now||shenhe.end<now)"
+              :deletable="(!item.zuoye.flag||item.zuoye.flag==3||item.zuoye.flag==1)&&!(item.zuoye.disabled||shenhe.begin>now||shenhe.end<now)"
               :disabled="item.zuoye.disabled||shenhe.begin>now||shenhe.end<now"
               multiple
               @oversize="onOversize"/>
-            <!-- <div class="upload_info">
-              <span v-if="item.zuoye.disabled" class="upload_info1">不在活动参与期内</span>
-              <span v-else-if="item.zuoye.fileList.length===0" class="upload_info1">未上传任何截图</span>
-              <span v-else-if="item.zuoye.flag===1" class="upload_info1">审核中<br>请耐心等待哟...</span>
-              <div v-else-if="item.zuoye.flag===2">
-                <span class="upload_info1">审核通过</span>
-                <div v-if="shenhe.url" style="height:.3rem;"/>
-                <van-button v-if="shenhe.url" type="primary" size="small" class="zuoye_btn" @click="tourl(shenhe.url)">活动详情</van-button>
-              </div>
-              <van-button v-else-if="!item.zuoye.flag&&item.zuoye.fileList.length>0" type="primary" size="small" class="zuoye_btn" @click="uploadfn(index)">提交截图</van-button>
-              <div v-else-if="item.zuoye.flag===3">
-                <span class="upload_info1">审核不通过</span>
-                <div style="height:.3rem;"/>
-                <van-button type="warning" size="mini" class="zuoye_btn" @click="bofn(item.zuoye.bo)">驳回原因</van-button>
-                <div style="height:.3rem;"/>
-                <van-button v-if="!(item.zuoye.disabled||shenhe.begin>now||shenhe.end<now)" type="primary" size="mini" class="zuoye_btn" @click="uploadfn(index)">提交截图</van-button>
-              </div>
-            </div> -->
           </div>
           <div class="tab_info">
-            <span v-if="item.zuoye.disabled" class="upload_info1">不在活动参与期内</span>
-            <div v-else-if="!item.zuoye.flag&&item.zuoye.fileList.length>0" class="upload_info2" @click="uploadfn(index)">
+            <!-- <span v-if="item.zuoye.disabled" class="upload_info1">不在活动参与期内</span> -->
+            <div v-if="!item.zuoye.flag&&item.zuoye.fileList.length>0" class="upload_info2" @click="uploadfn(index)">
               提交截图
             </div>
-            <span v-else-if="item.zuoye.fileList.length===0" class="upload_info1 upload_info4">还未上传任何截图</span>
-            <span v-if="item.zuoye.flag===1" class="upload_info1 upload_info3">审核中，耐心等待哦~</span>
-            <span v-else-if="item.zuoye.flag===2" class="upload_info1 upload_info7">已通过，再接再厉哦~</span>
+            <span v-else-if="item.zuoye.fileList.length===0" class="upload_info1 upload_info4">
+              <img src="@/assets/img/sh_ico1.png" class="ico">
+              还未上传任何截图
+            </span>
+            <div v-else-if="item.zuoye.flag===1">
+              <span class="upload_info1 upload_info3">
+                <img src="@/assets/img/sh_ico3.png" class="ico">
+                审核中，耐心等待哦~
+              </span>
+              <div v-if="!(item.zuoye.disabled||shenhe.begin>now||shenhe.end<now)" class="upload_info6" @click="uploadfn(index)">
+                重新提交
+              </div>
+            </div>
+            <span v-else-if="item.zuoye.flag===2" class="upload_info1 upload_info7">
+              <img src="@/assets/img/sh_ico2.png" class="ico">
+              已通过，再接再厉哦~
+            </span>
             <div v-else-if="item.zuoye.flag===3">
-              <span class="upload_info1 upload_info5">审核不通过（{{item.zuoye.bo}}）</span>
+              <span class="upload_info1 upload_info5">
+                <img src="@/assets/img/sh_ico4.png" class="ico">
+                审核不通过（{{item.zuoye.bo}}）
+              </span>
               <div v-if="!(item.zuoye.disabled||shenhe.begin>now||shenhe.end<now)" class="upload_info6" @click="uploadfn(index)">
                 重新提交
               </div>
@@ -80,6 +75,24 @@
           <span class="p2_nav_tit">截图提交成功</span>
           <span class="p2_nav_msg">请耐心等待截图审核</span>
           <div class='p2_nav_btn' @click="suc_nav=false">确定</div>
+        </div>
+      </div>
+    </transition>
+    <transition name="fade">
+      <div class='nav' v-show="rule_nav">
+        <div class='rule_border'>
+          <div class="rule_tit" />
+          <div class="rule_close" @click="rule_nav=false"/>
+          <div class="rule_content">
+            <div class="rule_body">
+              <ul class="rule">
+                <li v-for="(item, index) in rules" :key="index">
+                  <span>{{ index + 1 }}、</span>
+                  <div>{{ item }}</div>
+                </li>
+              </ul>
+            </div>
+          </div>
         </div>
       </div>
     </transition>
@@ -109,11 +122,12 @@ export default {
       readindex: null,
       now: 0,
       files: [],
-      shenhe: {},
+      shenhe: null,
       workid: 40,
       suc_nav: false,
       zjtab: false,
-      jytab: false
+      jytab: false,
+      rule_nav: false
     }
   },
   computed: {
@@ -198,6 +212,8 @@ export default {
           Toast('对不起，您暂无参与资格')
         } else if (res.res === 'noflag') {
           Toast('对不起，您暂时无法更新您的上传图片')
+        } else if (res.res === 'nopic') {
+          Toast('请选择图片并上传')
         } else if (res.res === 'success') {
           that.suc_nav = true
           that.init()
@@ -338,6 +354,8 @@ export default {
             if (res.shenhetab[i].zuoye) {
               that.zuoye_num++
               res.shenhetab[i].zuoye.fileList = []
+              // res.shenhetab[i].zuoye.disabled_begin = (that.now < res.shenhetab[i].begin)
+              // res.shenhetab[i].zuoye.disabled_end = (that.now > res.shenhetab[i].end)
               res.shenhetab[i].zuoye.disabled = !(that.now >= res.shenhetab[i].begin && that.now <= res.shenhetab[i].end)
               const img = res.shenhetab[i].zuoye.img.split(',')
               for (let j = 0; j < img.length; j++) {
@@ -349,11 +367,14 @@ export default {
             } else {
               res.shenhetab[i].zuoye = {
                 fileList: [],
-                disabled: !(that.now >= res.shenhetab[i].begin && that.now <= res.shenhetab[i].end)
+                disabled: !(that.now >= res.shenhetab[i].begin && that.now <= res.shenhetab[i].end),
+                disabled_begin: (that.now < res.shenhetab[i].begin),
+                disabled_end: (that.now > res.shenhetab[i].end)
               }
             }
           }
           that.shenhetab = res.shenhetab
+          console.log(res.shenhetab)
           that.toShare(that.shenhe.id, that.shenhe.sharetit, that.shenhe.sharedec)
         }
       })
