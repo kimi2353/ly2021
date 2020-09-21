@@ -600,6 +600,9 @@ img::selection{background:0}
     }
   }
 }
+.van-uploader{
+  display: block;
+}
 .van-uploader__upload{
   background: url(../img/input.png) no-repeat center;
   background-size: 100% 100%;
@@ -622,6 +625,13 @@ img::selection{background:0}
 }
 .upload{
   text-align: center;
+  .pre_load{
+    width: 5.867rem;
+    height: 5.867rem;
+    display: block;
+    margin: auto;
+    border-radius: 8px;
+  }
 }
 .rule_border{
   width: 12.864rem;

@@ -20,19 +20,23 @@
             <span v-if="!item.zuoye.disabled" class="sh_upload_info sh_upload_info3">（活动进行中）</span>
           </div>
           <span class='sh_txt2'>{{ format(item.begin) }}-{{ format(item.end) }}</span>
-          <div class='upload'>
+          <div class='upload' v-if="!item.zuoye.disabled||(item.zuoye.disabled&&item.zuoye.img)">
+            <img v-if="item.zuoye.flag&&item.zuoye.img" :src="item.zuoye.img" class='pre_load'>
             <van-uploader
+              v-if="!item.zuoye.flag"
               v-model="item.zuoye.fileList"
               :preview-full-image="false"
               :show-upload="!item.zuoye.flag||item.zuoye.flag==3||item.zuoye.flag==1"
-              :max-count="item.num"
               :max-size="5 * 1024 * 1024"
               :deletable="(!item.zuoye.flag||item.zuoye.flag==3||item.zuoye.flag==1)&&!(item.zuoye.disabled||shenhe.begin>now||shenhe.end<now)"
               :disabled="item.zuoye.disabled||shenhe.begin>now||shenhe.end<now"
-              multiple
-              @oversize="onOversize"/>
+              max-count="1"
+              :name="index"
+              @oversize="onOversize"
+              :after-read="readfn2"
+              />
           </div>
-          <div class="tab_info">
+          <div class="tab_info" v-if="!item.zuoye.disabled">
             <!-- <span v-if="item.zuoye.disabled" class="upload_info1">不在活动参与期内</span> -->
             <div v-if="!item.zuoye.flag&&item.zuoye.fileList.length>0" class="upload_info2" @click="uploadfn(index)">
               提交截图
@@ -46,9 +50,15 @@
                 <img src="@/assets/img/sh_ico3.png" class="ico">
                 审核中，耐心等待哦~
               </span>
-              <div v-if="!(item.zuoye.disabled||shenhe.begin>now||shenhe.end<now)" class="upload_info6" @click="uploadfn(index)">
-                重新提交
-              </div>
+              <van-uploader
+                v-if="!(item.zuoye.disabled||shenhe.begin>now||shenhe.end<now)&&item.zuoye.flag!=2"
+                max-count="1"
+                :name="index"
+                :max-size="5 * 1024 * 1024"
+                :after-read="readfn"
+                @oversize="onOversize">
+                <div class="upload_info6" />
+              </van-uploader>
             </div>
             <span v-else-if="item.zuoye.flag===2" class="upload_info1 upload_info7">
               <img src="@/assets/img/sh_ico2.png" class="ico">
@@ -59,9 +69,15 @@
                 <img src="@/assets/img/sh_ico4.png" class="ico">
                 审核不通过（{{item.zuoye.bo}}）
               </span>
-              <div v-if="!(item.zuoye.disabled||shenhe.begin>now||shenhe.end<now)" class="upload_info6" @click="uploadfn(index)">
-                重新提交
-              </div>
+              <van-uploader
+                v-if="!(item.zuoye.disabled||shenhe.begin>now||shenhe.end<now)&&item.zuoye.flag!=2"
+                max-count="1"
+                :name="index"
+                :max-size="5 * 1024 * 1024"
+                :after-read="readfn"
+                @oversize="onOversize">
+                <div class="upload_info6" />
+              </van-uploader>
             </div>
           </div>
         </li>
@@ -127,7 +143,8 @@ export default {
       suc_nav: false,
       zjtab: false,
       jytab: false,
-      rule_nav: false
+      rule_nav: false,
+      preimg: null
     }
   },
   computed: {
@@ -150,6 +167,25 @@ export default {
     that.init()
   },
   methods: {
+    beforeReadfn (index, name) {
+      console.log(index)
+      console.log(name)
+    },
+    readfn2 (res, name) {
+      const that = this
+      console.log(res)
+      console.log(name)
+      const fileList = that.shenhetab[name.name]
+      console.log(fileList)
+    },
+    readfn (res, name) {
+      const that = this
+      const fileList = that.shenhetab[name.name]
+      fileList.zuoye.flag = 0
+      fileList.zuoye.img = res.content
+      fileList.zuoye.fileList = [res]
+      that.$set(that.shenhetab, name.name, fileList)
+    },
     topic () {
       const that = this
       const bp = {
@@ -354,8 +390,8 @@ export default {
             if (res.shenhetab[i].zuoye) {
               that.zuoye_num++
               res.shenhetab[i].zuoye.fileList = []
-              // res.shenhetab[i].zuoye.disabled_begin = (that.now < res.shenhetab[i].begin)
-              // res.shenhetab[i].zuoye.disabled_end = (that.now > res.shenhetab[i].end)
+              res.shenhetab[i].zuoye.disabled_begin = (that.now < res.shenhetab[i].begin)
+              res.shenhetab[i].zuoye.disabled_end = (that.now > res.shenhetab[i].end)
               res.shenhetab[i].zuoye.disabled = !(that.now >= res.shenhetab[i].begin && that.now <= res.shenhetab[i].end)
               const img = res.shenhetab[i].zuoye.img.split(',')
               for (let j = 0; j < img.length; j++) {
@@ -374,7 +410,7 @@ export default {
             }
           }
           that.shenhetab = res.shenhetab
-          console.log(res.shenhetab)
+          // console.log(res.shenhetab)
           that.toShare(that.shenhe.id, that.shenhe.sharetit, that.shenhe.sharedec)
         }
       })
