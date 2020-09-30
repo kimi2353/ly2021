@@ -15,8 +15,10 @@
   },
   "dependencies": {
     "axios": "^0.18.0",
+    "exif-js": "^2.3.0",
     "iscroll": "^5.2.0",
     "js-base64": "^3.4.5",
+    "lrz": "^4.9.40",
     "vant": "^2.8.5",
     "vue": "^2.5.2",
     "vue-awesome-swiper": "^3.1.3",

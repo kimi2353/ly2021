@@ -1180,7 +1180,6 @@ img::selection{background:0}
     }
   }
 }
-
 .copytxt{
   width:13.65rem;
   height:11.6rem;
@@ -1315,5 +1314,224 @@ img::selection{background:0}
     right: .3rem;
     top: .2rem;
     z-index: 10;
+  }
+}
+.pg5{
+  width: 100%;height: 100%;
+  overflow: hidden;
+  position: relative;
+  .p4_btn1{
+    width:2.33rem;
+    height:.72rem;
+    font-size:0.51rem;
+    font-family:PingFangSC-Regular,PingFang SC;
+    font-weight:400;
+    color:rgba(255,255,255,1);
+    line-height:.72rem;
+    padding-left: .5rem;
+    box-sizing: border-box;
+    position: absolute;
+    left: .51rem;
+    top: .68rem;
+    z-index: 12;
+    &:before{
+      content: '';
+      width: .2rem;
+      height: .2rem;
+      border-left: 1px solid #fff;
+      border-bottom: 1px solid #fff;
+      transform: rotate(45deg);
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      margin: auto;
+      left: .51rem;
+    }
+  }
+  .p5_btn{
+    width:6.53rem;
+    height: 2.091rem;
+    line-height: 2.091rem;
+    background:url(../img/p5_btn.png) no-repeat center;
+    background-size: 100% 100%;
+    margin: .75rem .4rem 0;
+    font-size:0.76rem;
+    font-family:PingFangSC-Medium,PingFang SC;
+    font-weight:500;
+    color:#fff;
+    display: inline-block;
+    vertical-align: top;
+  }
+  .img2 .cropper-page{
+    background-color: #a6a4a4!important;
+  }
+  .photo_btn{
+    width: 2.671rem;
+    position: absolute;
+    margin: auto;
+    left: 0;
+    right: 0;
+    top: 7.573rem;
+    z-index: 15;
+  }
+  .big_mo{
+    width: 9.267rem;
+    height: 16.47rem;
+    margin: 0 auto;
+    position: relative;
+    .img1{
+      width: 100%;
+      height: 100%;
+      position: relative;
+      z-index: 10;
+      pointer-events: none;
+    }
+    .img2{
+      width: 7rem;
+      height: 8rem;
+      position: absolute;
+      left: 0;
+      right:0;
+      margin: auto;
+      top: 0;
+      bottom: 0;
+      z-index: 1;
+      border-radius: .4rem;
+      overflow: hidden;
+    }
+  }
+  .main{
+    width: 100%;height: 100%;
+    overflow: hidden;
+    position: absolute;
+    left: 0;
+    top: 0;
+    background: url(../img/bg_top_1.png) no-repeat center 0;
+    background-size:  100% 23.808rem;
+    background-color:rgba(255,224,228,1);
+    z-index: 10;
+    .mo_list{
+      margin: .44rem auto 0;
+      display: block;
+      li{
+        display: inline-block;
+        vertical-align: top;
+        width: 1.987rem;
+        height: 3.061rem;
+        margin: 0 auto;
+        border:2px solid transparent;
+        border-radius: .4rem;
+        position: relative;
+        overflow: hidden;
+        &.mo2{
+          margin:0 2.904rem;
+        }
+        &.active{
+          border-color: rgb(236, 111, 122);
+          box-shadow: 3px 3px 10px rgb(236, 111, 122);
+        }
+        img{
+          width: 100%;
+          height: 100%;
+          display: block;
+          margin: auto;
+          pointer-events: none;
+          background-color: #868686;
+        }
+        .guanfang{
+          pointer-events: none;
+          width: 3.904rem;
+          height: .853rem;
+          position: absolute;
+          top: -.2rem;
+          margin: auto;
+          left: -5rem;
+          right: -5rem;
+          z-index: 2;
+        }
+      }
+    }
+    .btn_list{
+      margin: .44rem auto 0;
+      display: block;
+    }
+  }
+  .hb{
+    width: 12.8rem;
+    height: 22.763rem;
+    display: block;
+    margin: 0;
+    position: relative;
+    z-index: 0;
+    margin: 0;
+    .headurl{
+      position: absolute;
+      z-index: 7;
+      width: 1.153rem;
+      height: 1.153rem;
+      left: .647rem;
+      top: 1.2rem;
+      border-radius: 50%;
+    }
+    .qrcode{
+      width: 4.001rem;
+      height: 4.001rem;
+      position: absolute;
+      z-index: 7;
+      left:7.641rem;
+      top: 17.66rem;
+      // overflow: hidden;
+      img{
+        width: 100%!important;
+        height: 100%!important;
+        display: block;
+        margin: auto;
+      }
+    }
+    .big_mo{
+      width: 100%;
+      height: 100%;
+      position: relative;
+      .img2{
+        width: 9.676rem;
+        height: 11.057rem;
+        position: absolute;
+        left: 0;
+        top: 0;
+        z-index: 4;
+        margin: auto;
+        right: 0;
+        bottom: 0;
+      }
+      .img1{
+        width: 100%;
+        height: 100%;
+        position: absolute;
+        left: 0;
+        top: 0;
+        z-index: 5;
+      }
+    }
+  }
+}
+.ipx{
+  .pg5{
+    .mo_list{
+      margin: .8rem auto 0;
+      li{
+        width: 2.987rem;
+        height: 3.861rem;
+        &.mo2{
+          margin:0 2.304rem;
+        }
+      }
+    }
+    .btn_list{
+      margin: .8rem auto 0;
+      li{
+        width: 6.677rem;
+        height: 2.347rem;
+      }
+    }
   }
 }

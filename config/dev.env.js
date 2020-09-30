@@ -4,7 +4,8 @@ const prodEnv = require('./prod.env')
 
 module.exports = merge(prodEnv, {
   NODE_ENV: '"development"',
-  BASE_API: '"https://festival.codemao.cn/dev_yyb2019/index/"',
+  BASE_API: '"http://localhost/tp5/public/index.php/yyb2019/index/"',
+  BASE_API2: '"http://localhost/tp5/public/index.php/zj2019/index/"',
   IMG_URL: '"/static/"',
   QRC_URL: '"/static/qrcode/"',
   IRIS: '"test"'

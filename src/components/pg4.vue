@@ -4,7 +4,7 @@
       <div class="p4_btn1" @click="toPage(2)">返回</div>
       <div v-if="user_id&&res.lbtn" class="lout lout2" @click="tologout">登出</div>
       <div class='swiperborder2' v-if='haiinfo.length>0'>
-        <swiper :options="swiperOption2" ref="mySwiper">
+        <swiper :options="haiinfo.length > 1 ? swiperOption2 : swiperOption3" ref="mySwiper">
           <swiper-slide v-for='(item, index) in haiinfo' :key='index'>
             <img :src='item.model' class='tupian' v-if='item.model!==""' @touchstart="gotouchstart(item)" @touchmove="gotouchmove(item)" @touchend="gotouchend(item)">
           </swiper-slide>
@@ -63,6 +63,11 @@ export default {
         effect: 'coverflow',
         slidesPerView: 1.5,
         centeredSlides: true,
+        pagination: {
+          el: '.swiper-pagination'
+        }
+      },
+      swiperOption3: {
         pagination: {
           el: '.swiper-pagination'
         }

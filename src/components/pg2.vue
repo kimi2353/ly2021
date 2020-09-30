@@ -7,6 +7,7 @@
         <img v-if="shenhe" :src="'https://static-k12edu-camprecord.codemao.cn/' + shenhe.tab_banner" class="tab_banner">
         <div v-show="zjtab" class="tohai" @click="topic">生成专属海报</div>
         <div v-show="jytab" class="tohai" @click="tojy">我的结营证书</div>
+        <div v-show="freetab" class="tohai" @click="slideto(5)">生成专属海报</div>
       </div>
       <div class="main2">
         <div class='pg2_txt1'>{{ zuoye_num===0 ? '分享截图，赢丰厚奖品' : ('再完成' + (shenhetab.length - zuoye_num) + '个任务有机会得到丰厚奖品~') }}</div>
@@ -143,6 +144,7 @@ export default {
       suc_nav: false,
       zjtab: false,
       jytab: false,
+      freetab: false,
       rule_nav: false,
       preimg: null
     }
@@ -331,9 +333,21 @@ export default {
     },
     init () {
       const that = this
-      const utmContent = that.getQueryString('utm_content')
-      const utmTerm = that.getQueryString('utm_term')
-      const utmSource = that.getQueryString('utm_source')
+      // const utmContent = that.getQueryString('utm_content')
+      // const utmTerm = that.getQueryString('utm_term')
+      // const utmSource = that.getQueryString('utm_source')
+      let utmSource = that.getQueryString('utm_source')
+      let utmContent = that.getQueryString('utm_content')
+      let utmTerm = that.getQueryString('utm_term')
+      if (!utmSource) {
+        utmSource = 'bcmxcg'
+      }
+      if (!utmTerm) {
+        utmTerm = 'poster'
+      }
+      if (!utmContent) {
+        utmContent = 'default'
+      }
       const data = {
         openid: window.Global.openid,
         unionid: window.Global.unionid,
@@ -370,6 +384,8 @@ export default {
           that.now = res.now
           that.zjtab = that.shenhe.zjtab === 1
           that.jytab = that.shenhe.jytab === 1
+          that.freetab = that.shenhe.freetab === 1
+          that.$store.commit('uFreeEr', that.shenhe.freetab_er)
           if (res.zj) {
             that.workid = res.zj[0].id
           }

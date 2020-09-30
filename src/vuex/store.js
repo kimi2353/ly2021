@@ -12,7 +12,22 @@ const store = new Vuex.Store({
     package_id: '',
     id: '',
     haiinfo: [],
-    res: null
+    res: null,
+    free_er: '',
+    bendi: [
+      {
+        'mo': '/static/img/mo1.png',
+        'mini': '/static/img/mo1.png'
+      },
+      {
+        'mo': '/static/img/mo2.png',
+        'mini': '/static/img/mo2.png'
+      },
+      {
+        'mo': '/static/img/mo3.png',
+        'mini': '/static/img/mo3.png'
+      }
+    ]
   },
   mutations: {
     uRes: (state, data) => {
@@ -38,6 +53,10 @@ const store = new Vuex.Store({
     uHaiinfo: (state, data) => {
       const obj = state
       obj.haiinfo = data
+    },
+    uFreeEr: (state, data) => {
+      const obj = state
+      obj.free_er = data
     }
   }
 })

@@ -30,10 +30,10 @@ Vue.use(Vant)
 Vue.use(Vuex)
 
 if (process.env.NODE_ENV === 'development') {
-  window.Global.openid = 'ooOv6wJjBvQfQU9hMJJS1Ezn2oxk'
+  window.Global.openid = 'ooOv6wF2ryLza2p9d4TkXoBTkZPQ'
   window.Global.nickname = 'hj'
   // window.Global.unionid = 'oE5xYwDuCW_nLx6S3RpJkRgLFLe8'
-  window.Global.unionid = 'oE5xYwF0pCMeCjM2Rcrzh24nRZMM'
+  window.Global.unionid = 'oE5xYwDuCW_nLx6S3RpJkRgLFLe8'
   // window.Global.unionid = 'oE5xYwBW7pJYqTfV47JaRuJQHmHs'
   window.Global.headimgurl = 'http://thirdwx.qlogo.cn/mmopen/vi_32/PiajxSqBRaELia5d3yhhnPrqfG0RC7sDqTsryX19ghe6mMJznic4KxGwgktCZ1WIiaiceK1unfoXhuFDibIuGlSGn2Lw/132'
 } else {

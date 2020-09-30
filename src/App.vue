@@ -23,6 +23,7 @@ import pg1 from './components/pg1'
 import pg2 from './components/pg2'
 import pg3 from './components/pg3'
 import pg4 from './components/pg4'
+import pg5 from './components/pg5'
 import { btnInfo, pageInfofn } from '@/api/login'
 
 export default {
@@ -31,7 +32,8 @@ export default {
     pg1,
     pg2,
     pg3,
-    pg4
+    pg4,
+    pg5
   },
   computed: {
     user_id () {
