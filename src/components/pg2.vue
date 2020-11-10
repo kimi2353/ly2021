@@ -30,19 +30,19 @@
               :show-upload="!item.zuoye.flag||item.zuoye.flag==3||item.zuoye.flag==1"
               :max-size="5 * 1024 * 1024"
               :deletable="(!item.zuoye.flag||item.zuoye.flag==3||item.zuoye.flag==1)&&!(item.zuoye.disabled||shenhe.begin>now||shenhe.end<now)"
-              :disabled="item.zuoye.disabled||shenhe.begin>now||shenhe.end<now"
+              :disabled="item.zuoye.disabled||shenhe.begin>now||(shenhe.end<now && item.zuoye.flag==1)"
               max-count="1"
               :name="index"
               @oversize="onOversize"
               :after-read="readfn2"
               />
           </div>
-          <div class="tab_info" v-if="!item.zuoye.disabled">
+          <div class="tab_info">
             <!-- <span v-if="item.zuoye.disabled" class="upload_info1">不在活动参与期内</span> -->
             <div v-if="!item.zuoye.flag&&item.zuoye.fileList.length>0" class="upload_info2" @click="uploadfn(index)">
               提交截图
             </div>
-            <span v-else-if="item.zuoye.fileList.length===0" class="upload_info1 upload_info4">
+            <span v-else-if="!item.zuoye.disabled&&item.zuoye.fileList.length===0" class="upload_info1 upload_info4">
               <img src="@/assets/img/sh_ico1.png" class="ico">
               还未上传任何截图
             </span>
@@ -71,7 +71,7 @@
                 审核不通过（{{item.zuoye.bo}}）
               </span>
               <van-uploader
-                v-if="!(item.zuoye.disabled||shenhe.begin>now||shenhe.end<now)&&item.zuoye.flag!=2"
+                v-if="item.zuoye.flag!=2"
                 max-count="1"
                 :name="index"
                 :max-size="5 * 1024 * 1024"

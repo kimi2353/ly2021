@@ -77,8 +77,8 @@ export default {
       pid: that.pid
     })
     that.CodemaoAuth = iris.auth.get_auth_instance()
-    // that.ready()
-    that.init()
+    that.ready()
+    // that.init()
   },
   methods: {
     upmenu () {
