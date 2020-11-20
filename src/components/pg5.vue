@@ -17,9 +17,9 @@
         <li class='mo2' :class='{active:mo===2}' @click='tomo(2)'>
           <img :src='bendi[1].mini'>
         </li>
-        <li class='mo3' :class='{active:mo===3}' @click='tomo(3)'>
+        <!-- <li class='mo3' :class='{active:mo===3}' @click='tomo(3)'>
           <img :src='bendi[2].mini'>
-        </li>
+        </li> -->
       </ul>
       <ul class='btn_list'>
         <li class='animated infinite hinge p5_btn' @click='btn1'>
@@ -53,8 +53,8 @@ export default {
     return {
       mo: 1,
       cropperConfig: {
-        width: 700,
-        height: 800,
+        width: 217,
+        height: 386,
         quality: 0.8,
         maxWidth: 750
       },
@@ -147,7 +147,7 @@ export default {
               sys
             }
           ]
-          console.log(haiinfo)
+          // console.log(haiinfo)
           that.$store.commit('uHaiinfo', haiinfo)
           that.$emit('slideto', 4)
         }

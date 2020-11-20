@@ -16,16 +16,12 @@ const store = new Vuex.Store({
     free_er: '',
     bendi: [
       {
-        'mo': '/static/img/mo1.png',
-        'mini': '/static/img/mo1.png'
+        'mo': '/static/img/m1.png',
+        'mini': '/static/img/m1.png'
       },
       {
-        'mo': '/static/img/mo2.png',
-        'mini': '/static/img/mo2.png'
-      },
-      {
-        'mo': '/static/img/mo3.png',
-        'mini': '/static/img/mo3.png'
+        'mo': '/static/img/m2.png',
+        'mini': '/static/img/m2.png'
       }
     ]
   },

@@ -1387,8 +1387,8 @@ img::selection{background:0}
       pointer-events: none;
     }
     .img2{
-      width: 7rem;
-      height: 8rem;
+      width: 100%;
+      height: 100%;
       position: absolute;
       left: 0;
       right:0;
@@ -1424,7 +1424,7 @@ img::selection{background:0}
         position: relative;
         overflow: hidden;
         &.mo2{
-          margin:0 2.904rem;
+          margin:0 0 0 2.904rem;
         }
         &.active{
           border-color: rgb(236, 111, 122);
@@ -1493,8 +1493,10 @@ img::selection{background:0}
       height: 100%;
       position: relative;
       .img2{
-        width: 9.676rem;
-        height: 11.057rem;
+        // width: 9.676rem;
+        // height: 11.057rem;
+        width: 100%;
+        height: 100%;
         position: absolute;
         left: 0;
         top: 0;
