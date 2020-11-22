@@ -11,7 +11,7 @@
         <span class="pg1_txt1" @click="upmenu">上传记录</span>
       </div>
       <ul class="list">
-        <li v-for="(item, index) in slist" :key="index" @click="totab(item)">
+        <li v-for="(item, index) in slist_filter" :key="index" @click="totab(item)">
           <img :src="'https://static-k12edu-camprecord.codemao.cn/' + item.banner">
           <div class="tag tag1" v-if="item.tag==='未开始'">{{ item.tag }}</div>
           <div class="tag tag2" v-else-if="item.tag==='进行中'">{{ item.tag }}</div>
@@ -55,6 +55,11 @@ export default {
     },
     id () {
       return this.$store.state.id
+    },
+    slist_filter () {
+      return this.slist.filter(function (item) {
+        return item.show === 1
+      })
     }
   },
   mounted () {
