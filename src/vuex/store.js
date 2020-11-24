@@ -17,11 +17,11 @@ const store = new Vuex.Store({
     bendi: [
       {
         'mo': '/static/img/m1.png',
-        'mini': '/static/img/m1.png'
+        'mini': '/static/img/mo_mini1.png'
       },
       {
         'mo': '/static/img/m2.png',
-        'mini': '/static/img/m2.png'
+        'mini': '/static/img/mo_mini2.png'
       }
     ]
   },
