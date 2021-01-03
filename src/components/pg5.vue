@@ -14,9 +14,9 @@
         <li class='mo1' :class='{active:mo===1}' @click='tomo(1)'>
           <img :src='bendi[0].mini'>
         </li>
-        <li class='mo2' :class='{active:mo===2}' @click='tomo(2)'>
+        <!-- <li class='mo2' :class='{active:mo===2}' @click='tomo(2)'>
           <img :src='bendi[1].mini'>
-        </li>
+        </li> -->
         <!-- <li class='mo3' :class='{active:mo===3}' @click='tomo(3)'>
           <img :src='bendi[2].mini'>
         </li> -->
@@ -48,7 +48,7 @@
 import imageCropper from '@/components/imageCropper'
 import { changeHaiChannel } from '@/api/article2'
 export default {
-  name: 'pg2',
+  name: 'pg5',
   data () {
     return {
       mo: 1,
@@ -90,7 +90,7 @@ export default {
     that.mo = 1
     that.openid = window.Global.openid
     that.nickname = window.Global.nickname
-    // console.log(that.free_er)
+    // console.log(that.haiinfo)
     that.init()
   },
   methods: {

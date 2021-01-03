@@ -1,4 +1,4 @@
-zanbody,html{position:relative;overflow:hidden;height:100%;min-height: 25.813rem; -webkit-tap-highlight-color:transparent}
+html{position:relative;overflow:hidden;height:100%;min-height: 25.813rem; -webkit-tap-highlight-color:transparent}
 article,aside,blockquote,body,button,code,dd,details,div,dl,dt,fieldset,figcaption,figure,footer,form,h1,h2,h3,h4,h5,h6,header,hr,html,iframe,input,legend,li,menu,nav,ol,p,pre,section,td,textarea,th,ul{margin:0;padding:0}
 div{margin:0 auto}
 :focus{outline:0}
@@ -1350,8 +1350,8 @@ img::selection{background:0}
   }
   .p5_btn{
     width:6.53rem;
-    height: 2.091rem;
-    line-height: 2.091rem;
+    height: 1.891rem;
+    line-height: 1.891rem;
     background:url(../img/p5_btn.png) no-repeat center;
     background-size: 100% 100%;
     margin: .75rem .4rem 0;
@@ -1521,8 +1521,8 @@ img::selection{background:0}
     .mo_list{
       margin: .8rem auto 0;
       li{
-        width: 2.987rem;
-        height: 3.861rem;
+        // width: 2.987rem;
+        // height: 3.861rem;
         &.mo2{
           // margin:0 2.304rem;
         }
@@ -1531,8 +1531,8 @@ img::selection{background:0}
     .btn_list{
       margin: .8rem auto 0;
       li{
-        width: 6.677rem;
-        height: 2.347rem;
+        // width: 6.677rem;
+        // height: 2.347rem;
       }
     }
   }
