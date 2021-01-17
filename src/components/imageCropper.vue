@@ -142,7 +142,7 @@ export default {
           let orientation = EXIF.getTag(this, 'Orientation')
           if (!orientation) orientation = 1
           self.orientation = orientation
-          console.log(orientation)
+          // console.log(orientation)
           self.$refs.img.onload = () => {
             self.initCropper()
           }
@@ -325,7 +325,7 @@ export default {
     top: 0;
     left: 0;
     width: 100%;
-    height: 100%;
+    height: 78%;
     z-index: 500;
     background-color: #fff;
     overflow: hidden;

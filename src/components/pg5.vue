@@ -3,23 +3,16 @@
     <div class="p4_btn1" @click="toPage(2)">返回</div>
     <div class='pg main'>
       <div class='big_mo'>
-        <img :src='bendi[mo-1].mo' class='img1'>
-        <!-- <img :src='img' v-if='img!==""' class='img2'> -->
+        <img :src='bendi[mo].img' class='img1'>
         <img class='animated infinite hinge pulse photo_btn' @click='btn1' v-show='!hasImg' src="https://static-k12edu-camprecord.codemao.cn/0_work4_zyu4iafv4x_1576058014000.png" />
         <div class='img2'>
           <image-cropper ref="imageCropper" :cropperConfig="cropperConfig" :callback="loadImage" @isflie="isflie"/>
         </div>
       </div>
       <ul class='mo_list'>
-        <li class='mo1' :class='{active:mo===1}' @click='tomo(1)'>
-          <img :src='bendi[0].mini'>
+        <li v-for="(item, index) in bendi" class='mo1' :key="index" :class='{active:index===mo}' @click='tomo(index)'>
+          <img :src='"https://static-k12edu-camprecord.codemao.cn/" + item.img_mini'>
         </li>
-        <!-- <li class='mo2' :class='{active:mo===2}' @click='tomo(2)'>
-          <img :src='bendi[1].mini'>
-        </li> -->
-        <!-- <li class='mo3' :class='{active:mo===3}' @click='tomo(3)'>
-          <img :src='bendi[2].mini'>
-        </li> -->
       </ul>
       <ul class='btn_list'>
         <li class='animated infinite hinge p5_btn' @click='btn1'>
@@ -33,7 +26,7 @@
     <div class='shadow' />
     <div class='hb' id='hb'>
       <div class='big_mo'>
-        <img :src='bendi[mo-1].mo' class='img1'>
+        <img :src='bendi[mo].img' class='img1'>
         <img :src='img' v-if='img!==""' class='img2'>
         <img :src='headurl' v-if='headurl!==""' class='headurl'>
         <div class="qrcode">
@@ -51,10 +44,10 @@ export default {
   name: 'pg5',
   data () {
     return {
-      mo: 1,
+      mo: 0,
       cropperConfig: {
         width: 217,
-        height: 386,
+        height: 306,
         quality: 0.8,
         maxWidth: 750
       },
@@ -87,10 +80,10 @@ export default {
   },
   mounted () {
     const that = this
-    that.mo = 1
+    that.mo = 0
     that.openid = window.Global.openid
     that.nickname = window.Global.nickname
-    // console.log(that.haiinfo)
+    // console.log(that.bendi)
     that.init()
   },
   methods: {

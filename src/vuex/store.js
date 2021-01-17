@@ -15,10 +15,10 @@ const store = new Vuex.Store({
     res: null,
     free_er: '',
     bendi: [
-      {
-        'mo': '/static/img/m1.png?1',
-        'mini': '/static/img/mo_mini1.png?1'
-      }
+      // {
+      //   'mo': '/static/img/m1.png?1',
+      //   'mini': '/static/img/mo_mini1.png?1'
+      // }
     ]
   },
   mutations: {
@@ -49,6 +49,10 @@ const store = new Vuex.Store({
     uFreeEr: (state, data) => {
       const obj = state
       obj.free_er = data
+    },
+    uFreePicList: (state, data) => {
+      const obj = state
+      obj.bendi = data
     }
   }
 })

@@ -384,8 +384,14 @@ export default {
           that.now = res.now
           that.zjtab = that.shenhe.zjtab === 1
           that.jytab = that.shenhe.jytab === 1
-          that.freetab = that.shenhe.freetab === 1
+          that.freetab = that.shenhe.freetab === 1 && that.shenhe.freetab_piclist.length > 0
           that.$store.commit('uFreeEr', that.shenhe.freetab_er)
+          if (that.shenhe.freetab_piclist.length > 0) {
+            for (let i = 0; i < that.shenhe.freetab_piclist.length; i++) {
+              that.shenhe.freetab_piclist[i].img = process.env.IMG_URL + 'img/' + that.shenhe.freetab_piclist[i].img
+            }
+            that.$store.commit('uFreePicList', that.shenhe.freetab_piclist)
+          }
           if (res.zj) {
             that.workid = res.zj[0].id
           }
