@@ -24,9 +24,121 @@ export function uptoken (data) {
   })
 }
 
-export function alluserback (data) {
+export function teaLongTap (data) {
   return request({
-    url: '/alluserback',
+    url: '/teaLongTap',
+    method: 'post',
+    data
+  })
+}
+
+export function forumBtn (data) {
+  return request({
+    url: '/forumBtn',
+    method: 'post',
+    data
+  })
+}
+
+export function forumTeacherUpLoad (data) {
+  return request({
+    url: '/forumTeacherUpLoad',
+    method: 'post',
+    data
+  })
+}
+
+export function txtUpLoad (data) {
+  return request({
+    url: '/txtUpLoad',
+    method: 'post',
+    data
+  })
+}
+
+export function checkWallYan (data) {
+  return request({
+    url: '/checkWallYan',
+    method: 'post',
+    data
+  })
+}
+
+export function wallCancelZan (data) {
+  return request({
+    url: '/wallCancelZan',
+    method: 'post',
+    data
+  })
+}
+
+export function wallZan (data) {
+  return request({
+    url: '/wallZan',
+    method: 'post',
+    data
+  })
+}
+
+export function checkWallInfo (data) {
+  return request({
+    url: '/checkWallInfo',
+    method: 'post',
+    data
+  })
+}
+
+export function checkLyInfo (data) {
+  return request({
+    url: '/checkLyInfo',
+    method: 'post',
+    data
+  })
+}
+
+export function lyUpLoad (data) {
+  return request({
+    url: '/lyUpLoad',
+    method: 'post',
+    data
+  })
+}
+
+export function lyZan (data) {
+  return request({
+    url: '/lyZan',
+    method: 'post',
+    data
+  })
+}
+
+export function sgpgfn (data) {
+  return request({
+    url: '/lypgfn',
+    method: 'post',
+    data
+  })
+}
+
+export function sgbtnfn (data) {
+  return request({
+    url: '/lybtnfn',
+    method: 'post',
+    data
+  })
+}
+
+export function lyCancelZan (data) {
+  return request({
+    url: '/lyCancelZan',
+    method: 'post',
+    data
+  })
+}
+
+export function checkLyYan (data) {
+  return request({
+    url: '/checkLyYan',
     method: 'post',
     data
   })
@@ -83,61 +195,6 @@ export function submitHai (data) {
 export function copySys (data) {
   return request({
     url: '/copySys',
-    method: 'post',
-    data
-  })
-}
-
-export function checkShenheInfo (data) {
-  return request({
-    url: '/checkShenheInfo',
-    method: 'post',
-    data
-  })
-}
-
-export function shenheupload (data) {
-  return request({
-    url: '/shenheupload',
-    method: 'post',
-    data
-  })
-}
-
-export function shenhetabinfo (data) {
-  return request({
-    url: '/shenhetabinfo',
-    method: 'post',
-    data
-  })
-}
-
-export function checkShenheMsg (data) {
-  return request({
-    url: '/checkShenheMsg',
-    method: 'post',
-    data
-  })
-}
-
-export function checkShenheMenu (data) {
-  return request({
-    url: '/checkShenheMenu',
-    method: 'post',
-    data
-  })
-}
-export function btnInfo (data) {
-  return request({
-    url: '/shbtnInfo',
-    method: 'post',
-    data
-  })
-}
-
-export function pageInfofn (data) {
-  return request({
-    url: '/shpageInfofn',
     method: 'post',
     data
   })

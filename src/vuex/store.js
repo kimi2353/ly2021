@@ -7,52 +7,22 @@ Vue.use(Vuex)
 
 const store = new Vuex.Store({
   state: {
-    sid: null,
-    user_id: '',
-    package_id: '',
-    id: '',
-    haiinfo: [],
-    res: null,
-    free_er: '',
-    bendi: [
-      // {
-      //   'mo': '/static/img/m1.png?1',
-      //   'mini': '/static/img/mo_mini1.png?1'
-      // }
-    ]
+    imginfo: null,
+    task: null,
+    user_id: 0
   },
   mutations: {
-    uRes: (state, data) => {
+    uTask: (state, data) => {
       const obj = state
-      obj.res = data
+      obj.task = data
     },
-    uSid: (state, data) => {
+    uImgInfo: (state, data) => {
       const obj = state
-      obj.sid = data
+      obj.imginfo = data
     },
     uUserId: (state, data) => {
       const obj = state
       obj.user_id = data
-    },
-    uPackageId: (state, data) => {
-      const obj = state
-      obj.package_id = data
-    },
-    uId: (state, data) => {
-      const obj = state
-      obj.id = data
-    },
-    uHaiinfo: (state, data) => {
-      const obj = state
-      obj.haiinfo = data
-    },
-    uFreeEr: (state, data) => {
-      const obj = state
-      obj.free_er = data
-    },
-    uFreePicList: (state, data) => {
-      const obj = state
-      obj.bendi = data
     }
   }
 })

@@ -1,186 +1,338 @@
 <template>
   <div class='pg3'>
-    <div class="p3_btn1" @click="slideto(1)">返回</div>
-    <div class='list' v-for="(item, index) in list" :key="index">
-      <div class='info'>
-        <div class='p3_txt1'>{{ item.remark }}</div>
-        <div class='p3_txt2'>{{ format(item.begin) }}-{{ format(item.end) }}</div>
-        <div class='p3_txt3'>已完成{{ item.over }}个任务，{{ item.all - item.over }}个任务未完成</div>
-        <div>
-          <div class='p3_txt3'>任务奖励：{{ item.win }}</div>
-          <div v-show="item.tap" class="tap tap1" @click="item.tap=!item.tap">收起</div>
-          <div v-show="!item.tap" class="tap tap2" @click="item.tap=!item.tap">展开</div>
+    <iscroll-view class='scroll-view' ref='iscroll1' :options='scrollOptions'>
+      <div class='pg3_main'>
+        <div v-if='zhuType'>
+          <div class='left' @click.once='to4(1)' v-show="videoIndex<videoList.length-1"/>
+          <div class='right' @click.once='to4(-1)' v-show="videoIndex>0"/>
+          <div class='menu' @click='ret'>全部</div>
+          <div class='pg3_tit'>{{tit}}</div>
         </div>
+        <div v-else>
+          <div class='pg3_tit1'>{{child_name}}正在编程猫学习“{{tit}}”，快来看看她完成的出色作业吧。</div>
+        </div>
+        <div class='pg3_main1'>
+          <div class='pg3_border'>
+            <video data-setup="{}" controls id='videozuoye' oncontextmenu="return false" controlslist="nodownload">
+              <source type="video/mp4">
+            </video>
+            <!-- <video-player class="video-player-box vjs-big-play-centered" ref="videoPlayer" :options="playerOptions" :playsinline="false" /> -->
+          </div>
+        </div>
+        <div class='pg3_main2'>
+          <div class='pg3_txt1' v-if="info">{{ info.teacher_name }}点评</div>
+          <div class='pg3_txt2'>
+            <p v-html='txt'></p>
+          </div>
+          <div class='piao' v-if='voiceList.length > 0'>
+            <div class='txt1' :style="'width:' + item.width + 'rem;'" @click='start(item, index)' v-for="(item, index) in voiceList" :key="index" :class="{red: item.red, voiceActive: item.voiceFlag}" >{{ item.voiceTimes }}''</div>
+          </div>
+        </div>
+        <div style="height: 4rem" />
       </div>
-      <ul class="shenhetab" v-show="item.tap">
-        <li v-for="(it, idx) in item.shenhetab" :key="idx">
-          <div class="flag" :class="{flag1:it.tab==='已通过',flag2:it.tab==='未通过', flag3:it.tab==='审核中'}" />
-          <div class="sht">
-            <span class='sht_txt1'>{{ it.name }}</span>
-            <!-- <van-tag class="sht_txt2" :type="it.tab==='已通过'?'success':(it.tab==='未通过'?'danger':(it.tab==='审核中'?'warning':'primary'))">{{ it.tab }}</van-tag> -->
-          </div>
-          <div class="sht_info">
-            <span class="sht_info_txt1" v-if="it.tab==='已通过'">审核通过时间：{{format(it.zuoye.stimes)}}</span>
-            <div v-else-if="it.tab==='未通过'">
-              <span class="sht_info_txt2">{{it.zuoye.bo}}</span>
-              <span class="sht_info_txt3" @click="totab(item)">重新上传</span>
-            </div>
-            <span class="sht_info_txt1" v-else-if="it.tab==='审核中'">编程猫老师正在火速审核中, 请耐心等待哦~</span>
-            <span class="sht_info_txt4" v-else-if="it.tab==='未开始'">未开始 开始时间：{{ format(it.begin) }}</span>
-            <span class="sht_info_txt5" v-else-if="it.tab==='已结束'">已结束</span>
-            <div v-else-if="it.tab==='未参加'">
-              <span class="sht_info_txt6">未参加</span>
-              <span class="sht_info_txt3" @click="totab(item)">重新上传</span>
-            </div>
-            <!-- <van-button v-if="it.tab==='未参加'||it.tab==='未通过'" class="itbtn" size="small" type="primary" @click="totab(item)">点击上传截图</van-button> -->
-            <!-- <van-tag class='sht_info_txt1' v-if="it.tab==='未开始'"></van-tag> -->
-            <!-- span  class='sht_info_txt1'></span> -->
-          </div>
-        </li>
-      </ul>
+    </iscroll-view>
+    <div class='pg3_btn' @click="sharefn" v-if='zhuType'>
+      <div class='pg3_btn1' @click="sharefn">快邀请朋友学习吧</div>
     </div>
-    <div style="height: 3rem;"/>
+    <div class='pg3_btn' v-else>
+      <img src='@/assets/img/btn_flag.png' class='btn_flag'>
+      <span class='pg3_btn_txt'>快来报名和{{ child_name }}<br>一起学编程吧</span>
+      <a :href="url" target="_blank">立即报名</a>
+    </div>
+    <transition name="fade">
+      <div class='nav1' v-show='sharenav'>
+        <img src="@/assets/img/f.png" class='shareimg'>
+        <div class='sharenav_txt'>点击右上角分享，让好友看到孩子的成长</div>
+        <div class='shareclose' @click.stop='sharenav=false'>好的</div>
+      </div>
+    </transition>
   </div>
 </template>
 
 <script>
-import { checkShenheMenu, checkShenheMsg } from '@/api/login'
-import { Toast } from 'vant'
+import { classinfo } from '@/api/login'
 
 export default {
   name: 'pg3',
   data () {
     return {
-      list: [],
-      activeNames: [],
-      now: 0
+      nickname: '',
+      tit: '',
+      child_name: '',
+      playerOptions: {
+        playbackRates: [0.7, 1.0, 1.5, 2.0],
+        sources: [{
+          type: 'video/mp4',
+          src: 'https://1257805666.vod2.myqcloud.com/d9ef0cb0vodcq1257805666/5cfebd525285890784262281763/p18NyxHgJ2oA.mp4'
+        }]
+      },
+      scrollOptions: {
+        mouseWheel: true,
+        click: true,
+        tap: true
+        // scrollbars: true
+      },
+      scrollOptions2: {
+        mouseWheel: true,
+        click: false,
+        tap: true,
+        scrollbars: true
+      },
+      video: '',
+      txt: '',
+      info: null,
+      voice: null,
+      voiceFlag: false,
+      id: '',
+      voiceList: [],
+      voiceId: '',
+      zhuType: true,
+      sharenav: false,
+      menunav: false,
+      url: '#'
     }
   },
   computed: {
-    user_id () {
-      return this.$store.state.user_id
+    player () {
+      return this.$refs.videoPlayer.player
     },
-    package_id () {
-      return this.$store.state.package_id
+    iscroll2 () {
+      return this.$refs.iscroll2
+    },
+    iscroll1 () {
+      return this.$refs.iscroll1
+    },
+    obj () {
+      return this.$store.state.obj
+    },
+    videoIndex () {
+      return this.$store.state.videoIndex
+    },
+    videoList () {
+      return this.$store.state.videoList
+    }
+  },
+  destroyed () {
+    const that = this
+    if (that.voice) {
+      that.voice.pause()
+      that.voice.removeEventListener('ended', function () {})
+      that.voice = null
+      for (let i = 0; i < that.voiceList.length; i++) {
+        that.voiceList[i].voiceFlag = false
+      }
     }
   },
   mounted () {
     const that = this
-    window.document.title = '上传记录'
-    const pagename = '上传记录页'
-    that.$emit('pageInfo', pagename)
-    that.init()
+    const id = that.getQueryString('id')
+    if (that.obj && that.obj.id) {
+      that.id = that.obj.id
+      that.init()
+    } else if (id) {
+      that.id = id
+      that.init()
+    } else {
+      that.ret()
+    }
   },
   methods: {
-    totab (item) {
+    menunfn () {
       const that = this
-      const bp = {
-        'element': '点击上传截图',
-        'page_name': '上传记录页'
-      }
-      that.$emit('btnInfo', bp)
-      const data = {
-        unionid: window.Global.unionid,
-        user_id: that.user_id,
-        sid: item.id,
-        package_id: that.package_id
-      }
-      that.$loading('加载中...')
-      checkShenheMsg(data).then(res => {
-        // console.log(res)
-        that.$loading.close()
-        if (res.res === 'error') {
-          Toast('系统错误，请刷新重试')
-        } else if (res.res === 'package_id') {
-          Toast('对不起，您暂无参与资格')
-        } else if (res.res === 'success') {
-          if (res.package_id) {
-            that.$store.commit('uPackageId', res.package_id)
-          }
-          that.$store.commit('uSid', item.id)
-          that.slideto('2')
-        } else if (res.res === 'time') {
-          Toast('项目已结束')
-        }
-      })
+      that.menunav = true
+      setTimeout(function () {
+        that.iscroll2.refresh()
+      }, 400)
     },
-    fmt (flag, begin1, end1, begin2, end2) {
+    toPage (i) {
       const that = this
-      if (!flag) {
-        if (that.now < begin1 || that.now < begin2) {
-          return '未开始'
-        }
-        if (that.now > end1 || that.now > end2) {
-          return '已结束'
-        }
-        return '未参加'
-      } else if (flag === 1) {
-        return '审核中'
-      } else if (flag === 2) {
-        return '已通过'
-      } else if (flag === 3) {
-        return '未通过'
-      }
-      return ''
+      that.$store.commit('uVideoIndex', i)
+      that.slideto(4)
     },
     slideto (res) {
       const that = this
       that.$emit('slideto', res)
     },
+    to4 (num) {
+      const that = this
+      let i = that.videoIndex
+      if (num === 1) {
+        if (i < (that.videoList.length - 1)) {
+          i++
+        } else {
+          i = that.videoList.length
+        }
+        that.$store.commit('uVideoIndex', i)
+        that.slideto(4)
+      } else if (num === -1) {
+        if (i < 1) {
+          i = 0
+        } else {
+          i--
+        }
+        that.$store.commit('uVideoIndex', i)
+        that.slideto(4)
+      }
+    },
     init () {
       const that = this
+      that.changeTitle('作业详情')
+      that.$loading('正在加载，请稍后...')
       const data = {
+        openid: window.Global.openid,
         unionid: window.Global.unionid,
-        user_id: that.user_id
+        nickname: window.Global.nickname,
+        headimgurl: window.Global.headimgurl,
+        id: that.id
       }
-      checkShenheMenu(data).then(res => {
-        // console.log(res)
+      classinfo(data).then(res => {
+        that.$loading.close()
         if (res.res === 'success') {
-          that.now = res.now
-          for (let i = 0; i < res.info.length; i++) {
-            res.info[i].all = 0
-            res.info[i].over = 0
-            if (res.info[i].begin <= that.now && res.info[i].end + 1296000 >= that.now) {
-              // that.activeNames.push(i)
-              res.info[i].tap = true
-            } else {
-              res.info[i].tap = false
+          if (res.zuoye !== '') {
+            // console.log(res.zuoye)
+            if (res.zuoye.flag != 1 && res.zuoye.flag != 2) { //eslint-disable-line
+              that.ret()
+              return
             }
-            for (let j = 0; j < res.info[i].shenhetab.length; j++) {
-              res.info[i].all++
-              if (res.info[i].shenhetab[j].zuoye) {
-                if (res.info[i].shenhetab[j].zuoye && res.info[i].shenhetab[j].zuoye.flag === 2) {
-                  res.info[i].over++
-                }
-                res.info[i].shenhetab[j].tab = that.fmt(res.info[i].shenhetab[j].zuoye.flag, res.info[i].shenhetab[j].begin, res.info[i].shenhetab[j].end, res.info[i].begin, res.info[i].end)
-              } else {
-                res.info[i].shenhetab[j].tab = that.fmt('', res.info[i].shenhetab[j].begin, res.info[i].shenhetab[j].end, res.info[i].begin, res.info[i].end)
+            that.info = res.zuoye
+            that.video = that.info.video
+            that.txt = that.info.comment
+            that.nickname = that.info.nickname
+            that.zhuType = that.info.openid === window.Global.openid
+            if (that.videoIndex === -1) {
+              that.$store.commit('uVideoIndex', 0)
+            }
+            that.tit = that.info.course_name
+            that.child_name = that.info.child_name
+            if (!that.zhuType) {
+              that.changeTitle(that.child_name + '的视频作业')
+            }
+            that.voiceList = []
+            let arr1 = []
+            let arr2 = []
+            if (that.info.voice) {
+              arr1 = that.info.voice.split(',')
+              arr2 = that.info.voiceTimes.split(',')
+            }
+            for (let i = 0; i < arr1.length; i++) {
+              let voiceTimes = parseInt(arr2[i])
+              let width = 3.5 + ((voiceTimes - 2) / 60) * 10
+              if (width > 13.5) {
+                width = 13.5
               }
+              if (voiceTimes < 10) {
+                voiceTimes = '0' + voiceTimes
+              }
+              that.voiceList.push({
+                voice: arr1[i],
+                voiceTimes,
+                voiceFlag: false,
+                red: that.checkzan(that.id + '_' + i),
+                width
+              })
             }
+            that.toShare(res.zuoye.id, res.zuoye.child_name, res.zuoye.course_name)
+            that.$nextTick(() => {
+              that.iscroll1.refresh()
+              document.getElementById('videozuoye').querySelector('source').src = that.info.video
+              document.getElementById('videozuoye').src = that.info.video
+              document.getElementById('videozuoye').poster = that.info.video + '?vframe/jpg/offset/0'
+              // that.player.src(that.info.video)
+              // that.player.poster(that.info.video + '?vframe/jpg/offset/0')
+            })
+            that.url = that.info.referral_url + that.info.referral
+            setTimeout(function () {
+              that.iscroll1.refresh()
+              setTimeout(function () {
+                that.iscroll1.refresh()
+              }, 1000)
+            }, 600)
+          } else {
+            that.ret()
           }
-          that.list = res.info
+        } else {
+          that.ret()
         }
       })
     },
-    format (shijianchuo) {
-      if (!shijianchuo) {
-        return ''
+    ret () {
+      const that = this
+      that.$emit('slideto', 1)
+    },
+    start (obj, index) {
+      const that = this
+      if (that.voiceList[index].red) {
+        const it = that.voiceList[index]
+        it.red = false
+        that.$set(that.voiceList, index, it)
+        that.checkcookie(that.id + '_' + index)
       }
-      const time = new Date(shijianchuo * 1000)
-      const y = time.getFullYear()
-      const m = time.getMonth() + 1
-      const d = time.getDate()
-      const h = time.getHours()
-      const mm = time.getMinutes()
-      const s = time.getSeconds()
-      function shi (s) {
-        s = '' + s
-        if (s.length < 2) {
-          s = '0' + s
+      if (that.voiceId === index) {
+        if (!that.voice) {
+          that.voice = new Audio()
+          that.voice.src = obj.voice
+          that.voice.play()
+          that.voiceList[index].voiceFlag = true
+          that.voice.addEventListener('ended', function () {
+            that.voice.pause()
+            that.voice.removeEventListener('ended', function () {})
+            that.voice = null
+            that.voiceId = ''
+            for (let i = 0; i < that.voiceList.length; i++) {
+              that.voiceList[i].voiceFlag = false
+            }
+          })
+        } else {
+          that.voice.pause()
+          that.voiceId = ''
+          that.voice.removeEventListener('ended', function () {})
+          that.voice = null
+          for (let i = 0; i < that.voiceList.length; i++) {
+            that.voiceList[i].voiceFlag = false
+          }
         }
-        return s
+      } else {
+        that.voiceId = index
+        if (!that.voice) {
+          that.voice = new Audio()
+          that.voice.src = obj.voice
+          that.voice.play()
+          that.voiceList[index].voiceFlag = true
+          that.voice.addEventListener('ended', function () {
+            that.voice.pause()
+            that.voice.removeEventListener('ended', function () {})
+            that.voice = null
+            that.voiceId = ''
+            for (let i = 0; i < that.voiceList.length; i++) {
+              that.voiceList[i].voiceFlag = false
+            }
+          })
+        } else {
+          that.voice.pause()
+          that.voice.removeEventListener('ended', function () {})
+          that.voice = null
+          for (let i = 0; i < that.voiceList.length; i++) {
+            that.voiceList[i].voiceFlag = false
+          }
+          that.voice = new Audio()
+          that.voice.src = obj.voice
+          that.voice.play()
+          that.voiceList[index].voiceFlag = true
+          that.voice.addEventListener('ended', function () {
+            that.voice.pause()
+            that.voice.removeEventListener('ended', function () {})
+            that.voice = null
+            that.voiceId = ''
+            for (let i = 0; i < that.voiceList.length; i++) {
+              that.voiceList[i].voiceFlag = false
+            }
+          })
+        }
       }
-      return y + '.' + shi(m) + '.' + shi(d) + ' ' + shi(h) + ':' + shi(mm) + ':' + shi(s)
+    },
+    sharefn () {
+      const that = this
+      that.sharenav = true
     }
   }
 }
